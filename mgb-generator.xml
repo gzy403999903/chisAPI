@@ -36,7 +36,7 @@
 
 		<!-- 配置javaBean 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<javaModelGenerator
-			targetPackage="com.chisapp.modules.item.bean"
+			targetPackage="com.chisapp.modules.goods.bean"
 			targetProject=".\src\main\java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
@@ -44,7 +44,7 @@
 
 		<!-- 配置 Mapper 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<sqlMapGenerator
-			targetPackage="mybatis.mapper.item"
+			targetPackage="mybatis.mapper.goods"
 			targetProject=".\src\main\resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
@@ -52,14 +52,14 @@
 		<!-- 配置 dao 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<javaClientGenerator
 			type="XMLMAPPER"
-			targetPackage="com.chisapp.modules.item.dao"
+			targetPackage="com.chisapp.modules.goods.dao"
 			targetProject=".\src\main\java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
 		<!-- 配置逆向工程的数据库表 -->
-		<table tableName="cim_item_type"
-			   domainObjectName="ItemType"/>
+		<table tableName="gsm_goods_apply"
+			   domainObjectName="GoodsApply"/>
 
 	</context>
 </generatorConfiguration>

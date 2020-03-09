@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.goods.dao.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.goods.bean.Goods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="gsm_goods_type_id" jdbcType="INTEGER" property="gsmGoodsTypeId" />
+    <result column="oid" jdbcType="VARCHAR" property="oid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sp_name" jdbcType="VARCHAR" property="spName" />
+    <result column="sp_code" jdbcType="VARCHAR" property="spCode" />
+    <result column="specs" jdbcType="VARCHAR" property="specs" />
+    <result column="goods_units_id" jdbcType="INTEGER" property="goodsUnitsId" />
+    <result column="goods_classify_id" jdbcType="INTEGER" property="goodsClassifyId" />
+    <result column="sys_second_classify_id" jdbcType="INTEGER" property="sysSecondClassifyId" />
+    <result column="barcode" jdbcType="VARCHAR" property="barcode" />
+    <result column="manufacturer_id" jdbcType="INTEGER" property="manufacturerId" />
+    <result column="origin_id" jdbcType="INTEGER" property="originId" />
+    <result column="billing_type_id" jdbcType="INTEGER" property="billingTypeId" />
+    <result column="retail_price" jdbcType="DECIMAL" property="retailPrice" />
+    <result column="profit_commission_rate" jdbcType="TINYINT" property="profitCommissionRate" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="min_purchase_quantity" jdbcType="INTEGER" property="minPurchaseQuantity" />
+    <result column="sell_classify_id" jdbcType="INTEGER" property="sellClassifyId" />
+    <result column="discountable" jdbcType="BIT" property="discountable" />
+    <result column="returnable" jdbcType="BIT" property="returnable" />
+    <result column="free_goods" jdbcType="BIT" property="freeGoods" />
+    <result column="lossable" jdbcType="BIT" property="lossable" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="splitable" jdbcType="BIT" property="splitable" />
+    <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
+    <result column="split_units_id" jdbcType="INTEGER" property="splitUnitsId" />
+    <result column="split_price" jdbcType="DECIMAL" property="splitPrice" />
+    <result column="dose_type_id" jdbcType="INTEGER" property="doseTypeId" />
+    <result column="dose" jdbcType="DECIMAL" property="dose" />
+    <result column="dose_units_id" jdbcType="INTEGER" property="doseUnitsId" />
+    <result column="special_drug_id" jdbcType="INTEGER" property="specialDrugId" />
+    <result column="drug_usage_id" jdbcType="INTEGER" property="drugUsageId" />
+    <result column="odored" jdbcType="BIT" property="odored" />
+    <result column="storage_temperature_id" jdbcType="INTEGER" property="storageTemperatureId" />
+    <result column="conservation_days" jdbcType="SMALLINT" property="conservationDays" />
+    <result column="prescription" jdbcType="BIT" property="prescription" />
+    <result column="prescription_type_id" jdbcType="INTEGER" property="prescriptionTypeId" />
+    <result column="yb_drug" jdbcType="BIT" property="ybDrug" />
+    <result column="yb_oid" jdbcType="VARCHAR" property="ybOid" />
+    <result column="yb_price" jdbcType="DECIMAL" property="ybPrice" />
+    <result column="approval_num" jdbcType="VARCHAR" property="approvalNum" />
+    <result column="approval_num_expiry_date" jdbcType="DATE" property="approvalNumExpiryDate" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="DATE" property="lastUpdateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from gsm_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.goods.bean.Goods">
+    insert into gsm_goods (id, gsm_goods_type_id, oid,
+      name, code, sp_name,
+      sp_code, specs, goods_units_id,
+      goods_classify_id, sys_second_classify_id, barcode,
+      manufacturer_id, origin_id, billing_type_id,
+      retail_price, profit_commission_rate, purchase_tax_rate,
+      sell_tax_rate, min_purchase_quantity, sell_classify_id,
+      discountable, returnable, free_goods,
+      lossable, state, splitable, split_quantity,
+      split_units_id, split_price, dose_type_id,
+      dose, dose_units_id, special_drug_id,
+      drug_usage_id, odored, storage_temperature_id,
+      conservation_days, prescription, prescription_type_id,
+      yb_drug, yb_oid, yb_price,
+      approval_num, approval_num_expiry_date, creator_id,
+      creation_date, last_updater_id, last_update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{gsmGoodsTypeId,jdbcType=INTEGER}, #{oid,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{spName,jdbcType=VARCHAR},
+      #{spCode,jdbcType=VARCHAR}, #{specs,jdbcType=VARCHAR}, #{goodsUnitsId,jdbcType=INTEGER},
+      #{goodsClassifyId,jdbcType=INTEGER}, #{sysSecondClassifyId,jdbcType=INTEGER}, #{barcode,jdbcType=VARCHAR},
+      #{manufacturerId,jdbcType=INTEGER}, #{originId,jdbcType=INTEGER}, #{billingTypeId,jdbcType=INTEGER},
+      #{retailPrice,jdbcType=DECIMAL}, #{profitCommissionRate,jdbcType=TINYINT}, #{purchaseTaxRate,jdbcType=TINYINT},
+      #{sellTaxRate,jdbcType=TINYINT}, #{minPurchaseQuantity,jdbcType=INTEGER}, #{sellClassifyId,jdbcType=INTEGER},
+      #{discountable,jdbcType=BIT}, #{returnable,jdbcType=BIT}, #{freeGoods,jdbcType=BIT},
+      #{lossable,jdbcType=BIT}, #{state,jdbcType=BIT}, #{splitable,jdbcType=BIT}, #{splitQuantity,jdbcType=INTEGER},
+      #{splitUnitsId,jdbcType=INTEGER}, #{splitPrice,jdbcType=DECIMAL}, #{doseTypeId,jdbcType=INTEGER},
+      #{dose,jdbcType=DECIMAL}, #{doseUnitsId,jdbcType=INTEGER}, #{specialDrugId,jdbcType=INTEGER},
+      #{drugUsageId,jdbcType=INTEGER}, #{odored,jdbcType=BIT}, #{storageTemperatureId,jdbcType=INTEGER},
+      #{conservationDays,jdbcType=SMALLINT}, #{prescription,jdbcType=BIT}, #{prescriptionTypeId,jdbcType=INTEGER},
+      #{ybDrug,jdbcType=BIT}, #{ybOid,jdbcType=VARCHAR}, #{ybPrice,jdbcType=DECIMAL},
+      #{approvalNum,jdbcType=VARCHAR}, #{approvalNumExpiryDate,jdbcType=DATE}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=DATE}, #{lastUpdaterId,jdbcType=INTEGER}, #{lastUpdateDate,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.goods.bean.Goods">
+    update gsm_goods
+    set gsm_goods_type_id = #{gsmGoodsTypeId,jdbcType=INTEGER},
+      oid = #{oid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sp_name = #{spName,jdbcType=VARCHAR},
+      sp_code = #{spCode,jdbcType=VARCHAR},
+      specs = #{specs,jdbcType=VARCHAR},
+      goods_units_id = #{goodsUnitsId,jdbcType=INTEGER},
+      goods_classify_id = #{goodsClassifyId,jdbcType=INTEGER},
+      sys_second_classify_id = #{sysSecondClassifyId,jdbcType=INTEGER},
+      barcode = #{barcode,jdbcType=VARCHAR},
+      manufacturer_id = #{manufacturerId,jdbcType=INTEGER},
+      origin_id = #{originId,jdbcType=INTEGER},
+      billing_type_id = #{billingTypeId,jdbcType=INTEGER},
+      retail_price = #{retailPrice,jdbcType=DECIMAL},
+      profit_commission_rate = #{profitCommissionRate,jdbcType=TINYINT},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      min_purchase_quantity = #{minPurchaseQuantity,jdbcType=INTEGER},
+      sell_classify_id = #{sellClassifyId,jdbcType=INTEGER},
+      discountable = #{discountable,jdbcType=BIT},
+      returnable = #{returnable,jdbcType=BIT},
+      free_goods = #{freeGoods,jdbcType=BIT},
+      lossable = #{lossable,jdbcType=BIT},
+      state = #{state,jdbcType=BIT},
+      splitable = #{splitable,jdbcType=BIT},
+      split_quantity = #{splitQuantity,jdbcType=INTEGER},
+      split_units_id = #{splitUnitsId,jdbcType=INTEGER},
+      split_price = #{splitPrice,jdbcType=DECIMAL},
+      dose_type_id = #{doseTypeId,jdbcType=INTEGER},
+      dose = #{dose,jdbcType=DECIMAL},
+      dose_units_id = #{doseUnitsId,jdbcType=INTEGER},
+      special_drug_id = #{specialDrugId,jdbcType=INTEGER},
+      drug_usage_id = #{drugUsageId,jdbcType=INTEGER},
+      odored = #{odored,jdbcType=BIT},
+      storage_temperature_id = #{storageTemperatureId,jdbcType=INTEGER},
+      conservation_days = #{conservationDays,jdbcType=SMALLINT},
+      prescription = #{prescription,jdbcType=BIT},
+      prescription_type_id = #{prescriptionTypeId,jdbcType=INTEGER},
+      yb_drug = #{ybDrug,jdbcType=BIT},
+      yb_oid = #{ybOid,jdbcType=VARCHAR},
+      yb_price = #{ybPrice,jdbcType=DECIMAL},
+      approval_num = #{approvalNum,jdbcType=VARCHAR},
+      approval_num_expiry_date = #{approvalNumExpiryDate,jdbcType=DATE},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, gsm_goods_type_id, oid, name, code, sp_name, sp_code, specs, goods_units_id,
+    goods_classify_id, sys_second_classify_id, barcode, manufacturer_id, origin_id, billing_type_id,
+    retail_price, profit_commission_rate, purchase_tax_rate, sell_tax_rate, min_purchase_quantity,
+    sell_classify_id, discountable, returnable, free_goods, lossable, state, splitable,
+    split_quantity, split_units_id, split_price, dose_type_id, dose, dose_units_id, special_drug_id,
+    drug_usage_id, odored, storage_temperature_id, conservation_days, prescription, prescription_type_id,
+    yb_drug, yb_oid, yb_price, approval_num, approval_num_expiry_date, creator_id, creation_date,
+    last_updater_id, last_update_date
+    from gsm_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, gsm_goods_type_id, oid, name, code, sp_name, sp_code, specs, goods_units_id,
+    goods_classify_id, sys_second_classify_id, barcode, manufacturer_id, origin_id, billing_type_id,
+    retail_price, profit_commission_rate, purchase_tax_rate, sell_tax_rate, min_purchase_quantity,
+    sell_classify_id, discountable, returnable, free_goods, lossable, state, splitable,
+    split_quantity, split_units_id, split_price, dose_type_id, dose, dose_units_id, special_drug_id,
+    drug_usage_id, odored, storage_temperature_id, conservation_days, prescription, prescription_type_id,
+    yb_drug, yb_oid, yb_price, approval_num, approval_num_expiry_date, creator_id, creation_date,
+    last_updater_id, last_update_date
+    from gsm_goods
+  </select>
+
+
+  <!--***************************************************************************************************************-->
+
+  <update id="updateRetailPriceById">
+    update gsm_goods
+    set retail_price = #{retailPrice}, split_price = #{splitPrice}
+    where id = #{id}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_gsm_goods
+    <trim prefix="where" suffixOverrides="and">
+      <if test="gsmGoodsTypeId != null">
+        (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
+      </if>
+      <if test="goodsClassifyId != null">
+        (goodsClassifyId = #{goodsClassifyId}) and
+      </if>
+      <if test="state != null">
+        (state = #{state}) and
+      </if>
+      <if test="oid != null &amp;&amp; oid.trim() != ''">
+        (oid like '${oid}%') and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by oid
+  </select>
+
+  <select id="selectEnabledLikeByName" resultType="map">
+    select *
+    from view_gsm_goods
+    where
+      (name like '${name}%' or code like '${name}%') and
+      (state is true)
+    order by oid
+    LIMIT 30
+  </select>
+
+  <select id="selectEnabledLikeByNameForPlan" resultType="map">
+    select a.*, ifnull(b.quantity, 0) as inventoryQuantity
+    from (
+      select *
+      from view_gsm_goods
+      where
+        (name like '${name}%' or code like '${name}%') and
+        (state is true)
+    ) a
+    left join (
+      select gsm_goods_id, SUM(quantity) AS quantity
+      from iym_inventory
+      where
+        (sys_clinic_id = #{sysClinicId}) and
+        (quantity > 0) and
+        (split_quantity = 1)
+      group by gsm_goods_id
+    ) b on a.id = b.gsm_goods_id
+    order by a.oid
+    LIMIT 30
+  </select>
+
+  <select id="selectEnabledLikeByNameForPrescription" resultType="map">
+   select
+      CONCAT(a.id,'s', ifnull(b.split_quantity, 1)) as uuid,
+       a.gsmGoodsTypeId, a.id, a.oid, a.name, a.code, a.specs,
+      (case when ifnull(b.split_quantity, 1) > 1 then a.splitUnitsId else a.goodsUnitsId end) as goodsUnitsId,
+      (case when ifnull(b.split_quantity, 1) > 1 then a.splitUnitsName else a.goodsUnitsName end) as goodsUnitsName,
+      (case when ifnull(b.split_quantity, 1) > 1 then a.splitPrice else a.retailPrice end) as retailPrice,
+      a.manufacturerId, a.manufacturerName, a.originId, a.originName, a.doseTypeId, a.doseTypeName, a.dose,
+      a.doseUnitsId, a.doseUnitsName, a.drugUsageId, a.drugUsageName, a.discountable, a.goodsClassifyName,
+      ifnull(b.split_quantity, 1) as splitQuantity, ifnull(b.quantity, 0) as quantity
+    from (
+      select *
+      from view_gsm_goods
+      where
+        (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
+        (name like '${name}%' or code like '${name}%') and
+        (state is true)
+    ) a
+    left join (
+      select id, gsm_goods_id, split_quantity, SUM(quantity) AS quantity
+      from iym_inventory
+      where
+        (sys_clinic_id = #{sysClinicId}) and
+        (quantity > 0)
+      group by gsm_goods_id, split_quantity
+    ) b on a.id = b.gsm_goods_id
+    order by oid
+    LIMIT 30
+  </select>
+
+</mapper>
