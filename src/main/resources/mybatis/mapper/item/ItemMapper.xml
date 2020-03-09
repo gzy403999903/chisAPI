@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.item.dao.ItemMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.item.bean.Item">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="cim_item_type_id" jdbcType="INTEGER" property="cimItemTypeId" />
+    <result column="item_units_id" jdbcType="INTEGER" property="itemUnitsId" />
+    <result column="befit_gender_id" jdbcType="INTEGER" property="befitGenderId" />
+    <result column="billing_type_id" jdbcType="INTEGER" property="billingTypeId" />
+    <result column="item_classify_id" jdbcType="INTEGER" property="itemClassifyId" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="retail_price" jdbcType="DECIMAL" property="retailPrice" />
+    <result column="explains" jdbcType="VARCHAR" property="explains" />
+    <result column="discountable" jdbcType="BIT" property="discountable" />
+    <result column="returnable" jdbcType="BIT" property="returnable" />
+    <result column="yb_item" jdbcType="BIT" property="ybItem" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="required" jdbcType="BIT" property="required" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="DATE" property="lastUpdateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cim_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.item.bean.Item">
+    insert into cim_item (id, name, code,
+      cim_item_type_id, item_units_id, befit_gender_id,
+      billing_type_id, item_classify_id, quantity,
+      retail_price, explains, discountable,
+      returnable, yb_item, state, required,
+      creator_id, creation_date, last_updater_id,
+      last_update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{cimItemTypeId,jdbcType=INTEGER}, #{itemUnitsId,jdbcType=INTEGER}, #{befitGenderId,jdbcType=INTEGER},
+      #{billingTypeId,jdbcType=INTEGER}, #{itemClassifyId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
+      #{retailPrice,jdbcType=DECIMAL}, #{explains,jdbcType=VARCHAR}, #{discountable,jdbcType=BIT},
+      #{returnable,jdbcType=BIT}, #{ybItem,jdbcType=BIT}, #{state,jdbcType=BIT}, #{required,jdbcType=BIT},
+      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE}, #{lastUpdaterId,jdbcType=INTEGER},
+      #{lastUpdateDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.item.bean.Item">
+    update cim_item
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      cim_item_type_id = #{cimItemTypeId,jdbcType=INTEGER},
+      item_units_id = #{itemUnitsId,jdbcType=INTEGER},
+      befit_gender_id = #{befitGenderId,jdbcType=INTEGER},
+      billing_type_id = #{billingTypeId,jdbcType=INTEGER},
+      item_classify_id = #{itemClassifyId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      retail_price = #{retailPrice,jdbcType=DECIMAL},
+      explains = #{explains,jdbcType=VARCHAR},
+      discountable = #{discountable,jdbcType=BIT},
+      returnable = #{returnable,jdbcType=BIT},
+      yb_item = #{ybItem,jdbcType=BIT},
+      state = #{state,jdbcType=BIT},
+      required = #{required,jdbcType=BIT},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
+    item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
+    state, required, creator_id, creation_date, last_updater_id, last_update_date
+    from cim_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
+    item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
+    state, required, creator_id, creation_date, last_updater_id, last_update_date
+    from cim_item
+  </select>
+
+  <!--***************************************************************************************************************-->
+  <update id="updateRetailPriceById">
+    update cim_item set retail_price = #{retailPrice}
+    where id = #{id}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_cim_item
+    <trim prefix="where" suffixOverrides="and">
+      <if test="cimItemTypeId != null">
+        (cimItemTypeId = #{cimItemTypeId}) and
+      </if>
+      <if test="state != null">
+        (state = #{state}) and
+      </if>
+      <if test="itemClassifyId != null">
+        (itemClassifyId = #{itemClassifyId}) and
+      </if>
+      <if test="ybItem != null">
+        (ybItem = #{ybItem}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%')
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectEnabledLikeByName" resultType="map">
+    select *
+    from
+      view_cim_item
+    where
+      (name like '${name}%' or code like '${name}%') and
+      (state is true)
+    order by id desc
+    LIMIT 30
+  </select>
+
+  <select id="selectEnabledLikeByNameForPrescription" resultType="map">
+    select *
+    from
+      view_cim_item
+    where
+      (cimItemTypeId = #{cimItemTypeId}) and
+      (name like '${name}%' or code like '${name}%') and
+      (state is true)
+    order by id desc
+    LIMIT 30
+  </select>
+
+  <select id="selectEnabledByBillingTypeId" resultMap="BaseResultMap">
+    select *
+    from cim_item
+    where
+      billing_type_id = #{billingTypeId} and
+      state is true
+  </select>
+
+
+</mapper>

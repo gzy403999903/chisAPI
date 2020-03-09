@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.item.dao.ItemApplyMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.item.bean.ItemApply">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="cim_item_type_id" jdbcType="INTEGER" property="cimItemTypeId" />
+    <result column="item_units_id" jdbcType="INTEGER" property="itemUnitsId" />
+    <result column="befit_gender_id" jdbcType="INTEGER" property="befitGenderId" />
+    <result column="billing_type_id" jdbcType="INTEGER" property="billingTypeId" />
+    <result column="item_classify_id" jdbcType="INTEGER" property="itemClassifyId" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="retail_price" jdbcType="DECIMAL" property="retailPrice" />
+    <result column="explains" jdbcType="VARCHAR" property="explains" />
+    <result column="discountable" jdbcType="BIT" property="discountable" />
+    <result column="returnable" jdbcType="BIT" property="returnable" />
+    <result column="yb_item" jdbcType="BIT" property="ybItem" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="pricer_id" jdbcType="INTEGER" property="pricerId" />
+    <result column="pricing_date" jdbcType="DATE" property="pricingDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cim_item_apply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.item.bean.ItemApply">
+    insert into cim_item_apply (id, name, code,
+      cim_item_type_id, item_units_id, befit_gender_id,
+      billing_type_id, item_classify_id, quantity,
+      retail_price, explains, discountable,
+      returnable, yb_item, creator_id,
+      creation_date, pricer_id, pricing_date,
+      approver_id, approve_date, approve_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{cimItemTypeId,jdbcType=INTEGER}, #{itemUnitsId,jdbcType=INTEGER}, #{befitGenderId,jdbcType=INTEGER},
+      #{billingTypeId,jdbcType=INTEGER}, #{itemClassifyId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
+      #{retailPrice,jdbcType=DECIMAL}, #{explains,jdbcType=VARCHAR}, #{discountable,jdbcType=BIT},
+      #{returnable,jdbcType=BIT}, #{ybItem,jdbcType=BIT}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=DATE}, #{pricerId,jdbcType=INTEGER}, #{pricingDate,jdbcType=DATE},
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.item.bean.ItemApply">
+    update cim_item_apply
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      cim_item_type_id = #{cimItemTypeId,jdbcType=INTEGER},
+      item_units_id = #{itemUnitsId,jdbcType=INTEGER},
+      befit_gender_id = #{befitGenderId,jdbcType=INTEGER},
+      billing_type_id = #{billingTypeId,jdbcType=INTEGER},
+      item_classify_id = #{itemClassifyId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      retail_price = #{retailPrice,jdbcType=DECIMAL},
+      explains = #{explains,jdbcType=VARCHAR},
+      discountable = #{discountable,jdbcType=BIT},
+      returnable = #{returnable,jdbcType=BIT},
+      yb_item = #{ybItem,jdbcType=BIT},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      pricer_id = #{pricerId,jdbcType=INTEGER},
+      pricing_date = #{pricingDate,jdbcType=DATE},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=DATE},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
+    item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
+    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, approve_state
+    from cim_item_apply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
+    item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
+    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, approve_state
+    from cim_item_apply
+  </select>
+
+
+  <!--***************************************************************************************************************-->
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_cim_item_apply
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (creationDate between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%')
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+
+</mapper>

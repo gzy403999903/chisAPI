@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.item.dao.ItemAdjustPriceMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.item.bean.ItemAdjustPrice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="cim_item_id" jdbcType="INTEGER" property="cimItemId" />
+    <result column="original_retail_price" jdbcType="DECIMAL" property="originalRetailPrice" />
+    <result column="new_retail_price" jdbcType="DECIMAL" property="newRetailPrice" />
+    <result column="explains" jdbcType="VARCHAR" property="explains" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cim_item_adjust_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.item.bean.ItemAdjustPrice">
+    insert into cim_item_adjust_price (id, lsh, mxh,
+      cim_item_id, original_retail_price, new_retail_price,
+      explains, creator_id, creation_date,
+      expiry_date, approver_id, approve_date,
+      approve_state)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{cimItemId,jdbcType=INTEGER}, #{originalRetailPrice,jdbcType=DECIMAL}, #{newRetailPrice,jdbcType=DECIMAL},
+      #{explains,jdbcType=VARCHAR}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE},
+      #{expiryDate,jdbcType=DATE}, #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE},
+      #{approveState,jdbcType=TINYINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.item.bean.ItemAdjustPrice">
+    update cim_item_adjust_price
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      cim_item_id = #{cimItemId,jdbcType=INTEGER},
+      original_retail_price = #{originalRetailPrice,jdbcType=DECIMAL},
+      new_retail_price = #{newRetailPrice,jdbcType=DECIMAL},
+      explains = #{explains,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      expiry_date = #{expiryDate,jdbcType=DATE},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=DATE},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, cim_item_id, original_retail_price, new_retail_price, explains,
+    creator_id, creation_date, expiry_date, approver_id, approve_date, approve_state
+    from cim_item_adjust_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, cim_item_id, original_retail_price, new_retail_price, explains,
+    creator_id, creation_date, expiry_date, approver_id, approve_date, approve_state
+    from cim_item_adjust_price
+  </select>
+
+
+  <!--***************************************************************************************************************-->
+
+  <select id="selectByLsh" resultType="map">
+    select *
+    from view_cim_item_adjust_price
+    where lsh = #{lsh}
+  </select>
+
+  <update id="updateByLsh">
+    update cim_item_adjust_price
+    <trim prefix="set" suffixOverrides=",">
+      <if test="approverId != null">
+        approver_id=#{approverId},
+      </if>
+      <if test="approveDate != null">
+        approve_date=#{approveDate},
+      </if>
+      <if test="approveState != null">
+        approve_state=#{approveState}
+      </if>
+    </trim>
+    where lsh=#{lsh}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_cim_item_adjust_price
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (creationDate between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (cimItemName like '${name}%' or cimItemCode like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+
+  <select id="selectGroupListByCriteria" resultType="map">
+    select *
+    from view_cim_item_adjust_price
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (creationDate between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by id desc
+  </select>
+
+
+
+</mapper>
