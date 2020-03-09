@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="sys_role_id" jdbcType="INTEGER" property="sysRoleId" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="required" jdbcType="BIT" property="required" />
+    <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
+    <result column="last_login_address" jdbcType="VARCHAR" property="lastLoginAddress" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="usually_login_location" jdbcType="VARCHAR" property="usuallyLoginLocation" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.User">
+    insert into sys_user (id, account, password,
+      name, code, sys_clinic_id,
+      sys_role_id, state, required,
+      last_login_ip, last_login_address, last_login_time,
+      usually_login_location)
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{sysClinicId,jdbcType=INTEGER},
+      #{sysRoleId,jdbcType=INTEGER}, #{state,jdbcType=BIT}, #{required,jdbcType=BIT},
+      #{lastLoginIp,jdbcType=VARCHAR}, #{lastLoginAddress,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP},
+      #{usuallyLoginLocation,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.User">
+    update sys_user
+    set account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      sys_role_id = #{sysRoleId,jdbcType=INTEGER},
+      state = #{state,jdbcType=BIT},
+      required = #{required,jdbcType=BIT},
+      last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      last_login_address = #{lastLoginAddress,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      usually_login_location = #{usuallyLoginLocation,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, account, password, name, code, sys_clinic_id, sys_role_id, state, required,
+    last_login_ip, last_login_address, last_login_time, usually_login_location
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, account, password, name, code, sys_clinic_id, sys_role_id, state, required,
+    last_login_ip, last_login_address, last_login_time, usually_login_location
+    from sys_user
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByAccount" resultMap="BaseResultMap">
+    select *
+    from sys_user
+    where account = #{account}
+    LIMIT 1
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_sys_user
+    <trim prefix="where" suffixOverrides="and">
+      <if test="state != null">
+        (state = #{state}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+      <if test="sysRoleName != null &amp;&amp; sysRoleName.trim() != ''">
+        (sysRoleName like '${sysRoleName}%' or sysRoleCode like '${sysRoleName}%') and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectClinicEnabled" resultType="map">
+    select id, name, code, sysClinicId, state
+    from view_sys_user
+    where
+      sysClinicId = #{sysClinicId} and
+      state = true
+  </select>
+
+
+</mapper>

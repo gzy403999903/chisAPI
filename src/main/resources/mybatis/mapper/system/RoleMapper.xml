@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.Role">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="required" jdbcType="BIT" property="required" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.Role" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into sys_role (id, name, code,
+      state, required)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{state,jdbcType=BIT}, #{required,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.Role">
+    update sys_role
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      required = #{required,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, state, required
+    from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, state, required
+    from sys_role
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultMap="BaseResultMap">
+    select *
+    from sys_role
+    <trim prefix="where" suffixOverrides="and">
+      <if test="state != null">
+        (state = #{state})
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectEnabled" resultMap="BaseResultMap">
+    select *
+    from sys_role
+    where state is true
+  </select>
+
+
+</mapper>

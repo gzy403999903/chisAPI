@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.ClinicRoomMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.ClinicRoom">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_clinic_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.ClinicRoom">
+    insert into sys_clinic_room (id, name, code,
+      sys_clinic_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{sysClinicId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.ClinicRoom">
+    update sys_clinic_room
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, sys_clinic_id
+    from sys_clinic_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, sys_clinic_id
+    from sys_clinic_room
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectClinicListByCriteria" resultMap="BaseResultMap">
+    select *
+    from sys_clinic_room
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        sys_clinic_id = #{sysClinicId} and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id
+  </select>
+
+  <select id="selectByClinicId" resultMap="BaseResultMap">
+    select *
+    from sys_clinic_room
+    where sys_clinic_id = #{sysClinicId}
+  </select>
+
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	<context id="DB2Tables" targetRuntime="MyBatis3Simple"> <!-- MyBatis3 | MyBatis3Simple -->
+		<!-- 配置自定义插件 使每次自动生成的文件覆盖原来的生成的文件 -->
+		<plugin type="com.chisapp.common.plugin.OverIsMergeablePlugin"/>
+
+		<!-- 配置逆向工程生成的 javaBean 不自动添加注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true"/>
+		</commentGenerator>
+
+		<!-- 配置数据库连接信息 localhost-->
+		<jdbcConnection
+			driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/chis_db
+										?useUnicode=true
+										&amp;characterEncoding=utf8
+										&amp;allowMultiQueries=true
+										&amp;useAffectedRows=true
+										&amp;serverTimezone=GMT%2b8"
+			userId="root"
+			password="55312153">
+			<!--识别主键-->
+			<property name="useInformationSchema" value="true"/>
+		</jdbcConnection>
+
+		<!-- java 类型解析器(默认配置即可) -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 配置javaBean 生成位置 --> <!-- ↓↓↓↓↓ -->
+		<javaModelGenerator
+			targetPackage="com.chisapp.modules.system.bean"
+			targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 配置 Mapper 生成位置 --> <!-- ↓↓↓↓↓ -->
+		<sqlMapGenerator
+			targetPackage="mybatis.mapper.system"
+			targetProject=".\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- 配置 dao 生成位置 --> <!-- ↓↓↓↓↓ -->
+		<javaClientGenerator
+			type="XMLMAPPER"
+			targetPackage="com.chisapp.modules.system.dao"
+			targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- 配置逆向工程的数据库表 -->
+		<table tableName="sys_second_classify"
+			   domainObjectName="SecondClassify"/>
+
+	</context>
+</generatorConfiguration>

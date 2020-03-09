@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.DictMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.Dict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sys_dict_type_id" jdbcType="INTEGER" property="sysDictTypeId" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="required" jdbcType="BIT" property="required" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.Dict">
+    insert into sys_dict (id, name, code,
+      sys_dict_type_id, state, required
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{sysDictTypeId,jdbcType=INTEGER}, #{state,jdbcType=BIT}, #{required,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.Dict">
+    update sys_dict
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sys_dict_type_id = #{sysDictTypeId,jdbcType=INTEGER},
+      state = #{state,jdbcType=BIT},
+      required = #{required,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, sys_dict_type_id, state, required
+    from sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, sys_dict_type_id, state, required
+    from sys_dict
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultMap="BaseResultMap">
+    select *
+    from sys_dict
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysDictTypeId != null">
+        (sys_dict_type_id = #{sysDictTypeId}) and
+      </if>
+      <if test="state != null">
+        state = #{state} and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectEnabledLikeByName" resultMap="BaseResultMap">
+    select *
+    from sys_dict
+    where
+      (sys_dict_type_id = #{sysDictTypeId}) and
+      (state is true) and
+      (name like '${name}%' or code like '${name}%')
+    order by id
+    LIMIT 30
+  </select>
+
+  <select id="selectEnabledByTypeId" resultMap="BaseResultMap">
+    select *
+    from sys_dict
+    where
+      sys_dict_type_id = #{sysDictTypeId} and
+      state is true
+  </select>
+
+</mapper>

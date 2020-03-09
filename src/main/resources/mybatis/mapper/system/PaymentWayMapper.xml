@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.PaymentWayMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.PaymentWay">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="cash_flag" jdbcType="BIT" property="cashFlag" />
+    <result column="balance_flag" jdbcType="BIT" property="balanceFlag" />
+    <result column="coupon_flag" jdbcType="BIT" property="couponFlag" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="required" jdbcType="BIT" property="required" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_payment_way
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.PaymentWay">
+    insert into sys_payment_way (id, name, code,
+      cash_flag, balance_flag, coupon_flag,
+      state, required)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{cashFlag,jdbcType=BIT}, #{balanceFlag,jdbcType=BIT}, #{couponFlag,jdbcType=BIT},
+      #{state,jdbcType=BIT}, #{required,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.PaymentWay">
+    update sys_payment_way
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      cash_flag = #{cashFlag,jdbcType=BIT},
+      balance_flag = #{balanceFlag,jdbcType=BIT},
+      coupon_flag = #{couponFlag,jdbcType=BIT},
+      state = #{state,jdbcType=BIT},
+      required = #{required,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, cash_flag, balance_flag, coupon_flag, state, required
+    from sys_payment_way
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, cash_flag, balance_flag, coupon_flag, state, required
+    from sys_payment_way
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <select id="selectByCriteria" resultMap="BaseResultMap">
+    select *
+    from sys_payment_way
+    <trim prefix="where" suffixOverrides="and">
+      <if test="state != null">
+        (state = #{state}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectEnabled" resultMap="BaseResultMap">
+    select *
+    from sys_payment_way
+    where state is true
+  </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 打印 SQL 语句  -->
+	 	<setting name="logImpl" value="STDOUT_LOGGING" />
+		<!-- 开启转换驼峰命名 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 设置如果参数为空时保存到数据库对应字段的数据类型 -->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<!-- 全局开启二级缓存 -->
+		<setting name="cacheEnabled" value="true"/>
+	</settings>
+	
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!--分页参数合理化  -->
+			<property name="reasonable" value="true"/>
+		</plugin>
+	</plugins>
+		
+</configuration>

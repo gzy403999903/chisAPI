@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.AuthcMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.Authc">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="module_order" jdbcType="INTEGER" property="moduleOrder" />
+    <result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+    <result column="module_index" jdbcType="VARCHAR" property="moduleIndex" />
+    <result column="menu_order" jdbcType="INTEGER" property="menuOrder" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_index" jdbcType="VARCHAR" property="menuIndex" />
+    <result column="path_order" jdbcType="INTEGER" property="pathOrder" />
+    <result column="path_name" jdbcType="VARCHAR" property="pathName" />
+    <result column="path_index" jdbcType="VARCHAR" property="pathIndex" />
+    <result column="role_names" jdbcType="VARCHAR" property="roleNames" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_authc
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.Authc">
+    insert into sys_authc (id, module_order, module_name,
+      module_index, menu_order, menu_name,
+      menu_index, path_order, path_name,
+      path_index, role_names)
+    values (#{id,jdbcType=INTEGER}, #{moduleOrder,jdbcType=INTEGER}, #{moduleName,jdbcType=VARCHAR},
+      #{moduleIndex,jdbcType=VARCHAR}, #{menuOrder,jdbcType=INTEGER}, #{menuName,jdbcType=VARCHAR},
+      #{menuIndex,jdbcType=VARCHAR}, #{pathOrder,jdbcType=INTEGER}, #{pathName,jdbcType=VARCHAR},
+      #{pathIndex,jdbcType=VARCHAR}, #{roleNames,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.Authc">
+    update sys_authc
+    set module_order = #{moduleOrder,jdbcType=INTEGER},
+      module_name = #{moduleName,jdbcType=VARCHAR},
+      module_index = #{moduleIndex,jdbcType=VARCHAR},
+      menu_order = #{menuOrder,jdbcType=INTEGER},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_index = #{menuIndex,jdbcType=VARCHAR},
+      path_order = #{pathOrder,jdbcType=INTEGER},
+      path_name = #{pathName,jdbcType=VARCHAR},
+      path_index = #{pathIndex,jdbcType=VARCHAR},
+      role_names = #{roleNames,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, module_order, module_name, module_index, menu_order, menu_name, menu_index,
+    path_order, path_name, path_index, role_names
+    from sys_authc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, module_order, module_name, module_index, menu_order, menu_name, menu_index,
+    path_order, path_name, path_index, role_names
+    from sys_authc
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateRoleNamesByMap" parameterType="java.util.Map">
+    <foreach collection="_parameter.entrySet()" index="id" item="roleNames">
+      UPDATE sys_authc
+      SET role_names=#{roleNames}
+      WHERE id=#{id};
+    </foreach>
+  </update>
+
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.DoctorMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.Doctor">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sys_clinic_room_id" jdbcType="INTEGER" property="sysClinicRoomId" />
+    <result column="mon_begin_time" jdbcType="TIME" property="monBeginTime" />
+    <result column="mon_end_time" jdbcType="TIME" property="monEndTime" />
+    <result column="mon_no" jdbcType="SMALLINT" property="monNo" />
+    <result column="tue_begin_time" jdbcType="TIME" property="tueBeginTime" />
+    <result column="tue_end_time" jdbcType="TIME" property="tueEndTime" />
+    <result column="tue_no" jdbcType="SMALLINT" property="tueNo" />
+    <result column="wed_begin_time" jdbcType="TIME" property="wedBeginTime" />
+    <result column="wed_end_time" jdbcType="TIME" property="wedEndTime" />
+    <result column="wed_no" jdbcType="SMALLINT" property="wedNo" />
+    <result column="thu_begin_time" jdbcType="TIME" property="thuBeginTime" />
+    <result column="thu_end_time" jdbcType="TIME" property="thuEndTime" />
+    <result column="thu_no" jdbcType="SMALLINT" property="thuNo" />
+    <result column="fri_begin_time" jdbcType="TIME" property="friBeginTime" />
+    <result column="fri_end_time" jdbcType="TIME" property="friEndTime" />
+    <result column="fri_no" jdbcType="SMALLINT" property="friNo" />
+    <result column="sat_begin_time" jdbcType="TIME" property="satBeginTime" />
+    <result column="sat_end_time" jdbcType="TIME" property="satEndTime" />
+    <result column="sat_no" jdbcType="SMALLINT" property="satNo" />
+    <result column="sun_begin_time" jdbcType="TIME" property="sunBeginTime" />
+    <result column="sun_end_time" jdbcType="TIME" property="sunEndTime" />
+    <result column="sun_no" jdbcType="SMALLINT" property="sunNo" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_doctor
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.Doctor">
+    insert into sys_doctor (id, sys_clinic_room_id, mon_begin_time,
+      mon_end_time, mon_no, tue_begin_time,
+      tue_end_time, tue_no, wed_begin_time,
+      wed_end_time, wed_no, thu_begin_time,
+      thu_end_time, thu_no, fri_begin_time,
+      fri_end_time, fri_no, sat_begin_time,
+      sat_end_time, sat_no, sun_begin_time,
+      sun_end_time, sun_no)
+    values (#{id,jdbcType=INTEGER}, #{sysClinicRoomId,jdbcType=INTEGER}, #{monBeginTime,jdbcType=TIME},
+      #{monEndTime,jdbcType=TIME}, #{monNo,jdbcType=SMALLINT}, #{tueBeginTime,jdbcType=TIME},
+      #{tueEndTime,jdbcType=TIME}, #{tueNo,jdbcType=SMALLINT}, #{wedBeginTime,jdbcType=TIME},
+      #{wedEndTime,jdbcType=TIME}, #{wedNo,jdbcType=SMALLINT}, #{thuBeginTime,jdbcType=TIME},
+      #{thuEndTime,jdbcType=TIME}, #{thuNo,jdbcType=SMALLINT}, #{friBeginTime,jdbcType=TIME},
+      #{friEndTime,jdbcType=TIME}, #{friNo,jdbcType=SMALLINT}, #{satBeginTime,jdbcType=TIME},
+      #{satEndTime,jdbcType=TIME}, #{satNo,jdbcType=SMALLINT}, #{sunBeginTime,jdbcType=TIME},
+      #{sunEndTime,jdbcType=TIME}, #{sunNo,jdbcType=SMALLINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.Doctor">
+    update sys_doctor
+    set sys_clinic_room_id = #{sysClinicRoomId,jdbcType=INTEGER},
+      mon_begin_time = #{monBeginTime,jdbcType=TIME},
+      mon_end_time = #{monEndTime,jdbcType=TIME},
+      mon_no = #{monNo,jdbcType=SMALLINT},
+      tue_begin_time = #{tueBeginTime,jdbcType=TIME},
+      tue_end_time = #{tueEndTime,jdbcType=TIME},
+      tue_no = #{tueNo,jdbcType=SMALLINT},
+      wed_begin_time = #{wedBeginTime,jdbcType=TIME},
+      wed_end_time = #{wedEndTime,jdbcType=TIME},
+      wed_no = #{wedNo,jdbcType=SMALLINT},
+      thu_begin_time = #{thuBeginTime,jdbcType=TIME},
+      thu_end_time = #{thuEndTime,jdbcType=TIME},
+      thu_no = #{thuNo,jdbcType=SMALLINT},
+      fri_begin_time = #{friBeginTime,jdbcType=TIME},
+      fri_end_time = #{friEndTime,jdbcType=TIME},
+      fri_no = #{friNo,jdbcType=SMALLINT},
+      sat_begin_time = #{satBeginTime,jdbcType=TIME},
+      sat_end_time = #{satEndTime,jdbcType=TIME},
+      sat_no = #{satNo,jdbcType=SMALLINT},
+      sun_begin_time = #{sunBeginTime,jdbcType=TIME},
+      sun_end_time = #{sunEndTime,jdbcType=TIME},
+      sun_no = #{sunNo,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, sys_clinic_room_id, mon_begin_time, mon_end_time, mon_no, tue_begin_time,
+    tue_end_time, tue_no, wed_begin_time, wed_end_time, wed_no, thu_begin_time, thu_end_time,
+    thu_no, fri_begin_time, fri_end_time, fri_no, sat_begin_time, sat_end_time, sat_no,
+    sun_begin_time, sun_end_time, sun_no
+    from sys_doctor
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sys_clinic_room_id, mon_begin_time, mon_end_time, mon_no, tue_begin_time,
+    tue_end_time, tue_no, wed_begin_time, wed_end_time, wed_no, thu_begin_time, thu_end_time,
+    thu_no, fri_begin_time, fri_end_time, fri_no, sat_begin_time, sat_end_time, sat_no,
+    sun_begin_time, sun_end_time, sun_no
+    from sys_doctor
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+  <select id="selectClinicListByCriteria" resultType="map">
+    select *
+    from view_sys_doctor
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        sysClinicId = #{sysClinicId} and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id
+  </select>
+
+  <select id="selectClinicEnabled" resultType="map">
+    select *
+    from view_sys_doctor
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (roomSysClinicId = #{sysClinicId}) and
+      (state = true)
+    order by id
+  </select>
+
+  <select id="selectAllEnabled" resultType="map">
+    select *
+    from view_sys_doctor
+    where
+      (state = true)
+    order by id
+  </select>
+
+</mapper>
