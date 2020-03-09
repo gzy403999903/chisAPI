@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.member.dao.CommitteeMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.member.bean.Committee">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="type_id" jdbcType="TINYINT" property="typeId" />
+    <result column="type_no" jdbcType="SMALLINT" property="typeNo" />
+    <result column="mrm_township_id" jdbcType="INTEGER" property="mrmTownshipId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mrm_committee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.member.bean.Committee">
+    insert into mrm_committee (id, name, code,
+      type_id, type_no, mrm_township_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{typeId,jdbcType=TINYINT}, #{typeNo,jdbcType=SMALLINT}, #{mrmTownshipId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.member.bean.Committee">
+    update mrm_committee
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=TINYINT},
+      type_no = #{typeNo,jdbcType=SMALLINT},
+      mrm_township_id = #{mrmTownshipId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, type_id, type_no, mrm_township_id
+    from mrm_committee
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, type_id, type_no, mrm_township_id
+    from mrm_committee
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectMaxTypeNoByCriteria" resultType="short">
+    select IFNULL(max(type_no), 0) as typeNo
+    from mrm_committee
+    where
+      type_id = #{typeId} and
+      mrm_township_id = #{mrmTownshipId}
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_mrm_committee
+    <trim prefix="where" suffixOverrides="and">
+      <if test="mrmTownshipName != null &amp;&amp; mrmTownshipName.trim() != ''">
+        (mrmTownshipName like '${mrmTownshipName}%' or mrmTownshipCode like '${mrmTownshipName}%') and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectByMrmTownshipId" resultType="map">
+    select *
+    from view_mrm_committee
+    where mrmTownshipId = #{mrmTownshipId}
+  </select>
+
+  <select id="selectCommitteeMapById" resultType="map">
+    SELECT
+      0 as maxIndex, a.type_no AS committeeNo,
+      b.type_no AS townshipNo, c.area_id AS areaNo
+    FROM mrm_committee a
+    LEFT JOIN mrm_township b ON a.mrm_township_id = b.id
+    LEFT JOIN sys_location c ON b.sys_location_id = c.id
+    where a.id = #{id}
+  </select>
+
+
+</mapper>

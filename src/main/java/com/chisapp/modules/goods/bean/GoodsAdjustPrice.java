@@ -25,22 +25,22 @@ public class GoodsAdjustPrice implements Serializable {
     @NotNull
     private Integer gsmGoodsId;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     @NotNull
     private BigDecimal originalRetailPrice;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     @NotNull
     private BigDecimal newRetailPrice;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     @NotNull
     private BigDecimal originalSplitPrice;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     @NotNull
     private BigDecimal newSplitPrice;

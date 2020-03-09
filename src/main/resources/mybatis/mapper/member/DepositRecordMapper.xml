@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.member.dao.DepositRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.member.bean.DepositRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="deposit_amount" jdbcType="DECIMAL" property="depositAmount" />
+    <result column="given_amount" jdbcType="DECIMAL" property="givenAmount" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="returned" jdbcType="BIT" property="returned" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mrm_deposit_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.member.bean.DepositRecord">
+    insert into mrm_deposit_record (id, lsh, mrm_member_id,
+      deposit_amount, given_amount, balance,
+      sys_clinic_id, creator_id, creation_date,
+      returned)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mrmMemberId,jdbcType=INTEGER},
+      #{depositAmount,jdbcType=DECIMAL}, #{givenAmount,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL},
+      #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+      #{returned,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.member.bean.DepositRecord">
+    update mrm_deposit_record
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+      given_amount = #{givenAmount,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      returned = #{returned,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mrm_member_id, deposit_amount, given_amount, balance, sys_clinic_id,
+    creator_id, creation_date, returned
+    from mrm_deposit_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mrm_member_id, deposit_amount, given_amount, balance, sys_clinic_id,
+    creator_id, creation_date, returned
+    from mrm_deposit_record
+  </select>
+
+  <!--***************************************************************************************************************-->
+
+  <select id="selectByLsh" resultMap="BaseResultMap">
+    select *
+    from mrm_deposit_record
+    where lsh = #{lsh}
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_mrm_deposit_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="returned != null">
+        (returned = #{returned}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%' or phone like '${mrmMemberName}%') and
+      </if>
+    </trim>
+    order by creationDate desc
+  </select>
+
+</mapper>

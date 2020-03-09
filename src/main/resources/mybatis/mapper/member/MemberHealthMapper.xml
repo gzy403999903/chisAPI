@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.member.dao.MemberHealthMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.member.bean.MemberHealth">
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="sys_dict_type_id" jdbcType="INTEGER" property="sysDictTypeId" />
+    <result column="sys_dict_id" jdbcType="INTEGER" property="sysDictId" />
+    <result column="diagnosis_detail" jdbcType="VARCHAR" property="diagnosisDetail" />
+    <result column="diagnosis_date" jdbcType="DATE" property="diagnosisDate" />
+  </resultMap>
+  <insert id="insert" parameterType="com.chisapp.modules.member.bean.MemberHealth">
+    insert into mrm_member_health (mrm_member_id, sys_dict_type_id, sys_dict_id,
+      diagnosis_detail, diagnosis_date)
+    values (#{mrmMemberId,jdbcType=INTEGER}, #{sysDictTypeId,jdbcType=INTEGER}, #{sysDictId,jdbcType=INTEGER},
+      #{diagnosisDetail,jdbcType=VARCHAR}, #{diagnosisDate,jdbcType=DATE})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select mrm_member_id, sys_dict_type_id, sys_dict_id, diagnosis_detail, diagnosis_date
+    from mrm_member_health
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+  <delete id="deleteByMemberId">
+    delete
+    from mrm_member_health
+    where mrm_member_id = #{mrmMemberId}
+  </delete>
+
+  <select id="selectByMrmMemberId" resultMap="BaseResultMap">
+    select *
+    from mrm_member_health
+    where mrm_member_id = #{mrmMemberId}
+  </select>
+
+</mapper>

@@ -55,7 +55,7 @@ public class Goods implements Serializable {
     @NotNull
     private Integer billingTypeId;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     @NotNull
     private BigDecimal retailPrice;
@@ -106,13 +106,13 @@ public class Goods implements Serializable {
 
     private Integer splitUnitsId;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     private BigDecimal splitPrice;
 
     private Integer doseTypeId; // 剂型
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     private BigDecimal dose; // 剂量
 
     private Integer doseUnitsId; // 剂量单位
@@ -139,7 +139,7 @@ public class Goods implements Serializable {
     @Length(max = 50)
     private String ybOid;
 
-    @Digits(integer = 6, fraction = 4)
+    @Digits(integer = 8, fraction = 4)
     @Min(0)
     private BigDecimal ybPrice;
 

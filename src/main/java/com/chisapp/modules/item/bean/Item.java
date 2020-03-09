@@ -35,7 +35,7 @@ public class Item implements Serializable {
     @NotNull
     private Integer quantity; // 包含次数
 
-    @Digits(integer = 6, fraction = 2)
+    @Digits(integer = 8, fraction = 2)
     @Min(0)
     @NotNull
     private BigDecimal retailPrice; // 零售价格

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.member.dao.MemberTypeMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.member.bean.MemberType">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="deposit_amount" jdbcType="DECIMAL" property="depositAmount" />
+    <result column="given_amount" jdbcType="DECIMAL" property="givenAmount" />
+    <result column="payment_amount" jdbcType="DECIMAL" property="paymentAmount" />
+    <result column="given_points" jdbcType="INTEGER" property="givenPoints" />
+    <result column="discount_rate" jdbcType="REAL" property="discountRate" />
+    <result column="state" jdbcType="BIT" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mrm_member_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.member.bean.MemberType">
+    insert into mrm_member_type (id, name, code,
+      deposit_amount, given_amount, payment_amount,
+      given_points, discount_rate, state
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{depositAmount,jdbcType=DECIMAL}, #{givenAmount,jdbcType=DECIMAL}, #{paymentAmount,jdbcType=DECIMAL},
+      #{givenPoints,jdbcType=INTEGER}, #{discountRate,jdbcType=REAL}, #{state,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.member.bean.MemberType">
+    update mrm_member_type
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+      given_amount = #{givenAmount,jdbcType=DECIMAL},
+      payment_amount = #{paymentAmount,jdbcType=DECIMAL},
+      given_points = #{givenPoints,jdbcType=INTEGER},
+      discount_rate = #{discountRate,jdbcType=REAL},
+      state = #{state,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, deposit_amount, given_amount, payment_amount, given_points,
+    discount_rate, state
+    from mrm_member_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, deposit_amount, given_amount, payment_amount, given_points,
+    discount_rate, state
+    from mrm_member_type
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+  <select id="selectByCriteria" resultMap="BaseResultMap">
+    select *
+    from mrm_member_type
+    <trim prefix="where" suffixOverrides="and">
+      <if test="state != null">
+        (state = #{state}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+  <select id="selectEnabled" resultMap="BaseResultMap">
+    select *
+    from mrm_member_type
+    where state is true
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

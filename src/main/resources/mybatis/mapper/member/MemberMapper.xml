@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.member.dao.MemberMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.member.bean.Member">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="oid" jdbcType="VARCHAR" property="oid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="gender_id" jdbcType="INTEGER" property="genderId" />
+    <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
+    <result column="birth" jdbcType="DATE" property="birth" />
+    <result column="nationality_id" jdbcType="INTEGER" property="nationalityId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="marital_id" jdbcType="INTEGER" property="maritalId" />
+    <result column="education_id" jdbcType="INTEGER" property="educationId" />
+    <result column="domicile_place" jdbcType="BIT" property="domicilePlace" />
+    <result column="blood_type_id" jdbcType="INTEGER" property="bloodTypeId" />
+    <result column="rh_id" jdbcType="INTEGER" property="rhId" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="profession_id" jdbcType="INTEGER" property="professionId" />
+    <result column="mrm_township_id" jdbcType="INTEGER" property="mrmTownshipId" />
+    <result column="mrm_committee_id" jdbcType="INTEGER" property="mrmCommitteeId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="dp_address" jdbcType="VARCHAR" property="dpAddress" />
+    <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
+    <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
+    <result column="doctor_id" jdbcType="INTEGER" property="doctorId" />
+    <result column="doctor_phone" jdbcType="VARCHAR" property="doctorPhone" />
+    <result column="mrm_member_type_id" jdbcType="INTEGER" property="mrmMemberTypeId" />
+    <result column="e_mail" jdbcType="VARCHAR" property="eMail" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="given_balance" jdbcType="DECIMAL" property="givenBalance" />
+    <result column="points" jdbcType="INTEGER" property="points" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="committee_archive_index" jdbcType="INTEGER" property="committeeArchiveIndex" />
+    <result column="archive_no" jdbcType="VARCHAR" property="archiveNo" />
+    <result column="genetic_illness" jdbcType="VARCHAR" property="geneticIllness" />
+    <result column="kitchen_exhaust_id" jdbcType="INTEGER" property="kitchenExhaustId" />
+    <result column="fuel_type_id" jdbcType="INTEGER" property="fuelTypeId" />
+    <result column="water_source_id" jdbcType="INTEGER" property="waterSourceId" />
+    <result column="toilet_type_id" jdbcType="INTEGER" property="toiletTypeId" />
+    <result column="livestock_fence_id" jdbcType="INTEGER" property="livestockFenceId" />
+    <result column="archive_state" jdbcType="BIT" property="archiveState" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="DATE" property="lastUpdateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mrm_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.member.bean.Member">
+    insert into mrm_member (id, oid, name,
+      code, gender_id, id_card_no,
+      birth, nationality_id, phone,
+      marital_id, education_id, domicile_place,
+      blood_type_id, rh_id, company,
+      profession_id, mrm_township_id, mrm_committee_id,
+      address, dp_address, contact_name,
+      contact_phone, doctor_id, doctor_phone,
+      mrm_member_type_id, e_mail, notes,
+      balance, given_balance, points,
+      image_url, committee_archive_index, archive_no,
+      genetic_illness, kitchen_exhaust_id, fuel_type_id,
+      water_source_id, toilet_type_id, livestock_fence_id,
+      archive_state, state, sys_clinic_id,
+      creator_id, creation_date, last_updater_id,
+      last_update_date)
+    values (#{id,jdbcType=INTEGER}, #{oid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR}, #{genderId,jdbcType=INTEGER}, #{idCardNo,jdbcType=VARCHAR},
+      #{birth,jdbcType=DATE}, #{nationalityId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+      #{maritalId,jdbcType=INTEGER}, #{educationId,jdbcType=INTEGER}, #{domicilePlace,jdbcType=BIT},
+      #{bloodTypeId,jdbcType=INTEGER}, #{rhId,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR},
+      #{professionId,jdbcType=INTEGER}, #{mrmTownshipId,jdbcType=INTEGER}, #{mrmCommitteeId,jdbcType=INTEGER},
+      #{address,jdbcType=VARCHAR}, #{dpAddress,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR},
+      #{contactPhone,jdbcType=VARCHAR}, #{doctorId,jdbcType=INTEGER}, #{doctorPhone,jdbcType=VARCHAR},
+      #{mrmMemberTypeId,jdbcType=INTEGER}, #{eMail,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR},
+      #{balance,jdbcType=DECIMAL}, #{givenBalance,jdbcType=DECIMAL}, #{points,jdbcType=INTEGER},
+      #{imageUrl,jdbcType=VARCHAR}, #{committeeArchiveIndex,jdbcType=INTEGER}, #{archiveNo,jdbcType=VARCHAR},
+      #{geneticIllness,jdbcType=VARCHAR}, #{kitchenExhaustId,jdbcType=INTEGER}, #{fuelTypeId,jdbcType=INTEGER},
+      #{waterSourceId,jdbcType=INTEGER}, #{toiletTypeId,jdbcType=INTEGER}, #{livestockFenceId,jdbcType=INTEGER},
+      #{archiveState,jdbcType=BIT}, #{state,jdbcType=BIT}, #{sysClinicId,jdbcType=INTEGER},
+      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE}, #{lastUpdaterId,jdbcType=INTEGER},
+      #{lastUpdateDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.member.bean.Member">
+    update mrm_member
+    set oid = #{oid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      gender_id = #{genderId,jdbcType=INTEGER},
+      id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=DATE},
+      nationality_id = #{nationalityId,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      marital_id = #{maritalId,jdbcType=INTEGER},
+      education_id = #{educationId,jdbcType=INTEGER},
+      domicile_place = #{domicilePlace,jdbcType=BIT},
+      blood_type_id = #{bloodTypeId,jdbcType=INTEGER},
+      rh_id = #{rhId,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      profession_id = #{professionId,jdbcType=INTEGER},
+      mrm_township_id = #{mrmTownshipId,jdbcType=INTEGER},
+      mrm_committee_id = #{mrmCommitteeId,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      dp_address = #{dpAddress,jdbcType=VARCHAR},
+      contact_name = #{contactName,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      doctor_id = #{doctorId,jdbcType=INTEGER},
+      doctor_phone = #{doctorPhone,jdbcType=VARCHAR},
+      mrm_member_type_id = #{mrmMemberTypeId,jdbcType=INTEGER},
+      e_mail = #{eMail,jdbcType=VARCHAR},
+      notes = #{notes,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      given_balance = #{givenBalance,jdbcType=DECIMAL},
+      points = #{points,jdbcType=INTEGER},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      committee_archive_index = #{committeeArchiveIndex,jdbcType=INTEGER},
+      archive_no = #{archiveNo,jdbcType=VARCHAR},
+      genetic_illness = #{geneticIllness,jdbcType=VARCHAR},
+      kitchen_exhaust_id = #{kitchenExhaustId,jdbcType=INTEGER},
+      fuel_type_id = #{fuelTypeId,jdbcType=INTEGER},
+      water_source_id = #{waterSourceId,jdbcType=INTEGER},
+      toilet_type_id = #{toiletTypeId,jdbcType=INTEGER},
+      livestock_fence_id = #{livestockFenceId,jdbcType=INTEGER},
+      archive_state = #{archiveState,jdbcType=BIT},
+      state = #{state,jdbcType=BIT},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, oid, name, code, gender_id, id_card_no, birth, nationality_id, phone,
+    marital_id, education_id, domicile_place, blood_type_id, rh_id, company, profession_id,
+    mrm_township_id, mrm_committee_id, address, dp_address, contact_name, contact_phone,
+    doctor_id, doctor_phone, mrm_member_type_id, e_mail, notes, balance, given_balance,
+    points, image_url, committee_archive_index, archive_no, genetic_illness, kitchen_exhaust_id,
+    fuel_type_id, water_source_id, toilet_type_id, livestock_fence_id, archive_state,
+    state, sys_clinic_id, creator_id, creation_date, last_updater_id, last_update_date
+    from mrm_member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, oid, name, code, gender_id, id_card_no, birth, nationality_id, phone,
+    marital_id, education_id, domicile_place, blood_type_id, rh_id, company, profession_id,
+    mrm_township_id, mrm_committee_id, address, dp_address, contact_name, contact_phone,
+    doctor_id, doctor_phone, mrm_member_type_id, e_mail, notes, balance, given_balance,
+    points, image_url, committee_archive_index, archive_no, genetic_illness, kitchen_exhaust_id,
+    fuel_type_id, water_source_id, toilet_type_id, livestock_fence_id, archive_state,
+    state, sys_clinic_id, creator_id, creation_date, last_updater_id, last_update_date
+    from mrm_member
+  </select>
+
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <update id="updateBalanceAndPoints">
+    update mrm_member
+    set balance = balance - #{balance}, points = points + #{points}
+    where id = #{id}
+  </update>
+
+  <update id="updateBalanceForDeposit">
+    update mrm_member
+    set balance = balance + #{balance}
+    where id = #{id}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    SELECT
+    a.*,
+    CASE WHEN allergy.id IS NULL THEN '无' ELSE '有' END AS hasAllergy,
+    CASE WHEN exposure.id IS NULL THEN '无' ELSE '有' END AS hasExposure,
+    CASE WHEN disability.id IS NULL THEN '无' ELSE '有' END AS hasDisability,
+    CASE WHEN previous.id IS NULL THEN '无' ELSE '有' END AS hasPrevious,
+    CASE WHEN family.id IS NULL THEN '无' ELSE '有' END AS hasFamily,
+    CASE WHEN a.geneticIllness IS NULL THEN '无' WHEN a.geneticIllness = '' THEN '无' ELSE '有' END AS hasGeneticIllness
+    FROM view_mrm_member a
+    LEFT JOIN (SELECT mrm_member_id AS id FROM mrm_member_health WHERE sys_dict_type_id = #{allergyId} GROUP BY mrm_member_id) allergy ON  a.id = allergy.id
+    LEFT JOIN (SELECT mrm_member_id AS id FROM mrm_member_health WHERE sys_dict_type_id = #{exposureId} GROUP BY mrm_member_id) exposure ON  a.id = exposure.id
+    LEFT JOIN (SELECT mrm_member_id AS id FROM mrm_member_health WHERE sys_dict_type_id = #{disabilityId} GROUP BY mrm_member_id) disability ON  a.id = disability.id
+    LEFT JOIN (SELECT mrm_member_id AS id FROM mrm_member_health WHERE sys_dict_type_id IN <foreach collection="previousIdList" item="item" open="(" separator="," close=")"> #{item}</foreach> GROUP BY mrm_member_id) previous ON  a.id = previous.id
+    LEFT JOIN (SELECT mrm_member_id AS id FROM mrm_member_health WHERE sys_dict_type_id IN <foreach collection="familyIdList" item="item" open="(" separator="," close=")"> #{item}</foreach> GROUP BY mrm_member_id) family ON  a.id = family.id
+    <trim prefix="where" suffixOverrides="and">
+      <if test="mrmMemberId != null">
+        (a.id = #{mrmMemberId}) AND
+      </if>
+      <if test="state != null">
+        (a.state = #{state}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (a.name LIKE '${name}%' OR a.code LIKE '${name}%') AND
+      </if>
+      <if test="phone != null &amp;&amp; phone.trim() != ''">
+        (a.phone LIKE '${phone}%') AND
+      </if>
+      <if test="idCardNo != null &amp;&amp; idCardNo.trim() != ''">
+        (a.idCardNo LIKE '${idCardNo}%') AND
+      </if>
+      <if test="healthState != null &amp;&amp; healthState.trim() != ''">
+        <if test="healthState == 'hasExposure'">
+          (exposure.id is not null) and
+        </if>
+        <if test="healthState == 'hasAllergy'">
+          (allergy.id is not null) and
+        </if>
+        <if test="healthState == 'hasDisability'">
+          (disability.id is not null) and
+        </if>
+        <if test="healthState == 'hasPrevious'">
+          (previous.id is not null) and
+        </if>
+        <if test="healthState == 'hasFamily'">
+          (family.id is not null) and
+        </if>
+        <if test="healthState == 'hasGeneticIllness'">
+          (a.geneticIllness is not null or a.geneticIllness != '') and
+        </if>
+      </if>
+    </trim>
+    ORDER BY a.id
+  </select>
+
+  <select id="selectEnabledLikeByKeyword" resultType="map">
+    SELECT *
+    FROM view_mrm_member
+    WHERE
+      (state IS TRUE) AND
+      ((phone LIKE '${keyword}%') OR (name LIKE '${keyword}%') OR (code LIKE '${keyword}%'))
+    ORDER BY id DESC
+    LIMIT 30
+  </select>
+
+  <select id="selectLastMemberMapByCommitteeId" resultType="map">
+    SELECT
+      a.committee_archive_index AS maxIndex, b.type_no AS committeeNo,
+      c.type_no AS townshipNo, d.area_id AS areaNo
+    FROM mrm_member a
+    LEFT JOIN mrm_committee b ON a.mrm_committee_id = b.id
+    LEFT JOIN mrm_township c ON b.mrm_township_id = c.id
+    LEFT JOIN sys_location d ON c.sys_location_id = d.id
+    WHERE mrm_committee_id = #{mrmCommitteeId}
+    ORDER BY a.id DESC
+    LIMIT 1
+  </select>
+
+
+
+</mapper>

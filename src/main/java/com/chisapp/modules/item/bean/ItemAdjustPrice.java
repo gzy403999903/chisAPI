@@ -25,12 +25,12 @@ public class ItemAdjustPrice implements Serializable {
     @NotNull
     private Integer cimItemId;
 
-    @Digits(integer = 6, fraction = 2)
+    @Digits(integer = 8, fraction = 2)
     @Min(0)
     @NotNull
     private BigDecimal originalRetailPrice;
 
-    @Digits(integer = 6, fraction = 2)
+    @Digits(integer = 8, fraction = 2)
     @Min(0)
     @NotNull
     private BigDecimal newRetailPrice;
