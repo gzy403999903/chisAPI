@@ -9,6 +9,7 @@
     <result column="dwt_sell_prescription_lsh" jdbcType="VARCHAR" property="dwtSellPrescriptionLsh" />
     <result column="invoice_type_id" jdbcType="INTEGER" property="invoiceTypeId" />
     <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+    <result column="invoice_date" jdbcType="TIMESTAMP" property="invoiceDate" />
     <result column="sys_sell_way_id" jdbcType="INTEGER" property="sysSellWayId" />
     <result column="sys_sell_type_id" jdbcType="INTEGER" property="sysSellTypeId" />
     <result column="entity_type_id" jdbcType="INTEGER" property="entityTypeId" />
@@ -45,28 +46,30 @@
   <insert id="insert" parameterType="com.chisapp.modules.datareport.bean.SellRecord">
     insert into dr_sell_record (id, creation_date, lsh,
       mxh, dwt_sell_prescription_lsh, invoice_type_id,
-      invoice_no, sys_sell_way_id, sys_sell_type_id,
-      entity_type_id, entity_id, retail_price,
-      actual_retail_price, purchase_tax_rate, sell_tax_rate,
-      discountable, lossable, iym_inventory_id,
-      ph, pch, split_quantity,
-      quantity, cost_price, produced_date,
-      expiry_date, pem_supplier_id, iym_inventory_add_id,
-      mrm_member_id, member_discount_rate, sys_clinic_id,
-      seller_id, operator_id, cashier_id,
-      pay_state, returned)
+      invoice_no, invoice_date, sys_sell_way_id,
+      sys_sell_type_id, entity_type_id, entity_id,
+      retail_price, actual_retail_price, purchase_tax_rate,
+      sell_tax_rate, discountable, lossable,
+      iym_inventory_id, ph, pch,
+      split_quantity, quantity, cost_price,
+      produced_date, expiry_date, pem_supplier_id,
+      iym_inventory_add_id, mrm_member_id, member_discount_rate,
+      sys_clinic_id, seller_id, operator_id,
+      cashier_id, pay_state, returned
+      )
     values (#{id,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{lsh,jdbcType=VARCHAR},
       #{mxh,jdbcType=VARCHAR}, #{dwtSellPrescriptionLsh,jdbcType=VARCHAR}, #{invoiceTypeId,jdbcType=INTEGER},
-      #{invoiceNo,jdbcType=VARCHAR}, #{sysSellWayId,jdbcType=INTEGER}, #{sysSellTypeId,jdbcType=INTEGER},
-      #{entityTypeId,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{retailPrice,jdbcType=DECIMAL},
-      #{actualRetailPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT}, #{sellTaxRate,jdbcType=TINYINT},
-      #{discountable,jdbcType=BIT}, #{lossable,jdbcType=BIT}, #{iymInventoryId,jdbcType=INTEGER},
-      #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR}, #{splitQuantity,jdbcType=INTEGER},
-      #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL}, #{producedDate,jdbcType=DATE},
-      #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER},
-      #{mrmMemberId,jdbcType=INTEGER}, #{memberDiscountRate,jdbcType=REAL}, #{sysClinicId,jdbcType=INTEGER},
-      #{sellerId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{cashierId,jdbcType=INTEGER},
-      #{payState,jdbcType=BIT}, #{returned,jdbcType=BIT})
+      #{invoiceNo,jdbcType=VARCHAR}, #{invoiceDate,jdbcType=TIMESTAMP}, #{sysSellWayId,jdbcType=INTEGER},
+      #{sysSellTypeId,jdbcType=INTEGER}, #{entityTypeId,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER},
+      #{retailPrice,jdbcType=DECIMAL}, #{actualRetailPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT},
+      #{sellTaxRate,jdbcType=TINYINT}, #{discountable,jdbcType=BIT}, #{lossable,jdbcType=BIT},
+      #{iymInventoryId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR},
+      #{splitQuantity,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL},
+      #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER},
+      #{iymInventoryAddId,jdbcType=INTEGER}, #{mrmMemberId,jdbcType=INTEGER}, #{memberDiscountRate,jdbcType=REAL},
+      #{sysClinicId,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER},
+      #{cashierId,jdbcType=INTEGER}, #{payState,jdbcType=BIT}, #{returned,jdbcType=BIT}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.datareport.bean.SellRecord">
     update dr_sell_record
@@ -76,6 +79,7 @@
       dwt_sell_prescription_lsh = #{dwtSellPrescriptionLsh,jdbcType=VARCHAR},
       invoice_type_id = #{invoiceTypeId,jdbcType=INTEGER},
       invoice_no = #{invoiceNo,jdbcType=VARCHAR},
+      invoice_date = #{invoiceDate,jdbcType=TIMESTAMP},
       sys_sell_way_id = #{sysSellWayId,jdbcType=INTEGER},
       sys_sell_type_id = #{sysSellTypeId,jdbcType=INTEGER},
       entity_type_id = #{entityTypeId,jdbcType=INTEGER},
@@ -108,9 +112,9 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
-    sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price, actual_retail_price,
-    purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id, ph, pch,
-    split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
+    invoice_date, sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price,
+    actual_retail_price, purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id,
+    ph, pch, split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
     iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
     operator_id, cashier_id, pay_state, returned
     from dr_sell_record
@@ -118,9 +122,9 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
-    sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price, actual_retail_price,
-    purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id, ph, pch,
-    split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
+    invoice_date, sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price,
+    actual_retail_price, purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id,
+    ph, pch, split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
     iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
     operator_id, cashier_id, pay_state, returned
     from dr_sell_record
@@ -141,7 +145,7 @@
   <update id="updateInvoiceByIdList">
     update dr_sell_record
     set
-    invoice_type_id = #{invoiceTypeId}, invoice_no = #{invoiceNo}
+    invoice_type_id = #{invoiceTypeId}, invoice_no = #{invoiceNo}, invoice_date = #{invoiceDate}
     where id in
     <foreach collection="idList" item="id" open="(" separator="," close=")">
       #{id}
@@ -213,15 +217,6 @@
       (lsh = #{lsh})
     order by sysSellTypeId, entityTypeId, entityId
   </select>
-
-
-
-
-
-
-
-
-
 
 
 

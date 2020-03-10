@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: Tandy
@@ -178,7 +175,7 @@ public class SellRecordServiceImpl implements SellRecordService {
 
     @Override
     public void updateInvoiceByIdList(List<Integer> idList, Integer invoiceTypeId, String invoiceNo) {
-        sellRecordMapper.updateInvoiceByIdList(idList, invoiceTypeId, invoiceNo);
+        sellRecordMapper.updateInvoiceByIdList(idList, invoiceTypeId, invoiceNo, new Date());
     }
 
     @Override

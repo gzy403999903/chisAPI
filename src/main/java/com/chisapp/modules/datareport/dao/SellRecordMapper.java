@@ -3,6 +3,7 @@ package com.chisapp.modules.datareport.dao;
 import com.chisapp.modules.datareport.bean.SellRecord;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +19,15 @@ public interface SellRecordMapper {
     int updateByPrimaryKey(SellRecord record);
 
 
+
     /* -------------------------------------------------------------------------------------------------------------- */
 
     void updateReturnedByIdList(@Param("idList") List<Integer> idList);
 
     void updateInvoiceByIdList(@Param("idList") List<Integer> idList,
                                @Param("invoiceTypeId") Integer invoiceTypeId,
-                               @Param("invoiceNo") String invoiceNo);
+                               @Param("invoiceNo") String invoiceNo,
+                               @Param("invoiceDate") Date invoiceDate);
 
     List<Map<String, Object>> selectByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                                @Param("creationDate") String[] creationDate,
@@ -41,4 +44,7 @@ public interface SellRecordMapper {
 
     List<Map<String, Object>> selectClinicListByLsh(@Param("sysClinicId") Integer sysClinicId,
                                                     @Param("lsh") String lsh);
+
+
+
 }
