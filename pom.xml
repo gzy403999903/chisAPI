@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.chisapp</groupId>
-    <artifactId>chis-api</artifactId>
+    <artifactId>chisAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>chis-api</name>
+    <name>chisAPI</name>
     <description>Community Health Information System</description>
 
     <properties>
