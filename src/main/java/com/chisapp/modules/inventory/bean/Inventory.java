@@ -42,6 +42,7 @@ public class Inventory extends InventoryAttach implements Serializable {
     @NotNull
     private BigDecimal costPrice;
 
+    // 平均进价, 拆零商品的平均进价 = 平均进价 / 拆分系数
     @Min(0)
     @Digits(integer = 8, fraction = 4)
     @NotNull

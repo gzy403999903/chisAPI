@@ -32,13 +32,28 @@ public class RegistrationRecordHandler {
     }
 
     /**
-     * 保存/修改一个挂号记录到缓存
+     * 保存挂号记录到缓存
      * @param registrationRecord
      * @param result
      * @return
      */
-    @PostMapping("/saveOrUpdateToCache")
-    public PageResult saveOrUpdateToCache(@Valid RegistrationRecord registrationRecord, BindingResult result) {
+    @PostMapping("/saveToCache")
+    public PageResult saveToCache(@Valid RegistrationRecord registrationRecord, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+        registrationRecordService.saveOrUpdateToCache(registrationRecord);
+        return PageResult.success();
+    }
+
+    /**
+     * 修改挂号记录到缓存
+     * @param registrationRecord
+     * @param result
+     * @return
+     */
+    @PutMapping("/updateToCache")
+    public PageResult updateToCache(@Valid RegistrationRecord registrationRecord, BindingResult result) {
         if (result.hasErrors()) {
             return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
         }

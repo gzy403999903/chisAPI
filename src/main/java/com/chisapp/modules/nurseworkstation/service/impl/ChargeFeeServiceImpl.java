@@ -272,14 +272,21 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
         if (memberType == null) {
             throw new RuntimeException("获取会员类型失败");
         }
-
-        BigDecimal expendBalance = paymentRecord.getMemberBalance(); // 本次扣减的金额
-        BigDecimal balance = member.getBalance().subtract(expendBalance); // 计算剩余余额 = 会员余额 - 本次扣减金额
-        int givenPoints = paymentRecord.getActualAmount().divide(memberType.getPaymentAmount(), 0, BigDecimal.ROUND_HALF_UP).intValue();  // 计算本次积分
-        int points = member.getPoints() + givenPoints;  // 计算剩余积分 = 会员当前积分 + 新赠送的积分
-
-        // 更新会员余额与积分 (注意比较运算要 不等于0 , 因为在退费操作时传过来的是负数.....)
         BigDecimal zero = new BigDecimal("0");
+
+        // 计算扣减的会员余额
+        BigDecimal expendBalance = paymentRecord.getMemberBalance(); // 本次扣减的金额
+        BigDecimal balance = member.getBalance().subtract(expendBalance); // 剩余余额 = 会员余额 - 本次扣减金额
+
+        // 计算赠送的会员积分
+        int givenPoints = 0;
+        if (memberType.getPaymentAmount().compareTo(zero) > 0) { // 如果赠送积分的消费金额 大于0(返回 1), 则进行赠送积分计算
+            givenPoints = paymentRecord.getActualAmount()
+                    .divide(memberType.getPaymentAmount(), 0, BigDecimal.ROUND_HALF_UP).intValue();  // 赠送积分 = 消费金额 / 赠送积分的消费金额
+        }
+        int points = member.getPoints() + givenPoints;  // 剩余积分 = 会员当前积分 + 新赠送的积分
+
+        // 更新会员余额与积分 (注意比较运算使用条件 不等于0(也就是允许返回值为1或-1) , 因为在退费操作时传过来的是负数.....)
         if (expendBalance.compareTo(zero) != 0 || givenPoints != 0) {
             this.memberService.updateBalanceAndPoints(member.getId(), expendBalance, givenPoints);
         }
