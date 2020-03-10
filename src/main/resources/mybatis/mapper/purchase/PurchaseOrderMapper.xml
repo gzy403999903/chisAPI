@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.purchase.dao.PurchaseOrderMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.purchase.bean.PurchaseOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="plan_quantity" jdbcType="INTEGER" property="planQuantity" />
+    <result column="purchase_quantity" jdbcType="INTEGER" property="purchaseQuantity" />
+    <result column="purchase_price" jdbcType="DECIMAL" property="purchasePrice" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="pem_purchase_plan_id" jdbcType="INTEGER" property="pemPurchasePlanId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+    <result column="inventory_state" jdbcType="BIT" property="inventoryState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from pem_purchase_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.purchase.bean.PurchaseOrder">
+    insert into pem_purchase_order (id, lsh, mxh,
+      gsm_goods_id, plan_quantity, purchase_quantity,
+      purchase_price, sys_clinic_id, pem_supplier_id,
+      pem_purchase_plan_id, creator_id, creation_date,
+      approver_id, approve_date, approve_state,
+      inventory_state)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{gsmGoodsId,jdbcType=INTEGER}, #{planQuantity,jdbcType=INTEGER}, #{purchaseQuantity,jdbcType=INTEGER},
+      #{purchasePrice,jdbcType=DECIMAL}, #{sysClinicId,jdbcType=INTEGER}, #{pemSupplierId,jdbcType=INTEGER},
+      #{pemPurchasePlanId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE},
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT},
+      #{inventoryState,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.purchase.bean.PurchaseOrder">
+    update pem_purchase_order
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      plan_quantity = #{planQuantity,jdbcType=INTEGER},
+      purchase_quantity = #{purchaseQuantity,jdbcType=INTEGER},
+      purchase_price = #{purchasePrice,jdbcType=DECIMAL},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      pem_purchase_plan_id = #{pemPurchasePlanId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=DATE},
+      approve_state = #{approveState,jdbcType=TINYINT},
+      inventory_state = #{inventoryState,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, plan_quantity, purchase_quantity, purchase_price,
+    sys_clinic_id, pem_supplier_id, pem_purchase_plan_id, creator_id, creation_date,
+    approver_id, approve_date, approve_state, inventory_state
+    from pem_purchase_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, plan_quantity, purchase_quantity, purchase_price,
+    sys_clinic_id, pem_supplier_id, pem_purchase_plan_id, creator_id, creation_date,
+    approver_id, approve_date, approve_state, inventory_state
+    from pem_purchase_order
+  </select>
+
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <update id="updateApproveStateByLsh">
+    update pem_purchase_order
+    set approver_id = #{approverId}, approve_date = #{approveDate}, approve_state = #{updateApproveState}
+    where lsh = #{lsh} and approve_state = #{currentApproveState}
+  </update>
+
+  <update id="updateInventoryStateByCriteria">
+    update pem_purchase_order
+    set inventory_state = #{inventoryState}
+    where lsh = #{lsh} and sys_clinic_id = #{sysClinicId}
+  </update>
+
+  <select id="selectLshGroupListByCriteria" resultType="map">
+    select
+    creationDate, lsh, pemSupplierName, sum(purchaseQuantity * purchasePrice) as totalPurchasePrice,
+    creatorName, approverName, approveDate, approveState
+    from view_pem_purchase_order
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (creationDate between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh = #{lsh}) and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc, lsh desc
+  </select>
+
+  <select id="selectGoodsGroupListByLsh" resultType="map">
+    select
+      lsh, gsmGoodsTypeName, gsmGoodsId, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName,
+      sum(planQuantity) as planQuantity,sum(purchaseQuantity) as purchaseQuantity, purchasePrice,
+      sum(purchaseQuantity * purchasePrice) as totalPurchasePrice, originName, manufacturerName,
+      approveState
+    from view_pem_purchase_order
+    where lsh = #{lsh}
+    group by gsmGoodsId
+    order by gsmGoodsOid
+  </select>
+
+  <select id="selectClinicLshGroupListByInventoryState" resultType="map">
+    select
+    creationDate, lsh, pemSupplierName, sysClinicName,
+    sum(purchaseQuantity * purchasePrice) as totalPurchasePrice, creatorName, inventoryState
+    from view_pem_purchase_order
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="inventoryState != null">
+        (inventoryState = #{inventoryState}) and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc, lsh desc
+  </select>
+
+  <select id="selectClinicListByLsh" resultType="map">
+    select *
+    from view_pem_purchase_order
+    where lsh = #{lsh} and sysClinicId = #{sysClinicId}
+  </select>
+
+  <select id="selectTrackListByLsh" resultType="map">
+    SELECT
+    a.id, a.sysClinicId, a.sysClinicName, a.gsmGoodsTypeName, a.gsmGoodsId, a.gsmGoodsOid,
+    a.gsmGoodsName, a.gsmGoodsSpecs, a.goodsUnitsName,a.retailPrice, a.manufacturerName, a.originName,
+    b.ph , b.pch, b.quantity as addQuantity, b.cost_price as addCostPrice,
+    b.expiry_date as expiryDate, b.approve_state as addApproveState,
+    c.inventoryQuantity
+    FROM (
+	  SELECT *
+	  FROM view_pem_purchase_order
+	  WHERE lsh = #{lsh}
+    ) a
+    LEFT JOIN iym_inventory_add b ON a.id = b.`pem_purchase_order_id`
+    LEFT JOIN (
+	  SELECT iym_inventory_add_id, sum(quantity) as inventoryQuantity
+	  FROM iym_inventory
+	  WHERE split_quantity = 1
+	  GROUP BY iym_inventory_add_id
+    ) c ON b.id = c.`iym_inventory_add_id`
+  </select>
+
+  <select id="selectByLsh" resultMap="BaseResultMap">
+    select *
+    from pem_purchase_order
+    where lsh = #{lsh}
+  </select>
+
+
+</mapper>

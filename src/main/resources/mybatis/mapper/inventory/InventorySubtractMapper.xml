@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.inventory.dao.InventorySubtractMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.inventory.bean.InventorySubtract">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="iym_inventory_type_id" jdbcType="INTEGER" property="iymInventoryTypeId" />
+    <result column="iym_inventory_id" jdbcType="INTEGER" property="iymInventoryId" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="produced_date" jdbcType="DATE" property="producedDate" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+    <result column="bill_no" jdbcType="VARCHAR" property="billNo" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+    <result column="action_type" jdbcType="TINYINT" property="actionType" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="TIMESTAMP" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iym_inventory_subtract
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.inventory.bean.InventorySubtract">
+    insert into iym_inventory_subtract (id, lsh, mxh,
+      sys_clinic_id, iym_inventory_type_id, iym_inventory_id,
+      gsm_goods_id, cost_price, purchase_tax_rate,
+      sell_tax_rate, quantity, ph,
+      pch, produced_date, expiry_date,
+      bill_no, notes, pem_supplier_id,
+      iym_inventory_add_id, action_type, creator_id,
+      creation_date, approver_id, approve_date,
+      approve_state)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{sysClinicId,jdbcType=INTEGER}, #{iymInventoryTypeId,jdbcType=INTEGER}, #{iymInventoryId,jdbcType=INTEGER},
+      #{gsmGoodsId,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT},
+      #{sellTaxRate,jdbcType=TINYINT}, #{quantity,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR},
+      #{pch,jdbcType=VARCHAR}, #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE},
+      #{billNo,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{pemSupplierId,jdbcType=INTEGER},
+      #{iymInventoryAddId,jdbcType=INTEGER}, #{actionType,jdbcType=TINYINT}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=TIMESTAMP},
+      #{approveState,jdbcType=TINYINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.InventorySubtract">
+    update iym_inventory_subtract
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      iym_inventory_type_id = #{iymInventoryTypeId,jdbcType=INTEGER},
+      iym_inventory_id = #{iymInventoryId,jdbcType=INTEGER},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      quantity = #{quantity,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      produced_date = #{producedDate,jdbcType=DATE},
+      expiry_date = #{expiryDate,jdbcType=DATE},
+      bill_no = #{billNo,jdbcType=VARCHAR},
+      notes = #{notes,jdbcType=VARCHAR},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER},
+      action_type = #{actionType,jdbcType=TINYINT},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=TIMESTAMP},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, sys_clinic_id, iym_inventory_type_id, iym_inventory_id, gsm_goods_id,
+    cost_price, purchase_tax_rate, sell_tax_rate, quantity, ph, pch, produced_date, expiry_date,
+    bill_no, notes, pem_supplier_id, iym_inventory_add_id, action_type, creator_id, creation_date,
+    approver_id, approve_date, approve_state
+    from iym_inventory_subtract
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, sys_clinic_id, iym_inventory_type_id, iym_inventory_id, gsm_goods_id,
+    cost_price, purchase_tax_rate, sell_tax_rate, quantity, ph, pch, produced_date, expiry_date,
+    bill_no, notes, pem_supplier_id, iym_inventory_add_id, action_type, creator_id, creation_date,
+    approver_id, approve_date, approve_state
+    from iym_inventory_subtract
+  </select>
+
+
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateApproveStateByLsh">
+    update
+      iym_inventory_subtract
+    set
+      approver_id = #{approverId}, approve_date = #{approveDate}, approve_state = #{approveState}
+    where
+      lsh = #{lsh}
+  </update>
+
+  <select id="selectClinicListByCriteria" resultType="map">
+    select *
+    from view_iym_inventory_subtract
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+    </trim>
+    order by creationDate desc, lsh desc, gsmGoodsOid
+  </select>
+
+  <select id="selectClinicLshGroupListByCriteria" resultType="map">
+    select
+    creationDate, lsh, pemSupplierName, sum(quantity * costPrice) as totalCostPrice,
+    creatorName, approverName, approveDate, approveState, sysClinicName
+    from view_iym_inventory_subtract
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc, lsh desc
+  </select>
+
+  <select id="selectByLsh" resultType="map">
+    select *
+    from view_iym_inventory_subtract
+    where lsh = #{lsh}
+  </select>
+
+
+
+
+</mapper>

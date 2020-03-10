@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.PerformItemRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.PerformItemRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="dwt_perform_item_id" jdbcType="INTEGER" property="dwtPerformItemId" />
+    <result column="perform_quantity" jdbcType="INTEGER" property="performQuantity" />
+    <result column="residue_quantity" jdbcType="INTEGER" property="residueQuantity" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_perform_item_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItemRecord">
+    insert into dwt_perform_item_record (id, lsh, dwt_perform_item_id,
+      perform_quantity, residue_quantity, sys_clinic_id,
+      operator_id, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{dwtPerformItemId,jdbcType=INTEGER},
+      #{performQuantity,jdbcType=INTEGER}, #{residueQuantity,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER},
+      #{operatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItemRecord">
+    update dwt_perform_item_record
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      dwt_perform_item_id = #{dwtPerformItemId,jdbcType=INTEGER},
+      perform_quantity = #{performQuantity,jdbcType=INTEGER},
+      residue_quantity = #{residueQuantity,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, dwt_perform_item_id, perform_quantity, residue_quantity, sys_clinic_id,
+    operator_id, creation_date
+    from dwt_perform_item_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, dwt_perform_item_id, perform_quantity, residue_quantity, sys_clinic_id,
+    operator_id, creation_date
+    from dwt_perform_item_record
+  </select>
+
+
+  <!--***************************************************************************************************************-->
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_perform_item_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%' or phone like '${mrmMemberName}%') and
+      </if>
+      <if test="operatorName != null &amp;&amp; operatorName.trim() != ''">
+        (operatorName like '${operatorName}%' or operatorCode like '${operatorName}%') and
+      </if>
+    </trim>
+    order by creationDate desc, cimItemName
+  </select>
+
+
+
+</mapper>

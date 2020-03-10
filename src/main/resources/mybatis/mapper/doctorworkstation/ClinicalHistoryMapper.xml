@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.ClinicalHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.ClinicalHistory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="chief_complaint" jdbcType="VARCHAR" property="chiefComplaint" />
+    <result column="present_illness" jdbcType="VARCHAR" property="presentIllness" />
+    <result column="physical_examination" jdbcType="VARCHAR" property="physicalExamination" />
+    <result column="past_history" jdbcType="VARCHAR" property="pastHistory" />
+    <result column="allergen_history" jdbcType="VARCHAR" property="allergenHistory" />
+    <result column="auxiliary_examination" jdbcType="VARCHAR" property="auxiliaryExamination" />
+    <result column="dialectical" jdbcType="VARCHAR" property="dialectical" />
+    <result column="diagnose_json" jdbcType="VARCHAR" property="diagnoseJson" />
+    <result column="dwt_diagnose_type_id" jdbcType="INTEGER" property="dwtDiagnoseTypeId" />
+    <result column="finished" jdbcType="BIT" property="finished" />
+    <result column="sys_doctor_id" jdbcType="INTEGER" property="sysDoctorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_clinical_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.ClinicalHistory" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into dwt_clinical_history (id, mrm_member_id, chief_complaint,
+      present_illness, physical_examination, past_history,
+      allergen_history, auxiliary_examination,
+      dialectical, diagnose_json, dwt_diagnose_type_id,
+      finished, sys_doctor_id, creation_date,
+      sys_clinic_id)
+    values (#{id,jdbcType=INTEGER}, #{mrmMemberId,jdbcType=INTEGER}, #{chiefComplaint,jdbcType=VARCHAR},
+      #{presentIllness,jdbcType=VARCHAR}, #{physicalExamination,jdbcType=VARCHAR}, #{pastHistory,jdbcType=VARCHAR},
+      #{allergenHistory,jdbcType=VARCHAR}, #{auxiliaryExamination,jdbcType=VARCHAR},
+      #{dialectical,jdbcType=VARCHAR}, #{diagnoseJson,jdbcType=VARCHAR}, #{dwtDiagnoseTypeId,jdbcType=INTEGER},
+      #{finished,jdbcType=BIT}, #{sysDoctorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+      #{sysClinicId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.ClinicalHistory">
+    update dwt_clinical_history
+    set mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      chief_complaint = #{chiefComplaint,jdbcType=VARCHAR},
+      present_illness = #{presentIllness,jdbcType=VARCHAR},
+      physical_examination = #{physicalExamination,jdbcType=VARCHAR},
+      past_history = #{pastHistory,jdbcType=VARCHAR},
+      allergen_history = #{allergenHistory,jdbcType=VARCHAR},
+      auxiliary_examination = #{auxiliaryExamination,jdbcType=VARCHAR},
+      dialectical = #{dialectical,jdbcType=VARCHAR},
+      diagnose_json = #{diagnoseJson,jdbcType=VARCHAR},
+      dwt_diagnose_type_id = #{dwtDiagnoseTypeId,jdbcType=INTEGER},
+      finished = #{finished,jdbcType=BIT},
+      sys_doctor_id = #{sysDoctorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, mrm_member_id, chief_complaint, present_illness, physical_examination,
+    past_history, allergen_history, auxiliary_examination, dialectical, diagnose_json,
+    dwt_diagnose_type_id, finished, sys_doctor_id, creation_date, sys_clinic_id
+    from dwt_clinical_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, mrm_member_id, chief_complaint, present_illness, physical_examination,
+    past_history, allergen_history, auxiliary_examination, dialectical, diagnose_json,
+    dwt_diagnose_type_id, finished, sys_doctor_id, creation_date, sys_clinic_id
+    from dwt_clinical_history
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <!-- 重新生成时 别忘了对自动生成的 insert 方法设置返回主键 (useGeneratedKeys="true" keyProperty="id" keyColumn="id")    -->
+
+  <update id="updateFinishedById">
+    update dwt_clinical_history
+    set finished = #{finished}
+    where id = #{id}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_clinical_history
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="mrmMemberId != null">
+        (mrmMemberId = #{mrmMemberId}) and
+      </if>
+      <if test="dwtDiagnoseTypeId != null">
+        (dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
+      </if>
+      (finished is true)
+    </trim>
+    order by creationDate desc
+  </select>
+
+  <select id="selectLastUnfinishedByCriteria" resultType="map">
+    select *
+    from view_dwt_clinical_history
+    where
+          (creationDate between DATE_SUB(NOW(), INTERVAL 1 DAY) and NOW()) and /*在一天之内*/
+          (mrmMemberId = #{mrmMemberId}) and
+          (sysDoctorId = #{sysDoctorId}) and
+          (finished is false)
+    order by creationDate desc
+    LIMIT 1
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.purchase.dao.PurchasePlanMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.purchase.bean.PurchasePlan">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="recommend_quantity" jdbcType="INTEGER" property="recommendQuantity" />
+    <result column="plan_days" jdbcType="TINYINT" property="planDays" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from pem_purchase_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.purchase.bean.PurchasePlan">
+    insert into pem_purchase_plan (id, lsh, mxh,
+      gsm_goods_id, quantity, recommend_quantity,
+      plan_days, sys_clinic_id, creator_id,
+      creation_date, approver_id, approve_date,
+      approve_state)
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{gsmGoodsId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{recommendQuantity,jdbcType=INTEGER},
+      #{planDays,jdbcType=TINYINT}, #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=DATE}, #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE},
+      #{approveState,jdbcType=TINYINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.purchase.bean.PurchasePlan">
+    update pem_purchase_plan
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      recommend_quantity = #{recommendQuantity,jdbcType=INTEGER},
+      plan_days = #{planDays,jdbcType=TINYINT},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=DATE},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, quantity, recommend_quantity, plan_days, sys_clinic_id,
+    creator_id, creation_date, approver_id, approve_date, approve_state
+    from pem_purchase_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, quantity, recommend_quantity, plan_days, sys_clinic_id,
+    creator_id, creation_date, approver_id, approve_date, approve_state
+    from pem_purchase_plan
+  </select>
+
+
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <update id="updateApproveStateByPlanIdList">
+    UPDATE pem_purchase_plan
+    <trim prefix="set" suffixOverrides=",">
+      <if test="approverId != null">
+        approver_id = #{approverId},
+      </if>
+      <if test="approveDate != null">
+        approve_date = #{approveDate},
+      </if>
+      <if test="approveState != null">
+        approve_state = #{approveState}
+      </if>
+    </trim>
+    WHERE
+    <foreach collection="planList" item="plan" open="id in (" separator="," close=")">
+      #{plan.id}
+    </foreach>
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_pem_purchase_plan
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (creationDate between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveDate != null &amp;&amp; approveDate.length == 2">
+        (approveDate between #{approveDate[0]} and #{approveDate[1]}) and
+      </if>
+      <if test="approverId != null">
+        (approverId = #{approverId}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+    </trim>
+    order by creationDate desc, sysClinicId, gsmGoodsTypeId, gsmGoodsOid
+  </select>
+
+  <select id="selectViewByPlanIdList" resultType="map">
+    SELECT *
+    FROM view_pem_purchase_plan
+    WHERE
+    <foreach collection="planIdList" item="planId" index="index" open="id in (" separator="," close=")">
+      #{planId}
+    </foreach>
+    order by sysClinicId, gsmGoodsTypeId, gsmGoodsOid
+  </select>
+
+
+  <select id="selectByPlanIdList" resultMap="BaseResultMap">
+    SELECT *
+    FROM pem_purchase_plan
+    WHERE
+    <foreach collection="planIdList" item="planId" index="index" open="id in (" separator="," close=")">
+      #{planId}
+    </foreach>
+  </select>
+
+
+</mapper>

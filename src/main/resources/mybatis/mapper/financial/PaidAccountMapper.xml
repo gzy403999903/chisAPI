@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.financial.dao.PaidAccountMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.financial.bean.PaidAccount">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="flm_payable_account_lsh" jdbcType="VARCHAR" property="flmPayableAccountLsh" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="payment_no" jdbcType="VARCHAR" property="paymentNo" />
+    <result column="payer_id" jdbcType="INTEGER" property="payerId" />
+    <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="TIMESTAMP" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from flm_paid_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.financial.bean.PaidAccount">
+    insert into flm_paid_account (id, lsh, mxh,
+      flm_payable_account_lsh, gsm_goods_id, ph,
+      pch, cost_price, quantity,
+      pem_supplier_id, iym_inventory_add_id, sys_clinic_id,
+      invoice_no, creator_id, creation_date,
+      payment_no, payer_id, pay_date,
+      approver_id, approve_date, approve_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{flmPayableAccountLsh,jdbcType=VARCHAR}, #{gsmGoodsId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR},
+      #{pch,jdbcType=VARCHAR}, #{costPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER},
+      #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER},
+      #{invoiceNo,jdbcType=VARCHAR}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+      #{paymentNo,jdbcType=VARCHAR}, #{payerId,jdbcType=INTEGER}, #{payDate,jdbcType=TIMESTAMP},
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=TIMESTAMP}, #{approveState,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.financial.bean.PaidAccount">
+    update flm_paid_account
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      flm_payable_account_lsh = #{flmPayableAccountLsh,jdbcType=VARCHAR},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      quantity = #{quantity,jdbcType=INTEGER},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      invoice_no = #{invoiceNo,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      payment_no = #{paymentNo,jdbcType=VARCHAR},
+      payer_id = #{payerId,jdbcType=INTEGER},
+      pay_date = #{payDate,jdbcType=TIMESTAMP},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=TIMESTAMP},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, flm_payable_account_lsh, gsm_goods_id, ph, pch, cost_price,
+    quantity, pem_supplier_id, iym_inventory_add_id, sys_clinic_id, invoice_no, creator_id,
+    creation_date, payment_no, payer_id, pay_date, approver_id, approve_date, approve_state
+    from flm_paid_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, flm_payable_account_lsh, gsm_goods_id, ph, pch, cost_price,
+    quantity, pem_supplier_id, iym_inventory_add_id, sys_clinic_id, invoice_no, creator_id,
+    creation_date, payment_no, payer_id, pay_date, approver_id, approve_date, approve_state
+    from flm_paid_account
+  </select>
+
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateInvoiceNo">
+    update flm_paid_account
+    set invoice_no = #{invoiceNo}
+    where
+    lsh in
+    <foreach collection="lshList" item="lsh" open="(" separator="," close=")">
+      #{lsh}
+    </foreach>
+  </update>
+
+  <update id="updatePaymentNo">
+    update flm_paid_account
+    set payment_no = #{paymentNo}, payer_id = #{payerId}, pay_date = #{payDate}
+    where
+    lsh in
+    <foreach collection="lshList" item="lsh" open="(" separator="," close=")">
+      #{lsh}
+    </foreach>
+  </update>
+
+  <update id="updateApproveStateByPaymentNo">
+     update flm_paid_account
+     set approver_id = #{approverId}, approve_date = #{approveDate}, approve_state = #{approveState}
+     where payment_no = #{paymentNo}
+  </update>
+
+  <select id="selectLshGroupListByCriteria" resultType="map">
+    select
+    lsh, pemSupplierId, pemSupplierOid, pemSupplierName, sum(costPrice * quantity) as paidAmount,
+    invoiceNo, sysClinicId, sysClinicName, creatorId, creatorName, creationDate, paymentNo, payerId, payerName, payDate,
+    approverId, approverName, approveDate, approveState
+    from view_flm_paid_account
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="pemSupplierId != null">
+        (pemSupplierId = #{pemSupplierId}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc
+  </select>
+
+  <select id="selectByLsh" resultType="map">
+    select *
+    from view_flm_paid_account
+    where lsh = #{lsh}
+  </select>
+
+  <select id="selectPaymentNoGroupListByCriteria" resultType="map">
+    select
+    lsh, pemSupplierId, pemSupplierOid, pemSupplierName, sum(costPrice * quantity) as paidAmount,
+    invoiceNo, sysClinicId, sysClinicName, creatorId, creatorName, creationDate, paymentNo, payerId, payerName, payDate,
+    approverId, approverName, approveDate, approveState
+    from view_flm_paid_account
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="pemSupplierId != null">
+        (pemSupplierId = #{pemSupplierId}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="paymentNo != null &amp;&amp; paymentNo.trim() != ''">
+        (paymentNo like '${paymentNo}%') and
+      </if>
+      (invoiceNo is not null) and (invoiceNo != '') and (paymentNo is not null) and (paymentNo != '')
+    </trim>
+    group by paymentNo
+    order by creationDate desc
+  </select>
+
+  <select id="selectByPaymentNo" resultType="map">
+    select *
+    from view_flm_paid_account
+    where paymentNo = #{paymentNo}
+  </select>
+
+
+
+</mapper>

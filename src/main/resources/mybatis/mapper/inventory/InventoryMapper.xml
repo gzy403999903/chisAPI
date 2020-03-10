@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.inventory.dao.InventoryMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.inventory.bean.Inventory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="iym_inventory_type_id" jdbcType="INTEGER" property="iymInventoryTypeId" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="average_cost_price" jdbcType="DECIMAL" property="averageCostPrice" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="produced_date" jdbcType="DATE" property="producedDate" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iym_inventory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.inventory.bean.Inventory">
+    insert into iym_inventory (id, sys_clinic_id, iym_inventory_type_id,
+      gsm_goods_id, ph, pch,
+      split_quantity, quantity, cost_price,
+      average_cost_price, purchase_tax_rate, sell_tax_rate,
+      produced_date, expiry_date, pem_supplier_id,
+      iym_inventory_add_id)
+    values (#{id,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER}, #{iymInventoryTypeId,jdbcType=INTEGER},
+      #{gsmGoodsId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR},
+      #{splitQuantity,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL},
+      #{averageCostPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT}, #{sellTaxRate,jdbcType=TINYINT},
+      #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER},
+      #{iymInventoryAddId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.Inventory">
+    update iym_inventory
+    set sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      iym_inventory_type_id = #{iymInventoryTypeId,jdbcType=INTEGER},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      split_quantity = #{splitQuantity,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      average_cost_price = #{averageCostPrice,jdbcType=DECIMAL},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      produced_date = #{producedDate,jdbcType=DATE},
+      expiry_date = #{expiryDate,jdbcType=DATE},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, sys_clinic_id, iym_inventory_type_id, gsm_goods_id, ph, pch, split_quantity,
+    quantity, cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
+    expiry_date, pem_supplier_id, iym_inventory_add_id
+    from iym_inventory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sys_clinic_id, iym_inventory_type_id, gsm_goods_id, ph, pch, split_quantity,
+    quantity, cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
+    expiry_date, pem_supplier_id, iym_inventory_add_id
+    from iym_inventory
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateQuantityById">
+     update iym_inventory
+      set quantity = quantity - #{quantity}
+      where id = #{id}
+  </update>
+
+  <update id="updateIymInventoryTypeIdById">
+    update iym_inventory
+    set iym_inventory_type_id = #{iymInventoryTypeId}
+    where id = #{id}
+  </update>
+
+  <select id="selectLastByGoodsIdList" resultMap="BaseResultMap">
+    SELECT *
+    FROM iym_inventory
+    WHERE
+    id IN (
+    SELECT MAX(id)
+    FROM iym_inventory
+    WHERE
+    gsm_goods_id IN
+    <foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+      #{goodsId}
+    </foreach>
+    GROUP BY gsm_goods_id
+    ORDER BY id DESC
+    )
+  </select>
+
+  <select id="selectClinicPchEnabledLikeByCriteria" resultType="map">
+    select *
+    from
+      view_iym_inventory
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (iymInventoryTypeId = #{iymInventoryTypeId}) and
+      (quantity > 0) and
+      (gsmGoodsState is true) and
+      (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%')
+    order by gsmGoodsTypeId, gsmGoodsOid, expiryDate
+    LIMIT 30
+  </select>
+
+  <select id="selectClinicPchEnabledByCriteriaForOutInventory" resultType="map">
+    select *
+    from
+      view_iym_inventory
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (gsmGoodsId = #{gsmGoodsId}) and
+      (gsmGoodsState is true) and
+      (quantity > 0) and
+      (sellable is true)
+    order by expiryDate
+  </select>
+
+  <select id="selectClinicSubtractPchLikeByCriteria" resultType="map">
+    select *
+    from
+      view_iym_inventory
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (iymInventoryTypeId = #{iymInventoryTypeId}) and
+      (pemSupplierId = #{pemSupplierId}) and
+      (quantity > 0) and
+      (splitQuantity = 1) and
+      (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%')
+    order by gsmGoodsTypeId, gsmGoodsOid, expiryDate
+    LIMIT 30
+  </select>
+
+  <select id="selectByIdList" resultType="map">
+    select *
+    from view_iym_inventory
+    where id in
+    <foreach collection="idList" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectPhGroupListByCriteria" resultType="map">
+    select
+    iymInventoryTypeName, gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName, ph,
+    sum(quantity) as quantity, retailPrice, costPrice, producedDate, expiryDate, originName, manufacturerName,
+    sysClinicName
+    from view_iym_inventory
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="iymInventoryTypeId != null">
+        (iymInventoryTypeId = #{iymInventoryTypeId}) and
+      </if>
+      <if test="showZero != null &amp;&amp; !showZero">
+        (quantity > 0) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+      <if test="ph != null &amp;&amp; ph.trim() != ''">
+        (ph like '${ph}%') and
+      </if>
+    </trim>
+    group by sysClinicId, iymInventoryTypeId, gsmGoodsId, ph, costPrice, expiryDate
+    order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
+  </select>
+
+  <select id="selectClinicPchListByCriteria" resultType="map">
+    select *
+    from view_iym_inventory
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="iymInventoryTypeId != null">
+        (iymInventoryTypeId = #{iymInventoryTypeId}) and
+      </if>
+      <if test="showZero != null &amp;&amp; !showZero">
+        (quantity > 0) and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+      <if test="ph != null &amp;&amp; ph.trim() != ''">
+        (ph like '${ph}%') and
+      </if>
+    </trim>
+    order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
+  </select>
+
+
+
+</mapper>

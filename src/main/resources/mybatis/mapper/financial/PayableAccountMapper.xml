@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.financial.dao.PayableAccountMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.financial.bean.PayableAccount">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from flm_payable_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.financial.bean.PayableAccount">
+    insert into flm_payable_account (id, lsh, mxh,
+      gsm_goods_id, ph, pch,
+      cost_price, quantity, purchase_tax_rate,
+      sell_tax_rate, pem_supplier_id, iym_inventory_add_id,
+      sys_clinic_id, creator_id, creation_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{gsmGoodsId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR},
+      #{costPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{purchaseTaxRate,jdbcType=TINYINT},
+      #{sellTaxRate,jdbcType=TINYINT}, #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER},
+      #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.financial.bean.PayableAccount">
+    update flm_payable_account
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      quantity = #{quantity,jdbcType=INTEGER},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, ph, pch, cost_price, quantity, purchase_tax_rate,
+    sell_tax_rate, pem_supplier_id, iym_inventory_add_id, sys_clinic_id, creator_id,
+    creation_date
+    from flm_payable_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, gsm_goods_id, ph, pch, cost_price, quantity, purchase_tax_rate,
+    sell_tax_rate, pem_supplier_id, iym_inventory_add_id, sys_clinic_id, creator_id,
+    creation_date
+    from flm_payable_account
+  </select>
+
+
+
+
+  <!-- ************************************************************************************************************* -->
+  <select id="selectGroupListByCriteria" resultType="map">
+    select a.*, ifnull(b.paidAmount, 0) as paidAmount
+    from (
+    select
+    creationDate, lsh, pemSupplierId, pemSupplierOid, pemSupplierName, sum(quantity * costPrice) as payableAmount,
+    creatorId, creatorName, sysClinicId, sysClinicName
+    from view_flm_payable_account
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="pemSupplierId != null">
+        (pemSupplierId = #{pemSupplierId}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+    </trim>
+    group by lsh
+    ) a
+    left join (
+    select
+    flm_payable_account_lsh,
+    sum(ifnull(quantity * cost_price, 0)) as paidAmount
+    from flm_paid_account
+    group by flm_payable_account_lsh
+    ) b on a.lsh = b.flm_payable_account_lsh
+    <trim prefix="where" suffixOverrides="and">
+      <if test="arrearagesAmount != null &amp;&amp; arrearagesAmount != 0">
+        ((a.payableAmount - ifnull(b.paidAmount, 0)) >= #{arrearagesAmount}) and
+      </if>
+    </trim>
+    order by a.creationDate desc
+  </select>
+
+  <select id="selectByLsh" resultType="map">
+    select
+      a.*,
+      (a.quantity - ifnull(b.paidQuantity, 0)) as payableQuantity,
+      ifnull(inventoryQuantity, 0) as inventoryQuantity
+    from (
+      select *
+      from view_flm_payable_account
+      where lsh = #{lsh}
+    ) a
+    left join (
+      select
+        id, iym_inventory_add_id, flm_payable_account_lsh, sum(ifnull(quantity, 0)) as paidQuantity
+      from flm_paid_account
+      group by iym_inventory_add_id, flm_payable_account_lsh
+    ) b on a.iymInventoryAddId = b.iym_inventory_add_id and a.lsh = b.flm_payable_account_lsh
+    left join (
+      select
+        id, iym_inventory_add_id, sum(ifnull(quantity, 0)) as inventoryQuantity
+      from iym_inventory
+      where split_quantity = 1
+      group by iym_inventory_add_id
+    ) c on a.iymInventoryAddId = c.iym_inventory_add_id
+  </select>
+
+</mapper>

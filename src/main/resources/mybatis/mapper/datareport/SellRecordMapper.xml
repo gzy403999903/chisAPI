@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.datareport.dao.SellRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.datareport.bean.SellRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="dwt_sell_prescription_lsh" jdbcType="VARCHAR" property="dwtSellPrescriptionLsh" />
+    <result column="invoice_type_id" jdbcType="INTEGER" property="invoiceTypeId" />
+    <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+    <result column="sys_sell_way_id" jdbcType="INTEGER" property="sysSellWayId" />
+    <result column="sys_sell_type_id" jdbcType="INTEGER" property="sysSellTypeId" />
+    <result column="entity_type_id" jdbcType="INTEGER" property="entityTypeId" />
+    <result column="entity_id" jdbcType="INTEGER" property="entityId" />
+    <result column="retail_price" jdbcType="DECIMAL" property="retailPrice" />
+    <result column="actual_retail_price" jdbcType="DECIMAL" property="actualRetailPrice" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="discountable" jdbcType="BIT" property="discountable" />
+    <result column="lossable" jdbcType="BIT" property="lossable" />
+    <result column="iym_inventory_id" jdbcType="INTEGER" property="iymInventoryId" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="produced_date" jdbcType="DATE" property="producedDate" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="member_discount_rate" jdbcType="REAL" property="memberDiscountRate" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="cashier_id" jdbcType="INTEGER" property="cashierId" />
+    <result column="pay_state" jdbcType="BIT" property="payState" />
+    <result column="returned" jdbcType="BIT" property="returned" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dr_sell_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.datareport.bean.SellRecord">
+    insert into dr_sell_record (id, creation_date, lsh,
+      mxh, dwt_sell_prescription_lsh, invoice_type_id,
+      invoice_no, sys_sell_way_id, sys_sell_type_id,
+      entity_type_id, entity_id, retail_price,
+      actual_retail_price, purchase_tax_rate, sell_tax_rate,
+      discountable, lossable, iym_inventory_id,
+      ph, pch, split_quantity,
+      quantity, cost_price, produced_date,
+      expiry_date, pem_supplier_id, iym_inventory_add_id,
+      mrm_member_id, member_discount_rate, sys_clinic_id,
+      seller_id, operator_id, cashier_id,
+      pay_state, returned)
+    values (#{id,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{lsh,jdbcType=VARCHAR},
+      #{mxh,jdbcType=VARCHAR}, #{dwtSellPrescriptionLsh,jdbcType=VARCHAR}, #{invoiceTypeId,jdbcType=INTEGER},
+      #{invoiceNo,jdbcType=VARCHAR}, #{sysSellWayId,jdbcType=INTEGER}, #{sysSellTypeId,jdbcType=INTEGER},
+      #{entityTypeId,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{retailPrice,jdbcType=DECIMAL},
+      #{actualRetailPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT}, #{sellTaxRate,jdbcType=TINYINT},
+      #{discountable,jdbcType=BIT}, #{lossable,jdbcType=BIT}, #{iymInventoryId,jdbcType=INTEGER},
+      #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR}, #{splitQuantity,jdbcType=INTEGER},
+      #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL}, #{producedDate,jdbcType=DATE},
+      #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER},
+      #{mrmMemberId,jdbcType=INTEGER}, #{memberDiscountRate,jdbcType=REAL}, #{sysClinicId,jdbcType=INTEGER},
+      #{sellerId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{cashierId,jdbcType=INTEGER},
+      #{payState,jdbcType=BIT}, #{returned,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.datareport.bean.SellRecord">
+    update dr_sell_record
+    set creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      dwt_sell_prescription_lsh = #{dwtSellPrescriptionLsh,jdbcType=VARCHAR},
+      invoice_type_id = #{invoiceTypeId,jdbcType=INTEGER},
+      invoice_no = #{invoiceNo,jdbcType=VARCHAR},
+      sys_sell_way_id = #{sysSellWayId,jdbcType=INTEGER},
+      sys_sell_type_id = #{sysSellTypeId,jdbcType=INTEGER},
+      entity_type_id = #{entityTypeId,jdbcType=INTEGER},
+      entity_id = #{entityId,jdbcType=INTEGER},
+      retail_price = #{retailPrice,jdbcType=DECIMAL},
+      actual_retail_price = #{actualRetailPrice,jdbcType=DECIMAL},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      discountable = #{discountable,jdbcType=BIT},
+      lossable = #{lossable,jdbcType=BIT},
+      iym_inventory_id = #{iymInventoryId,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      split_quantity = #{splitQuantity,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      produced_date = #{producedDate,jdbcType=DATE},
+      expiry_date = #{expiryDate,jdbcType=DATE},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER},
+      mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      member_discount_rate = #{memberDiscountRate,jdbcType=REAL},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      seller_id = #{sellerId,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      cashier_id = #{cashierId,jdbcType=INTEGER},
+      pay_state = #{payState,jdbcType=BIT},
+      returned = #{returned,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
+    sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price, actual_retail_price,
+    purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id, ph, pch,
+    split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
+    iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
+    operator_id, cashier_id, pay_state, returned
+    from dr_sell_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
+    sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price, actual_retail_price,
+    purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id, ph, pch,
+    split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
+    iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
+    operator_id, cashier_id, pay_state, returned
+    from dr_sell_record
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateReturnedByIdList">
+    update dr_sell_record
+    set
+    returned = true
+    where id in
+    <foreach collection="idList" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <update id="updateInvoiceByIdList">
+    update dr_sell_record
+    set
+    invoice_type_id = #{invoiceTypeId}, invoice_no = #{invoiceNo}
+    where id in
+    <foreach collection="idList" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+      <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
+        (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
+      </if>
+    </trim>
+    order by creationDate desc, sysSellTypeId, entityTypeId, entityId
+  </select>
+
+  <select id="selectClinicGroupListByCriteria" resultType="map">
+    select
+    creationDate, lsh, invoiceTypeName, invoiceNo, sysSellWayName, mrmMemberId, mrmMemberOid, mrmMemberName, phone,
+    sysClinicName, cashierName, sum(quantity * actualRetailPrice) as totalSellAmount,
+    sum(case when invoiceTypeId is not null then (quantity * actualRetailPrice) else 0 end) as totalInvoiceAmount
+    from
+    view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%' or phone like '${mrmMemberName}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc
+  </select>
+
+  <select id="selectClinicUnreturnedListByLsh" resultType="map">
+    select *
+    from
+      view_dr_sell_record
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (lsh = #{lsh}) and
+      (returned is false)
+    order by sysSellTypeId, entityTypeId, entityId
+  </select>
+
+  <select id="selectClinicListByLsh" resultType="map">
+    select *
+    from
+      view_dr_sell_record
+    where
+      (sysClinicId = #{sysClinicId}) and
+      (lsh = #{lsh})
+    order by sysSellTypeId, entityTypeId, entityId
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

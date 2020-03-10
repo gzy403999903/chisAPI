@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.inventory.dao.SelfUsedRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.inventory.bean.SelfUsedRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="iym_inventory_id" jdbcType="INTEGER" property="iymInventoryId" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="ph" jdbcType="VARCHAR" property="ph" />
+    <result column="pch" jdbcType="VARCHAR" property="pch" />
+    <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="average_cost_price" jdbcType="DECIMAL" property="averageCostPrice" />
+    <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
+    <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
+    <result column="produced_date" jdbcType="DATE" property="producedDate" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="iym_inventory_add_id" jdbcType="INTEGER" property="iymInventoryAddId" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="approver_id" jdbcType="INTEGER" property="approverId" />
+    <result column="approve_date" jdbcType="TIMESTAMP" property="approveDate" />
+    <result column="approve_state" jdbcType="TINYINT" property="approveState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iym_self_used_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.inventory.bean.SelfUsedRecord">
+    insert into iym_self_used_record (id, lsh, mxh,
+      iym_inventory_id, gsm_goods_id, ph,
+      pch, split_quantity, quantity,
+      cost_price, average_cost_price, purchase_tax_rate,
+      sell_tax_rate, produced_date, expiry_date,
+      pem_supplier_id, iym_inventory_add_id, notes,
+      sys_clinic_id, creator_id, creation_date,
+      approver_id, approve_date, approve_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{iymInventoryId,jdbcType=INTEGER}, #{gsmGoodsId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR},
+      #{pch,jdbcType=VARCHAR}, #{splitQuantity,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
+      #{costPrice,jdbcType=DECIMAL}, #{averageCostPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT},
+      #{sellTaxRate,jdbcType=TINYINT}, #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE},
+      #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER}, #{notes,jdbcType=VARCHAR},
+      #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=TIMESTAMP}, #{approveState,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.SelfUsedRecord">
+    update iym_self_used_record
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      iym_inventory_id = #{iymInventoryId,jdbcType=INTEGER},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      ph = #{ph,jdbcType=VARCHAR},
+      pch = #{pch,jdbcType=VARCHAR},
+      split_quantity = #{splitQuantity,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      average_cost_price = #{averageCostPrice,jdbcType=DECIMAL},
+      purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
+      sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
+      produced_date = #{producedDate,jdbcType=DATE},
+      expiry_date = #{expiryDate,jdbcType=DATE},
+      pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      iym_inventory_add_id = #{iymInventoryAddId,jdbcType=INTEGER},
+      notes = #{notes,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      approver_id = #{approverId,jdbcType=INTEGER},
+      approve_date = #{approveDate,jdbcType=TIMESTAMP},
+      approve_state = #{approveState,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mxh, iym_inventory_id, gsm_goods_id, ph, pch, split_quantity, quantity,
+    cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
+    expiry_date, pem_supplier_id, iym_inventory_add_id, notes, sys_clinic_id, creator_id,
+    creation_date, approver_id, approve_date, approve_state
+    from iym_self_used_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mxh, iym_inventory_id, gsm_goods_id, ph, pch, split_quantity, quantity,
+    cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
+    expiry_date, pem_supplier_id, iym_inventory_add_id, notes, sys_clinic_id, creator_id,
+    creation_date, approver_id, approve_date, approve_state
+    from iym_self_used_record
+  </select>
+
+
+
+  <!--***************************************************************************************************************-->
+  <update id="updateApproveState">
+    update iym_self_used_record
+    set approver_id = #{approverId}, approve_date = #{approveDate}, approve_state = #{approveState}
+    where lsh =#{lsh}
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_iym_self_used_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+    </trim>
+    order by creationDate desc, mxh
+  </select>
+
+  <select id="selectClinicGroupListByCriteria" resultType="map">
+    select *
+    from view_iym_self_used_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="approveState != null">
+        (approveState = #{approveState}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc
+  </select>
+
+  <select id="selectByLsh" resultType="map">
+    select *
+    from view_iym_self_used_record
+    where lsh = #{lsh}
+  </select>
+
+
+
+
+</mapper>

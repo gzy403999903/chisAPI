@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.ClinicalHistoryTemplateMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.ClinicalHistoryTemplate">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="chief_complaint" jdbcType="VARCHAR" property="chiefComplaint" />
+    <result column="present_illness" jdbcType="VARCHAR" property="presentIllness" />
+    <result column="physical_examination" jdbcType="VARCHAR" property="physicalExamination" />
+    <result column="past_history" jdbcType="VARCHAR" property="pastHistory" />
+    <result column="allergen_history" jdbcType="VARCHAR" property="allergenHistory" />
+    <result column="auxiliary_examination" jdbcType="VARCHAR" property="auxiliaryExamination" />
+    <result column="dialectical" jdbcType="VARCHAR" property="dialectical" />
+    <result column="diagnose_json" jdbcType="VARCHAR" property="diagnoseJson" />
+    <result column="dwt_diagnose_type_id" jdbcType="INTEGER" property="dwtDiagnoseTypeId" />
+    <result column="sys_doctor_id" jdbcType="INTEGER" property="sysDoctorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="share_state" jdbcType="BIT" property="shareState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_clinical_history_template
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.ClinicalHistoryTemplate">
+    insert into dwt_clinical_history_template (id, name, code,
+      chief_complaint, present_illness, physical_examination,
+      past_history, allergen_history, auxiliary_examination,
+      dialectical, diagnose_json, dwt_diagnose_type_id,
+      sys_doctor_id, creation_date, sys_clinic_id,
+      notes, share_state)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{chiefComplaint,jdbcType=VARCHAR}, #{presentIllness,jdbcType=VARCHAR}, #{physicalExamination,jdbcType=VARCHAR},
+      #{pastHistory,jdbcType=VARCHAR}, #{allergenHistory,jdbcType=VARCHAR}, #{auxiliaryExamination,jdbcType=VARCHAR},
+      #{dialectical,jdbcType=VARCHAR}, #{diagnoseJson,jdbcType=VARCHAR}, #{dwtDiagnoseTypeId,jdbcType=INTEGER},
+      #{sysDoctorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{sysClinicId,jdbcType=INTEGER},
+      #{notes,jdbcType=VARCHAR}, #{shareState,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.ClinicalHistoryTemplate">
+    update dwt_clinical_history_template
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      chief_complaint = #{chiefComplaint,jdbcType=VARCHAR},
+      present_illness = #{presentIllness,jdbcType=VARCHAR},
+      physical_examination = #{physicalExamination,jdbcType=VARCHAR},
+      past_history = #{pastHistory,jdbcType=VARCHAR},
+      allergen_history = #{allergenHistory,jdbcType=VARCHAR},
+      auxiliary_examination = #{auxiliaryExamination,jdbcType=VARCHAR},
+      dialectical = #{dialectical,jdbcType=VARCHAR},
+      diagnose_json = #{diagnoseJson,jdbcType=VARCHAR},
+      dwt_diagnose_type_id = #{dwtDiagnoseTypeId,jdbcType=INTEGER},
+      sys_doctor_id = #{sysDoctorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      notes = #{notes,jdbcType=VARCHAR},
+      share_state = #{shareState,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, chief_complaint, present_illness, physical_examination, past_history,
+    allergen_history, auxiliary_examination, dialectical, diagnose_json, dwt_diagnose_type_id,
+    sys_doctor_id, creation_date, sys_clinic_id, notes, share_state
+    from dwt_clinical_history_template
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, chief_complaint, present_illness, physical_examination, past_history,
+    allergen_history, auxiliary_examination, dialectical, diagnose_json, dwt_diagnose_type_id,
+    sys_doctor_id, creation_date, sys_clinic_id, notes, share_state
+    from dwt_clinical_history_template
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_clinical_history_template
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dwtDiagnoseTypeId != null">
+        (dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
+      </if>
+      <if test="shareState">
+        (sysDoctorId = #{sysDoctorId} or shareState is true) and
+      </if>
+      <if test="!shareState">
+        (sysDoctorId = #{sysDoctorId}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%')
+      </if>
+    </trim>
+    order by creationDate desc
+  </select>
+
+
+
+</mapper>

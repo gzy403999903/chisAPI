@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.CommonDiagnoseMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.CommonDiagnose">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="dwt_diagnose_type_id" jdbcType="INTEGER" property="dwtDiagnoseTypeId" />
+    <result column="share_state" jdbcType="BIT" property="shareState" />
+    <result column="normative" jdbcType="BIT" property="normative" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_common_diagnose
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.CommonDiagnose">
+    insert into dwt_common_diagnose (id, name, code,
+      dwt_diagnose_type_id, share_state, normative,
+      creator_id, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{dwtDiagnoseTypeId,jdbcType=INTEGER}, #{shareState,jdbcType=BIT}, #{normative,jdbcType=BIT},
+      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.CommonDiagnose">
+    update dwt_common_diagnose
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      dwt_diagnose_type_id = #{dwtDiagnoseTypeId,jdbcType=INTEGER},
+      share_state = #{shareState,jdbcType=BIT},
+      normative = #{normative,jdbcType=BIT},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, dwt_diagnose_type_id, share_state, normative, creator_id,
+    creation_date
+    from dwt_common_diagnose
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, dwt_diagnose_type_id, share_state, normative, creator_id,
+    creation_date
+    from dwt_common_diagnose
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_common_diagnose
+    <trim prefix="where" suffixOverrides="and">
+      (dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
+      <if test="shareState">
+        (creatorId = #{creatorId} or shareState is true) and
+      </if>
+      <if test="!shareState">
+        (creatorId = #{creatorId}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by id
+  </select>
+
+  <select id="selectLikeByName" resultMap="BaseResultMap">
+    select *
+    from
+      dwt_common_diagnose
+    where
+      (dwt_diagnose_type_id = #{dwtDiagnoseTypeId}) and
+      (name like '${name}%' or code like '${name}%')
+    order by id
+    LIMIT 30
+  </select>
+
+
+</mapper>

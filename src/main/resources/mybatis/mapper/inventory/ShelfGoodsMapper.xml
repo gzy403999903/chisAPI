@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.inventory.dao.ShelfGoodsMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.inventory.bean.ShelfGoods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="iym_shelf_position_id" jdbcType="INTEGER" property="iymShelfPositionId" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="max_quantity" jdbcType="INTEGER" property="maxQuantity" />
+    <result column="min_quantity" jdbcType="INTEGER" property="minQuantity" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iym_shelf_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.inventory.bean.ShelfGoods">
+    insert into iym_shelf_goods (id, iym_shelf_position_id, gsm_goods_id,
+      max_quantity, min_quantity, sys_clinic_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{iymShelfPositionId,jdbcType=INTEGER}, #{gsmGoodsId,jdbcType=INTEGER},
+      #{maxQuantity,jdbcType=INTEGER}, #{minQuantity,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.ShelfGoods">
+    update iym_shelf_goods
+    set iym_shelf_position_id = #{iymShelfPositionId,jdbcType=INTEGER},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      max_quantity = #{maxQuantity,jdbcType=INTEGER},
+      min_quantity = #{minQuantity,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, iym_shelf_position_id, gsm_goods_id, max_quantity, min_quantity, sys_clinic_id
+    from iym_shelf_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, iym_shelf_position_id, gsm_goods_id, max_quantity, min_quantity, sys_clinic_id
+    from iym_shelf_goods
+  </select>
+
+
+
+  <!-- ************************************************************************************************************* -->
+  <update id="updateById">
+    update iym_shelf_goods
+    set
+      iym_shelf_position_id = #{iymShelfPositionId},
+      max_quantity = #{maxQuantity},
+      min_quantity = #{minQuantity}
+    where
+      id = #{id}
+  </update>
+
+
+  <select id="selectClinicListByCriteria" resultType="map">
+    select *
+    from view_iym_shelf_goods
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId} or sysClinicId is null) and
+      </if>
+      <if test="gsmGoodsTypeId != null">
+        (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+      <if test="iymShelfPositionName != null &amp;&amp; iymShelfPositionName.trim() != ''">
+        (iymShelfPositionName like '${iymShelfPositionName}%' or iymShelfPositionCode like '${iymShelfPositionName}%') and
+      </if>
+    </trim>
+    order by gsmGoodsTypeId, gsmGoodsOid
+  </select>
+
+
+
+</mapper>

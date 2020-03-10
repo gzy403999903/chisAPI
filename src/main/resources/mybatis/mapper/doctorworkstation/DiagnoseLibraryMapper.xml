@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.DiagnoseLibraryMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.DiagnoseLibrary">
+    <id column="oid" jdbcType="VARCHAR" property="oid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="dwt_diagnose_classify_id" jdbcType="INTEGER" property="dwtDiagnoseClassifyId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dwt_diagnose_library
+    where oid = #{oid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.DiagnoseLibrary">
+    insert into dwt_diagnose_library (oid, name, code,
+      dwt_diagnose_classify_id)
+    values (#{oid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{dwtDiagnoseClassifyId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.DiagnoseLibrary">
+    update dwt_diagnose_library
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      dwt_diagnose_classify_id = #{dwtDiagnoseClassifyId,jdbcType=INTEGER}
+    where oid = #{oid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select oid, name, code, dwt_diagnose_classify_id
+    from dwt_diagnose_library
+    where oid = #{oid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select oid, name, code, dwt_diagnose_classify_id
+    from dwt_diagnose_library
+  </select>
+
+
+  <!-- ************************************************************************************************************ -->
+
+  <select id="selectByCriteria" resultType="map">
+    select a.*,
+    (case when b.id is not null then true else false end) as used
+    from view_dwt_diagnose_library a
+    left join dwt_common_diagnose b on a.name = b.name
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dwtDiagnoseClassifyId != null">
+        (a.dwtDiagnoseClassifyId = #{dwtDiagnoseClassifyId}) and
+      </if>
+      <if test="dwtDiagnoseClassifyId == null">
+        (a.dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (a.name like '${name}%' or a.code like '${name}%') and
+      </if>
+    </trim>
+    order by a.dwtDiagnoseClassifyId, a.oid
+  </select>
+
+
+
+</mapper>

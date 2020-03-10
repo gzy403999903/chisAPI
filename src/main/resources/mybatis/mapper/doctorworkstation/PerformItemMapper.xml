@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.PerformItemMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.PerformItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="cim_item_id" jdbcType="INTEGER" property="cimItemId" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="once_contain_quantity" jdbcType="INTEGER" property="onceContainQuantity" />
+    <result column="residue_quantity" jdbcType="INTEGER" property="residueQuantity" />
+    <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_perform_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItem">
+    insert into dwt_perform_item (id, lsh, mrm_member_id,
+      cim_item_id, quantity, once_contain_quantity,
+      residue_quantity, seller_id, creation_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mrmMemberId,jdbcType=INTEGER},
+      #{cimItemId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{onceContainQuantity,jdbcType=INTEGER},
+      #{residueQuantity,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItem">
+    update dwt_perform_item
+    set lsh = #{lsh,jdbcType=VARCHAR},
+      mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      cim_item_id = #{cimItemId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      once_contain_quantity = #{onceContainQuantity,jdbcType=INTEGER},
+      residue_quantity = #{residueQuantity,jdbcType=INTEGER},
+      seller_id = #{sellerId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, lsh, mrm_member_id, cim_item_id, quantity, once_contain_quantity, residue_quantity,
+    seller_id, creation_date
+    from dwt_perform_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, lsh, mrm_member_id, cim_item_id, quantity, once_contain_quantity, residue_quantity,
+    seller_id, creation_date
+    from dwt_perform_item
+  </select>
+
+
+  <!--***************************************************************************************************************-->
+  <update id="updateResidueQuantityById">
+    update dwt_perform_item
+    set residue_quantity = residue_quantity - #{performQuantity}
+    where id = #{id}
+  </update>
+
+  <update id="updateResidueQuantityByList">
+    <foreach collection="performItemList" item="performItem" separator=";" close=";">
+      update dwt_perform_item
+      set residue_quantity = residue_quantity - (#{performItem.residueQuantity} * once_contain_quantity)
+      where
+      cim_item_id = #{performItem.cimItemId} and
+      lsh = #{performItem.lsh}
+    </foreach>
+  </update>
+
+  <update id="resetResidueQuantityByList">
+    <foreach collection="performItemList" item="performItem" separator=";" close=";">
+      update dwt_perform_item
+      set residue_quantity = 0
+      where
+      cim_item_id = #{performItem.cimItemId} and
+      lsh = #{performItem.lsh}
+    </foreach>
+  </update>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_perform_item
+    <trim prefix="where" suffixOverrides="and">
+      <if test="showZero != null &amp;&amp; !showZero">
+        (residueQuantity > 0) and
+      </if>
+      <if test="mrmMemberId != null">
+        (mrmMemberId = #{mrmMemberId}) and
+      </if>
+      <if test="cimItemName != null &amp;&amp; cimItemName.trim() != ''">
+        (cimItemName like '${cimItemName}%' or cimItemCode like '${cimItemName}%') and
+      </if>
+    </trim>
+  </select>
+
+
+
+</mapper>

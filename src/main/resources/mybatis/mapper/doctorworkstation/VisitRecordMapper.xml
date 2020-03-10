@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.VisitRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.VisitRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="appointment_date" jdbcType="TIMESTAMP" property="appointmentDate" />
+    <result column="finish_date" jdbcType="TIMESTAMP" property="finishDate" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="dwt_clinical_history_id" jdbcType="INTEGER" property="dwtClinicalHistoryId" />
+    <result column="phase" jdbcType="INTEGER" property="phase" />
+    <result column="visit_content" jdbcType="VARCHAR" property="visitContent" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="finished" jdbcType="BIT" property="finished" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_visit_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.VisitRecord">
+    insert into dwt_visit_record (id, appointment_date, finish_date,
+      mrm_member_id, dwt_clinical_history_id, phase,
+      visit_content, sys_clinic_id, creator_id,
+      creation_date, finished)
+    values (#{id,jdbcType=INTEGER}, #{appointmentDate,jdbcType=TIMESTAMP}, #{finishDate,jdbcType=TIMESTAMP},
+      #{mrmMemberId,jdbcType=INTEGER}, #{dwtClinicalHistoryId,jdbcType=INTEGER}, #{phase,jdbcType=INTEGER},
+      #{visitContent,jdbcType=VARCHAR}, #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{finished,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.VisitRecord">
+    update dwt_visit_record
+    set appointment_date = #{appointmentDate,jdbcType=TIMESTAMP},
+      finish_date = #{finishDate,jdbcType=TIMESTAMP},
+      mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      dwt_clinical_history_id = #{dwtClinicalHistoryId,jdbcType=INTEGER},
+      phase = #{phase,jdbcType=INTEGER},
+      visit_content = #{visitContent,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      finished = #{finished,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, appointment_date, finish_date, mrm_member_id, dwt_clinical_history_id,
+    phase, visit_content, sys_clinic_id, creator_id, creation_date, finished
+    from dwt_visit_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, appointment_date, finish_date, mrm_member_id, dwt_clinical_history_id,
+    phase, visit_content, sys_clinic_id, creator_id, creation_date, finished
+    from dwt_visit_record
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_dwt_visit_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="appointmentDate != null &amp;&amp; appointmentDate.length == 2">
+        (appointmentDate between #{appointmentDate[0]} and #{appointmentDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="creatorId != null">
+        (creatorId = #{creatorId}) and
+      </if>
+      <if test="finished != null">
+        (finished = #{finished}) and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%' or phone like '${mrmMemberName}%') and
+      </if>
+    </trim>
+    order by appointmentDate
+  </select>
+
+  <select id="selectUnfinishedByDwtClinicalHistoryId" resultMap="BaseResultMap">
+    select *
+    from dwt_visit_record
+    where
+      dwt_clinical_history_id = #{dwtClinicalHistoryId} and
+      finished is false
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.doctorworkstation.dao.SellPrescriptionMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.doctorworkstation.bean.SellPrescription">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sys_sell_type_id" jdbcType="INTEGER" property="sysSellTypeId" />
+    <result column="dwt_clinical_history_id" jdbcType="INTEGER" property="dwtClinicalHistoryId" />
+    <result column="mrm_member_id" jdbcType="INTEGER" property="mrmMemberId" />
+    <result column="lsh" jdbcType="VARCHAR" property="lsh" />
+    <result column="mxh" jdbcType="VARCHAR" property="mxh" />
+    <result column="entity_type_id" jdbcType="INTEGER" property="entityTypeId" />
+    <result column="entity_id" jdbcType="INTEGER" property="entityId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="specs" jdbcType="VARCHAR" property="specs" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="units_name" jdbcType="VARCHAR" property="unitsName" />
+    <result column="fold_quantity" jdbcType="INTEGER" property="foldQuantity" />
+    <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
+    <result column="sig_json" jdbcType="VARCHAR" property="sigJson" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="sys_doctor_id" jdbcType="INTEGER" property="sysDoctorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dwt_sell_prescription
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.SellPrescription">
+    insert into dwt_sell_prescription (id, sys_sell_type_id, dwt_clinical_history_id,
+      mrm_member_id, lsh, mxh,
+      entity_type_id, entity_id, name,
+      specs, quantity, units_name,
+      fold_quantity, split_quantity, sig_json,
+      sys_clinic_id, sys_doctor_id, creation_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{sysSellTypeId,jdbcType=INTEGER}, #{dwtClinicalHistoryId,jdbcType=INTEGER},
+      #{mrmMemberId,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mxh,jdbcType=VARCHAR},
+      #{entityTypeId,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+      #{specs,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{unitsName,jdbcType=VARCHAR},
+      #{foldQuantity,jdbcType=INTEGER}, #{splitQuantity,jdbcType=INTEGER}, #{sigJson,jdbcType=VARCHAR},
+      #{sysClinicId,jdbcType=INTEGER}, #{sysDoctorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.SellPrescription">
+    update dwt_sell_prescription
+    set sys_sell_type_id = #{sysSellTypeId,jdbcType=INTEGER},
+      dwt_clinical_history_id = #{dwtClinicalHistoryId,jdbcType=INTEGER},
+      mrm_member_id = #{mrmMemberId,jdbcType=INTEGER},
+      lsh = #{lsh,jdbcType=VARCHAR},
+      mxh = #{mxh,jdbcType=VARCHAR},
+      entity_type_id = #{entityTypeId,jdbcType=INTEGER},
+      entity_id = #{entityId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      specs = #{specs,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      units_name = #{unitsName,jdbcType=VARCHAR},
+      fold_quantity = #{foldQuantity,jdbcType=INTEGER},
+      split_quantity = #{splitQuantity,jdbcType=INTEGER},
+      sig_json = #{sigJson,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      sys_doctor_id = #{sysDoctorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, sys_sell_type_id, dwt_clinical_history_id, mrm_member_id, lsh, mxh, entity_type_id,
+    entity_id, name, specs, quantity, units_name, fold_quantity, split_quantity, sig_json,
+    sys_clinic_id, sys_doctor_id, creation_date
+    from dwt_sell_prescription
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sys_sell_type_id, dwt_clinical_history_id, mrm_member_id, lsh, mxh, entity_type_id,
+    entity_id, name, specs, quantity, units_name, fold_quantity, split_quantity, sig_json,
+    sys_clinic_id, sys_doctor_id, creation_date
+    from dwt_sell_prescription
+  </select>
+
+
+
+
+  <!--***************************************************************************************************************-->
+  <select id="selectGroupListByCriteria" resultType="map">
+    select
+    creationDate, lsh, sysSellTypeId, sysSellTypeName, entityTypeId, entityTypeName,
+    mrmMemberOid,mrmMemberId, mrmMemberName, phone, sysDoctorId, sysDoctorName
+    from view_dwt_sell_prescription
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh = #{lsh}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysSellTypeId != null">
+        (sysSellTypeId = #{sysSellTypeId}) and
+      </if>
+      <if test="entityTypeId != null">
+        (entityTypeId = #{entityTypeId}) and
+      </if>
+      <if test="mrmMemberId != null">
+        (mrmMemberId = #{mrmMemberId}) and
+      </if>
+      <if test="sysDoctorName != null &amp;&amp; sysDoctorName.trim() != ''">
+        (sysDoctorName like '${sysDoctorName}%' or sysDoctorCode like '${sysDoctorName}%') and
+      </if>
+    </trim>
+    group by lsh
+    order by creationDate desc
+  </select>
+
+  <select id="selectClinicListByLsh" resultType="map">
+    select *
+    from view_dwt_sell_prescription
+    where sysClinicId = #{sysClinicId} and lsh = #{lsh}
+  </select>
+
+  <select id="selectByLshForTemplate" resultType="map">
+    select
+      a.sys_sell_type_id as sysSellTypeId, a.entity_type_id as entityTypeId, a.entity_id as entityId, b.oid as oid,
+      a.name, a.specs, a.quantity, a.fold_quantity as foldQuantity, a.split_quantity as splitQuantity, a.units_name as unitsName,
+      (case when a.split_quantity = 1 then b.retail_price when a.split_quantity > 1 then b.split_price end ) as retailPrice,
+      b.discountable, IFNULL(c.inventoryQuantity, 0) as inventoryQuantity, a.sig_json as sigJson
+    from (
+      select *
+      from dwt_sell_prescription
+      where lsh = #{lsh}
+    ) a
+    left join gsm_goods b on a.entity_id = b.id
+    left join (
+      select
+        i1.sys_clinic_id, i1.gsm_goods_id , i1.split_quantity, SUM(i1.quantity) AS inventoryQuantity
+      from iym_inventory i1
+      left join iym_inventory_type i2 on i1.iym_inventory_type_id = i2.id
+      where
+        i1.sys_clinic_id = #{sysClinicId} and
+        i1.quantity > 0 and
+        i2.sellable is true
+      group by i1.sys_clinic_id, i1.gsm_goods_id, i1.split_quantity
+    ) c on a.entity_id = c.gsm_goods_id and a.split_quantity = c.split_quantity
+  </select>
+
+  <select id="selectByClinicalHistoryId" resultMap="BaseResultMap">
+    select *
+    from dwt_sell_prescription
+    where dwt_clinical_history_id = #{dwtClinicalHistoryId}
+    order by sys_sell_type_id, entity_type_id, entity_id
+  </select>
+
+
+
+</mapper>

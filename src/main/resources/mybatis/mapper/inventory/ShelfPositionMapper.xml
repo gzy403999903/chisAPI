@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.inventory.dao.ShelfPositionMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.inventory.bean.ShelfPosition">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iym_shelf_position
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.inventory.bean.ShelfPosition">
+    insert into iym_shelf_position (id, name, code,
+      sys_clinic_id, creator_id, creation_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.ShelfPosition">
+    update iym_shelf_position
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, code, sys_clinic_id, creator_id, creation_date
+    from iym_shelf_position
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, code, sys_clinic_id, creator_id, creation_date
+    from iym_shelf_position
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectClinicListByCriteria" resultMap="BaseResultMap">
+    select *
+    from iym_shelf_position
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        sys_clinic_id = #{sysClinicId} and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (name like '${name}%' or code like '${name}%') and
+      </if>
+    </trim>
+    order by name
+  </select>
+
+
+  <select id="selectAllByClinicId" resultMap="BaseResultMap">
+    select *
+    from iym_shelf_position
+    where sys_clinic_id = #{sysClinicId}
+    order by name
+  </select>
+
+</mapper>

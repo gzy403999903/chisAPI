@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.tandy.chis.modules.datareport.dao.InventoryCheckReportMapper">
+
+  <select id="selectClinicByCriteriaForCurrent" resultType="map">
+    select
+      b.id as gsmGoodsId, b.oid as gsmGoodsOid, b.name as gsmGoodsName, b.goodsUnitsName, b.splitUnitsName,
+      b.specs as gsmGoodsSpecs, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
+      d.name as iymShelfPositionName, a.ph, a.expiryDate, a.inventoryIntactQuantity, a.inventorySplitQuantity, a.totalCostAmount
+    from (
+      select
+        sys_clinic_id, gsm_goods_id, ph,
+        expiry_date AS expiryDate,
+        SUM(CASE WHEN split_quantity = 1 THEN quantity ELSE 0 END) AS inventoryIntactQuantity,
+        SUM(CASE WHEN split_quantity > 1 THEN quantity ELSE 0 END) AS inventorySplitQuantity,
+        SUM(cost_price * quantity) AS totalCostAmount
+      from iym_inventory
+      where
+        (sys_clinic_id = #{sysClinicId}) and
+        (quantity > 0)
+      <if test="checkWay != null &amp;&amp; checkWay.trim() == 'goods'">
+        group by gsm_goods_id
+      </if>
+      <if test="checkWay != null &amp;&amp; checkWay.trim() == 'ph'">
+        group by gsm_goods_id, ph
+      </if>
+    ) a
+    left join view_gsm_goods b on a.gsm_goods_id = b.id
+    left join iym_shelf_goods c on a.sys_clinic_id = c.sys_clinic_id and a.gsm_goods_id = c.gsm_goods_id
+    left join iym_shelf_position d on c.iym_shelf_position_id = d.id
+    <if test="gsmGoodsTypeId != null">
+      where (b.gsmGoodsTypeId = #{gsmGoodsTypeId})
+    </if>
+    order by b.gsmGoodsTypeId, b.oid
+  </select>
+
+  <select id="executePcdInventoryCheckChanged" statementType="CALLABLE">
+    {CALL pcd_inventory_check_changed(#{creationDate[0], mode=IN}, #{creationDate[1], mode=IN}, #{sysClinicId})};
+  </select>
+
+  <select id="dropPcdInventoryCheckChanged">
+    DROP TABLE IF EXISTS temp_add;
+    DROP TABLE IF EXISTS temp_subtract;
+    DROP TABLE IF EXISTS temp_sell;
+    DROP TABLE IF EXISTS temp_returned;
+    DROP TABLE IF EXISTS temp_used;
+    DROP TABLE IF EXISTS temp_loss;
+    DROP TABLE IF EXISTS temp_union;
+    DROP TABLE IF EXISTS temp_inventory;
+  </select>
+
+  <select id="selectClinicByCriteriaForChanged" resultType="map">
+    select
+      b.id as gsmGoodsId, b.oid as gsmGoodsOid, b.name as gsmGoodsName, b.goodsUnitsName, b.splitUnitsName,
+      b.specs as gsmGoodsSpecs, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
+      d.name as iymShelfPositionName, a.ph, a.expiryDate, a.totalCostAmount,
+      sum(a.inventoryIntactQuantity) as inventoryIntactQuantity,
+      sum(a.inventorySplitQuantity) as inventorySplitQuantity,
+      sum(a.addQuantity) as addQuantity,
+      sum(a.subtractQuantity) as subtractQuantity,
+      sum(a.sellIntactQuantity) as sellIntactQuantity,
+      sum(a.sellSplitQuantity) as sellSplitQuantity,
+      sum(a.returnedIntactQuantity) as returnedIntactQuantity,
+      sum(a.returnedSplitQuantity) as returnedSplitQuantity,
+      sum(a.usedIntactQuantity) as usedIntactQuantity,
+      sum(a.usedSplitQuantity) as usedSplitQuantity,
+      sum(a.lossIntactQuantity) as lossIntactQuantity,
+      sum(a.lossSplitQuantity) as lossSplitQuantity
+
+    from temp_inventory_changed a
+    left join view_gsm_goods b on a.gsmGoodsId = b.id
+    left join iym_shelf_goods c on a.sysClinicId = c.sys_clinic_id and a.gsmGoodsId = c.gsm_goods_id
+    left join iym_shelf_position d on c.iym_shelf_position_id = d.id
+    <if test="gsmGoodsTypeId != null">
+      where (b.gsmGoodsTypeId = #{gsmGoodsTypeId})
+    </if>
+    <if test="checkWay != null &amp;&amp; checkWay.trim() == 'goods'">
+      group by a.gsmGoodsId
+    </if>
+    <if test="checkWay != null &amp;&amp; checkWay.trim() == 'ph'">
+      group by a.gsmGoodsId, a.ph
+    </if>
+    order by b.gsmGoodsTypeId, b.oid
+  </select>
+
+
+</mapper>

@@ -45,9 +45,9 @@ public class AuthcServiceImpl implements AuthcService {
         Map<Integer, String> changedAuthcMap = new HashMap<>();
 
         // 遍历 allAuthcList 判断其 roleNames 是否发生改变
-        for (int i = 0; i < allAuthcList.size(); i++) {
-            Integer key = allAuthcList.get(i).getId();
-            String roleNames = allAuthcList.get(i).getRoleNames();
+        for (Authc authc : allAuthcList) {
+            Integer key = authc.getId();
+            String roleNames = authc.getRoleNames();
 
             // 如果 allAuthcList 当前记录 id 为选中状态, 则进行添加操作
             if (checkedAuthcSet.contains(key)) {
