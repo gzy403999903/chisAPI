@@ -22,25 +22,25 @@ public class ClinicalHistoryTemplate implements Serializable {
     @Length(max = 100)
     private String chiefComplaint;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String presentIllness;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String physicalExamination;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String pastHistory;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String allergenHistory;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String auxiliaryExamination;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String dialectical;
 
-    @Length(max = 500)
+    @Length(max = 300)
     private String diagnoseJson;
 
     @NotNull

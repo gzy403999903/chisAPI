@@ -115,16 +115,19 @@
     LIMIT 30
   </select>
 
-  <select id="selectClinicPchEnabledByCriteriaForOutInventory" resultType="map">
+  <select id="selectClinicPchListByGoodsIdList" resultType="map">
     select *
     from
       view_iym_inventory
     where
       (sysClinicId = #{sysClinicId}) and
-      (gsmGoodsId = #{gsmGoodsId}) and
-      (gsmGoodsState is true) and
+      (sellable is true) and
       (quantity > 0) and
-      (sellable is true)
+      gsmGoodsId in (
+        <foreach collection="gsmGoodsIdList" item="goodsId" separator=",">
+          #{goodsId}
+        </foreach>
+      )
     order by expiryDate
   </select>
 

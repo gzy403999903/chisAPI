@@ -1,8 +1,10 @@
 package com.chisapp.modules.inventory.handler;
 
 import com.chisapp.common.component.PageResult;
+import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.modules.inventory.service.InventoryService;
 import com.chisapp.modules.system.bean.User;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -55,16 +58,16 @@ public class InventoryHandler {
     }
 
     /**
-     * 获取机构对应库房的 pch 库存
-     * (出库发药)
+     * 获取机构对应 pch 库存
+     * (出库发药) [护士工作站]
      * @return
      */
-    @GetMapping("/getClinicPchEnabledByCriteriaForOutInventory")
-    public PageResult getClinicPchEnabledByCriteriaForOutInventory(@RequestParam Integer gsmGoodsId) {
-        // 获取用户信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
+    @GetMapping("/getClinicPchListByGoodsIdList")
+    public PageResult getClinicPchListByGoodsIdList(@RequestParam String gsmGoodsIdListJson) {
+        List<Integer> gsmGoodsIdList = JSONUtils.parseJsonToObject(gsmGoodsIdListJson, new TypeReference<List<Integer>>() {});
+        User user = (User) SecurityUtils.getSubject().getPrincipal();  // 获取用户信息
         List<Map<String, Object>> list =
-                inventoryService.getClinicPchEnabledByCriteriaForOutInventory(user.getSysClinicId(), gsmGoodsId);
+                inventoryService.getClinicPchListByGoodsIdList(user.getSysClinicId(), gsmGoodsIdList.stream().distinct().collect(Collectors.toList()));
         return PageResult.success().resultSet("list", list);
     }
 

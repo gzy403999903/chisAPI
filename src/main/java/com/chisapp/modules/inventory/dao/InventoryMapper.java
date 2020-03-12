@@ -30,8 +30,8 @@ public interface InventoryMapper {
                                                                    @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
                                                                    @Param("gsmGoodsName") String gsmGoodsName);
 
-    List<Map<String, Object>> selectClinicPchEnabledByCriteriaForOutInventory(@Param("sysClinicId") Integer sysClinicId,
-                                                                              @Param("gsmGoodsId") Integer gsmGoodsId);
+    List<Map<String, Object>> selectClinicPchListByGoodsIdList(@Param("sysClinicId") Integer sysClinicId,
+                                                               @Param("gsmGoodsIdList") List<Integer> gsmGoodsIdList);
 
     List<Map<String, Object>> selectClinicSubtractPchLikeByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                                                     @Param("iymInventoryTypeId") Integer iymInventoryTypeId,

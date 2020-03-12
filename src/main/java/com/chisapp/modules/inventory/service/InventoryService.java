@@ -67,11 +67,11 @@ public interface InventoryService {
     /**
      * 查询机构批次库存数量(用于出库)[护士工作站]
      * @param sysClinicId
-     * @param gsmGoodsId
+     * @param gsmGoodsIdList
      * @return
      */
-    List<Map<String, Object>> getClinicPchEnabledByCriteriaForOutInventory(Integer sysClinicId,
-                                                                           Integer gsmGoodsId);
+    List<Map<String, Object>> getClinicPchListByGoodsIdList(Integer sysClinicId,
+                                                            List<Integer> gsmGoodsIdList);
 
     /**
      * 查询机构退货批次库存数量(用于退货)

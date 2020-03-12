@@ -96,11 +96,14 @@
     order by creationDate desc
   </select>
 
+  <!--
+    (creationDate between DATE_SUB(NOW(), INTERVAL 1 DAY) and NOW()) and /*在一天之内*/
+    去掉了时间条件, 如果挂号不结账就一直保持对应的挂号获取这个病例信息
+  -->
   <select id="selectLastUnfinishedByCriteria" resultType="map">
     select *
     from view_dwt_clinical_history
     where
-          (creationDate between DATE_SUB(NOW(), INTERVAL 1 DAY) and NOW()) and /*在一天之内*/
           (mrmMemberId = #{mrmMemberId}) and
           (sysDoctorId = #{sysDoctorId}) and
           (finished is false)

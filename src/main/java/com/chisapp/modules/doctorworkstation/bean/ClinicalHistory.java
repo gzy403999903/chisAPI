@@ -13,28 +13,28 @@ public class ClinicalHistory implements Serializable {
     @NotNull
     private Integer mrmMemberId;
 
-    @Length(max = 100)
+    @Length(max = 100) // 主诉
     private String chiefComplaint;
 
-    @Length(max = 100)
+    @Length(max = 300) // 现病史
     private String presentIllness;
 
-    @Length(max = 100)
+    @Length(max = 300) // 查体
     private String physicalExamination;
 
-    @Length(max = 100)
+    @Length(max = 300) // 既往史
     private String pastHistory;
 
-    @Length(max = 100)
+    @Length(max = 300) // 过敏史
     private String allergenHistory;
 
-    @Length(max = 100)
+    @Length(max = 300) // 辅助检查
     private String auxiliaryExamination;
 
-    @Length(max = 100)
+    @Length(max = 300) // 辩证
     private String dialectical;
 
-    @Length(max = 300)
+    @Length(max = 300) // 诊断JSON
     private String diagnoseJson;
 
     @NotNull

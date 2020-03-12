@@ -239,10 +239,9 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Map<String, Object>> getClinicPchEnabledByCriteriaForOutInventory(Integer sysClinicId, Integer gsmGoodsId) {
-        return inventoryMapper.selectClinicPchEnabledByCriteriaForOutInventory(sysClinicId, gsmGoodsId);
+    public List<Map<String, Object>> getClinicPchListByGoodsIdList(Integer sysClinicId, List<Integer> gsmGoodsIdList) {
+        return inventoryMapper.selectClinicPchListByGoodsIdList(sysClinicId, gsmGoodsIdList);
     }
-
 
     @Override
     public List<Map<String, Object>> getClinicSubtractPchLikeByCriteria(Integer sysClinicId, Integer iymInventoryTypeId, Integer pemSupplierId, String gsmGoodsName) {
