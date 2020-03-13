@@ -48,10 +48,12 @@ public class SellRecordServiceImpl implements SellRecordService {
                 JSONUtils.parseJsonToObject(recordJson, new TypeReference<List<SellRecord>>() {});
 
         // 获取处方流水号
-        String prescriptionLsh = recordList.get(0).getDwtSellPrescriptionLsh();
-
-        if (prescriptionLsh == null) {
-            throw new RuntimeException("未能获取处方流水号");
+        String prescriptionLsh = null;
+        for (SellRecord sellRecord : recordList) {
+            prescriptionLsh = sellRecord.getDwtSellPrescriptionLsh();
+            if (prescriptionLsh == null) {
+                throw new RuntimeException("SellRecord: 未能获取处方流水号");
+            }
         }
 
         // 将赋值后的 list 转成 JSON 保存到缓存 保存格式为(key, prescriptionLsh, recordJson)
@@ -73,9 +75,8 @@ public class SellRecordServiceImpl implements SellRecordService {
         // 将List<Object> 解析成 List<SellRecord>
         List<SellRecord> sellRecordList = new ArrayList<>();
         for (Object o : objectList) {
-            String recordJson = o.toString();
             List<SellRecord> recordList =
-                    JSONUtils.parseJsonToObject(recordJson, new TypeReference<List<SellRecord>>() {});
+                    JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
             sellRecordList.addAll(recordList);
         }
 
@@ -101,9 +102,8 @@ public class SellRecordServiceImpl implements SellRecordService {
         // 将List<Object> 解析成 List<SellRecord> 并过滤对应会员记录
         List<SellRecord> detailList = new ArrayList<>();
         for (Object o : objectList) {
-            String recordJson = o.toString();
             List<SellRecord> recordList =
-                    JSONUtils.parseJsonToObject(recordJson, new TypeReference<List<SellRecord>>() {});
+                    JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
 
             // 过滤对应会员对应记录并进行封装
             if (recordList.get(0).getMrmMemberId().intValue() == mrmMemberId.intValue()) {
@@ -123,11 +123,9 @@ public class SellRecordServiceImpl implements SellRecordService {
         // 将List<Object> 解析成 List<SellRecord> 并进行汇总
         List<SellRecord> groupList = new ArrayList<>();
         for (Object o : objectList) {
-            String recordJson = o.toString();
             List<SellRecord> recordList =
-                    JSONUtils.parseJsonToObject(recordJson, new TypeReference<List<SellRecord>>() {});
+                    JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
 
-            // 通过 Map 去掉重复, 封装汇总数据
             SellRecord record = recordList.get(0);
             if (record.getSysSellTypeId().intValue() == SellTypeEnum.GOODS.getIndex()) {
                 groupList.add(record);
@@ -143,16 +141,17 @@ public class SellRecordServiceImpl implements SellRecordService {
         // 从缓存中获取对应流水号 JSON
         Object o = stringRedisTemplate.opsForHash().get(this.getRedisHashKey(), prescriptionLsh);
         if (o == null) {
-            throw new RuntimeException("获取销售记录缓存失败");
+            throw new RuntimeException("获取销售记录失败, 请刷新数据");
         }
 
         // 将获取的 Object 解析 对应的处方明细 List<SellRecord>
-        String recordJson = o.toString();
         List<SellRecord> recordList =
-                JSONUtils.parseJsonToObject(recordJson, new TypeReference<List<SellRecord>>() {});
+                JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
 
         return this.sellRecordListSort(recordList);
     }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
 
     @Override
     public void saveList(List<SellRecord> sellRecordList) {

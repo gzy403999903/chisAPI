@@ -58,29 +58,49 @@ public class RegistrationRecordServiceImpl implements RegistrationRecordService 
 
     @Override
     public void saveOrUpdateToCache(RegistrationRecord registrationRecord) {
-        // 获取流水号
-        String lsh = registrationRecord.getLsh(); // 初始化流水号
-
-        // 判断是否需要初始化部分属性
-        if (registrationRecord.getLsh() == null || registrationRecord.getLsh().trim().equals("")) {
-            User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
-            lsh = KeyUtils.getLSH(user.getId());
-
-            registrationRecord.setLsh(lsh); // 写入流水号
-            registrationRecord.setSysClinicId(user.getSysClinicId()); // 写入机构ID
-            registrationRecord.setCreatorId(user.getId()); // 操作人ID
-            registrationRecord.setCreatorName(user.getName()); // 操作人姓名
-            registrationRecord.setCreationDate(new Date()); // 操作时间
+        // 从挂号信息中获取流水号
+        String lsh = registrationRecord.getLsh();
+        // 如果获取不到则进行创建, 并将返回的 lsh 对 lsh 进行赋值
+        if (lsh == null || lsh.trim().equals("")) {
+            lsh = this.preSaveToCache(registrationRecord);
+        } else {
+            // 如果可以获取到流水号, 则通过流水号获取该挂号信息, 主要判断该挂号信息是否存在, 不存在由被调用方法抛异常
+            this.getByLshFromCache(lsh);
         }
 
         // 赋值后转成 JSON 保存到缓存
         String recordJson = JSONUtils.parseObjectToJson(registrationRecord);
-
         // 插入一条挂号记录(key, lsh, prescriptionJson)
         stringRedisTemplate.opsForHash().put(this.getRedisHashKey(), lsh, recordJson);
 
         // 插入一条收费记录
         this.saveToSellRecordCache(registrationRecord);
+    }
+
+    private String preSaveToCache (RegistrationRecord registrationRecord) {
+        // 获取当前机构所有的挂号明细
+        List<RegistrationRecord> registrationRecordList = this.getClinicListFromCache();
+        // 判断当前挂号信息是否已经存在(一个患者一次只能挂一个大夫的号)
+        for (RegistrationRecord record : registrationRecordList) {
+            if (
+                    record.getMrmMemberId().intValue() == registrationRecord.getMrmMemberId().intValue() && // 会员ID相同
+                            record.getSysDoctorId().intValue() == registrationRecord.getSysDoctorId().intValue() // 医生ID相同
+            ) {
+                throw new RuntimeException("该会员尚未退号或结算, 请勿重复挂号");
+            }
+        }
+
+        // 设置其他挂号信息
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
+        String lsh = KeyUtils.getLSH(user.getId());
+
+        registrationRecord.setLsh(lsh); // 写入流水号
+        registrationRecord.setSysClinicId(user.getSysClinicId()); // 写入机构ID
+        registrationRecord.setCreatorId(user.getId()); // 操作人ID
+        registrationRecord.setCreatorName(user.getName()); // 操作人姓名
+        registrationRecord.setCreationDate(new Date()); // 操作时间
+
+        return lsh;
     }
 
     private void saveToSellRecordCache(RegistrationRecord registrationRecord) {
@@ -155,7 +175,7 @@ public class RegistrationRecordServiceImpl implements RegistrationRecordService 
     public RegistrationRecord getByLshFromCache(String lsh) {
         Object o = stringRedisTemplate.opsForHash().get(this.getRedisHashKey(), lsh);
         if (o == null) {
-            throw new RuntimeException("获取挂号记录缓存失败");
+            throw new RuntimeException("获取挂号记录失败, 请刷新数据");
         }
         return JSONUtils.parseJsonToObject(o.toString(), new TypeReference<RegistrationRecord>() {});
     }

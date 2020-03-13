@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -70,22 +72,35 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
         List<SellPrescription> prescriptionList =
                 JSONUtils.parseJsonToObject(prescriptionJson, new TypeReference<List<SellPrescription>>() {});
 
-        // 获取一条记录
-        SellPrescription sellPrescription = prescriptionList.get(0);
-        if (sellPrescription == null) {
-            throw new RuntimeException("未能获取处方记录");
-        }
-
-        // 初始化部分属性
-        Map<String, Object> member = memberService.getByIdForTreatment(sellPrescription.getMrmMemberId()); // 获取会员
+        // 初始化 会员ID、流水号、明细号
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
-        String lsh = sellPrescription.getLsh(); // 初始化流水号
+        Integer mrmMemberId = null;
+        String lsh = null;
         int mxh = 1; // 初始化明细号
 
-        // 判定流水号的生成方式(如果有则继续使用, 如果没有则生成一个)
-        if (lsh == null || lsh.trim().equals("")) {
+        // 获取流水号和会员ID (只要处方明细中包含流水号则使用该流水号)
+        for (SellPrescription prescription : prescriptionList) {
+            if (prescription.getLsh() != null && !prescription.getLsh().trim().equals("")) {
+                lsh = prescription.getLsh();
+            }
+            if (prescription.getMrmMemberId() != null) {
+                mrmMemberId = prescription.getMrmMemberId();
+            }
+            if (lsh != null && mrmMemberId != null) {
+                break;
+            }
+        }
+
+        // 如果没有从处方明细中获取到流水号则创建一个
+        if (lsh == null) {
             lsh = KeyUtils.getLSH(user.getId());
         }
+
+        // 获取会员信息
+        if (mrmMemberId == null) {
+            throw new RuntimeException("未能获会员信息");
+        }
+        Map<String, Object> member = memberService.getByIdForTreatment(mrmMemberId); // 获取会员
 
         // 赋值对应的属性
         for (SellPrescription prescription : prescriptionList) {
@@ -99,7 +114,6 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
 
         // 将赋值后的 list 转成 JSON 保存到缓存
         prescriptionJson = JSONUtils.parseObjectToJson(prescriptionList);
-
         // 向缓存插入一条记录(key, lsh, prescriptionJson)
         stringRedisTemplate.opsForHash().put(this.getRedisHashKey(), lsh, prescriptionJson);
 
@@ -176,14 +190,13 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
     public List<SellPrescription> getClinicDoctorGroupListByCriteriaFromCache(Integer sysDoctorId, Integer mrmMemberId, Integer sysSellTypeId, Integer entityTypeId) {
         // 从缓存中获取本机构的所有处方
         List<Object> objectList = stringRedisTemplate.opsForHash().values(this.getRedisHashKey());
-
-        // 将获取到 List<Object> 转成 List<SellPrescription>
+        // 用于返回的处方集合
         List<SellPrescription> groupList = new ArrayList<>();
+        // 将获取到 List<Object> 转成 List<SellPrescription>
         for (Object o : objectList) {
             // 解析当前处方明细
-            String prescriptionJson = o.toString();
             List<SellPrescription> prescriptionList =
-                    JSONUtils.parseJsonToObject(prescriptionJson, new TypeReference<List<SellPrescription>>() {});
+                    JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellPrescription>>() {});
 
             // 获取当前解析后的处方List中一条进行过滤判断
             SellPrescription prescription = prescriptionList.get(0);
@@ -205,7 +218,7 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
         // 从缓存中获取目标流水号的处方
         Object o = stringRedisTemplate.opsForHash().get(this.getRedisHashKey(), lsh);
         if (o == null) {
-            throw new RuntimeException("获取处方缓存失败");
+            throw new RuntimeException("获取处方记录失败, 请刷新数据");
         }
 
         // 将获取的 Object 解析 对应的处方明细 List<SellPrescription>

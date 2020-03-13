@@ -6,6 +6,7 @@ import com.chisapp.common.enums.SellTypeEnum;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.common.utils.KeyUtils;
 import com.chisapp.modules.datareport.bean.SellRecord;
+import com.chisapp.modules.datareport.bean.SellRecordAttach;
 import com.chisapp.modules.datareport.service.SellRecordService;
 import com.chisapp.modules.doctorworkstation.bean.PerformItem;
 import com.chisapp.modules.doctorworkstation.bean.SellPrescription;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -492,7 +494,7 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
                 throw new RuntimeException("保存处方时无法获取对应明细");
             }
 
-            // 汇总病例ID
+            // 汇总病历ID
             Integer dwtClinicalHistoryId = sellPrescription.getDwtClinicalHistoryId();
             dwtClinicalHistoryIdSet.add(dwtClinicalHistoryId);
 
