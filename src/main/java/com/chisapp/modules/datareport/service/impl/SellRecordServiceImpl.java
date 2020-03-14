@@ -105,6 +105,13 @@ public class SellRecordServiceImpl implements SellRecordService {
             List<SellRecord> recordList =
                     JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
 
+            // 检查是否有会员ID 为空的明细
+            recordList.forEach(record -> {
+                if (record.getMrmMemberId() == null) {
+                    throw new RuntimeException("销售流水号: " + record.getDwtSellPrescriptionLsh() + " 会员ID不能为空");
+                }
+            });
+
             // 过滤对应会员对应记录并进行封装
             if (recordList.get(0).getMrmMemberId().intValue() == mrmMemberId.intValue()) {
                 detailList.addAll(recordList);
