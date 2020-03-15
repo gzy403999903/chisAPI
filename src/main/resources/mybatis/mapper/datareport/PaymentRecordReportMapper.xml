@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.datareport.dao.PaymentRecordReportMapper">
+
+  <!--
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+  -->
+
+  <select id="selectCreatorGroupListByCriteria" resultType="map">
+    SELECT
+      ROUND(SUM(cash), 2) AS cash,
+      ROUND(SUM(memberBalance), 2) AS memberBalance,
+      ROUND(SUM(unionpay), 2) AS unionpay,
+      ROUND(SUM(alipay), 2) AS alipay,
+      ROUND(SUM(wechatpay), 2) AS wechatpay,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 1 THEN sysPaymentWayAmount ELSE 0 END), 2) AS shengyb,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 2 THEN sysPaymentWayAmount ELSE 0 END), 2) AS shiyb,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 3 THEN sysPaymentWayAmount ELSE 0 END), 2) AS dkq,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 4 THEN sysPaymentWayAmount ELSE 0 END), 2) AS ybk,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 5 THEN sysPaymentWayAmount ELSE 0 END), 2) AS bgflk,
+      ROUND(SUM(CASE WHEN sysPaymentWayId = 6 THEN sysPaymentWayAmount ELSE 0 END), 2) AS yky,
+      ROUND(SUM(actualAmount), 2) AS actualAmount,
+      ROUND(SUM(disparityAmount), 2) AS disparityAmount,
+      DATE_FORMAT(creationDate, '%Y-%m-%d') AS creationDate,
+      creatorId,
+      creatorName,
+      sysClinicName
+    FROM view_nwt_payment_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="creatorName != null &amp;&amp; creatorName.trim() != ''">
+        (creatorName like '${creatorName}%' or creatorCode like '${creatorName}%') and
+      </if>
+    </trim>
+    GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+  </select>
+
+
+</mapper>

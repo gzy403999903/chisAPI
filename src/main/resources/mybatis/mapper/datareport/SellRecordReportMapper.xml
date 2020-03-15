@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.datareport.dao.SellRecordReportMapper">
+
+  <!--
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+  -->
+
+  <select id="selectBillingTypeGroupListByCriteria" resultType="map">
+    SELECT
+      ROUND(SUM( CASE WHEN billingTypeId = 4 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS xyf , /*西药费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 5 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS zyf , /*中药费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 6 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS zcyf , /*中成药费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 7 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS jcf , /*检查费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 8 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS hyf , /*化验费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 9 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS llf , /*理疗费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 10 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS fwf , /*服务费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 11 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS ghf , /*挂号费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 12 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS zlf , /*治疗费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 13 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS czf , /*出诊费*/
+      ROUND(SUM( CASE WHEN billingTypeId = 177 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS clf , /*材料费*/
+      DATE_FORMAT(creationDate, '%Y-%m-%d') as creationDate,
+      sysClinicName
+    FROM view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+    </trim>
+    GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+  </select>
+
+
+</mapper>

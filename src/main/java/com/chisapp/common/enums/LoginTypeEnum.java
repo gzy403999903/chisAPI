@@ -1,4 +1,4 @@
-package com.chisapp.common.authority.component;
+package com.chisapp.common.enums;
 
 /**
  * 枚举要使用 Realm 名称中包含的单词

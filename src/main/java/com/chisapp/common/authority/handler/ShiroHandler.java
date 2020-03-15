@@ -1,6 +1,6 @@
 package com.chisapp.common.authority.handler;
 
-import com.chisapp.common.authority.component.LoginTypeEnum;
+import com.chisapp.common.enums.LoginTypeEnum;
 import com.chisapp.common.authority.component.ShiroSessionManager;
 import com.chisapp.common.authority.component.ShiroUsernamePasswordToken;
 import com.chisapp.common.component.PageResult;
