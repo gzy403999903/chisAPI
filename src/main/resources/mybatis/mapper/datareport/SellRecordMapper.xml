@@ -152,26 +152,6 @@
     </foreach>
   </update>
 
-  <select id="selectByCriteria" resultType="map">
-    select *
-    from view_dr_sell_record
-    <trim prefix="where" suffixOverrides="and">
-      <if test="sysClinicId != null">
-        (sysClinicId = #{sysClinicId}) and
-      </if>
-      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
-        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
-      </if>
-      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
-        (lsh like '${lsh}%') and
-      </if>
-      <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
-        (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
-      </if>
-    </trim>
-    order by creationDate desc, sysSellTypeId, entityTypeId, entityId
-  </select>
-
   <select id="selectClinicGroupListByCriteria" resultType="map">
     select
     creationDate, lsh, invoiceTypeName, invoiceNo, sysSellWayName, mrmMemberId, mrmMemberOid, mrmMemberName, phone,

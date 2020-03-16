@@ -29,11 +29,6 @@ public interface SellRecordMapper {
                                @Param("invoiceNo") String invoiceNo,
                                @Param("invoiceDate") Date invoiceDate);
 
-    List<Map<String, Object>> selectByCriteria(@Param("sysClinicId") Integer sysClinicId,
-                                               @Param("creationDate") String[] creationDate,
-                                               @Param("lsh") String lsh,
-                                               @Param("sellerName") String sellerName);
-
     List<Map<String, Object>> selectClinicGroupListByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                                               @Param("creationDate") String[] creationDate,
                                                               @Param("lsh") String lsh,

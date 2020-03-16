@@ -185,11 +185,6 @@ public class SellRecordServiceImpl implements SellRecordService {
     }
 
     @Override
-    public List<Map<String, Object>> getByCriteria(Integer sysClinicId, String[] creationDate, String lsh, String sellerName) {
-        return sellRecordMapper.selectByCriteria(sysClinicId, creationDate, lsh, sellerName);
-    }
-
-    @Override
     public List<Map<String, Object>> getClinicGroupListByCriteria(Integer sysClinicId, String[] creationDate, String lsh, String mrmMemberName) {
         return sellRecordMapper.selectClinicGroupListByCriteria(sysClinicId, creationDate, lsh, mrmMemberName);
     }

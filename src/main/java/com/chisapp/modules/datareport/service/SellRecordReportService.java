@@ -11,6 +11,19 @@ import java.util.Map;
 public interface SellRecordReportService {
 
     /**
+     * 根据条件获取销售明细
+     * @param sysClinicId
+     * @param creationDate
+     * @param lsh
+     * @param sellerName
+     * @return
+     */
+    List<Map<String, Object>> getByCriteria(Integer sysClinicId,
+                                            String[] creationDate,
+                                            String lsh,
+                                            String sellerName);
+
+    /**
      * 计费类型汇总表
      * @param creationDate
      * @param sysClinicId

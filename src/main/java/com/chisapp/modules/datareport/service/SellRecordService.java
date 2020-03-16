@@ -88,16 +88,6 @@ public interface SellRecordService {
     void updateInvoiceByIdList(List<Integer> idList, Integer invoiceTypeId, String invoiceNo);
 
     /**
-     * 根据条件获取销售明细
-     * @param sysClinicId
-     * @param creationDate
-     * @param lsh
-     * @param sellerName
-     * @return
-     */
-    List<Map<String, Object>> getByCriteria(Integer sysClinicId, String[] creationDate, String lsh, String sellerName);
-
-    /**
      * 根据条件获取对应的销售汇总记录
      * @param sysClinicId
      * @param creationDate

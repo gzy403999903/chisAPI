@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.datareport.dao.InventoryReportMapper">
+
+  <!--
+      &lt; <
+      &gt; >
+      &amp; &
+  -->
+
+  <select id="selectExpiryDateListByCriteria" resultType="map">
+    SELECT *, DATEDIFF(expiryDate, NOW()) AS days
+    FROM view_iym_inventory
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="true">
+        (quantity > 0) and
+      </if>
+      <if test="filterDays != null">
+        (DATEDIFF(expiryDate, NOW()) &lt; #{filterDays}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+    </trim>
+    ORDER BY days
+  </select>
+
+  <select id="countExpiryDateListByCriteria" resultType="int">
+    select count(a.id) as sums
+    from iym_inventory a
+    left join iym_inventory_type b on a.iym_inventory_type_id = b.id
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (a.sys_clinic_id = #{sysClinicId}) and
+      </if>
+      <if test="true">
+        (a.quantity > 0) and
+      </if>
+      <if test="true">
+        (b.sellable is true) and
+      </if>
+      <if test="filterDays != null">
+        (DATEDIFF(a.expiry_date, NOW()) &lt; #{filterDays}) and
+      </if>
+    </trim>
+  </select>
+
+
+</mapper>

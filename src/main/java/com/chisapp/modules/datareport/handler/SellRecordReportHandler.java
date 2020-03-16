@@ -30,6 +30,58 @@ public class SellRecordReportHandler {
         this.sellRecordReportService = sellRecordReportService;
     }
 
+    /* -------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * 获取机构对应的销售明细
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param lsh
+     * @param sellerName
+     * @return
+     */
+    @GetMapping("/getClinicListByCriteria")
+    public PageResult getClinicListByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) String sellerName){
+
+        // 获取用户信息
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getByCriteria(user.getSysClinicId(), creationDate, lsh, sellerName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取所有机构对应的销售明细
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param lsh
+     * @param sellerName
+     * @return
+     */
+    @GetMapping("/getByCriteria")
+    public PageResult getByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) String sellerName){
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getByCriteria(null, creationDate, lsh, sellerName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
     /**
      * 获取全机构 计费类型汇总
      * @param pageNum
