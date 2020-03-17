@@ -2,8 +2,10 @@ package com.chisapp.modules.doctorworkstation.handler;
 
 import com.chisapp.common.component.PageResult;
 import com.chisapp.modules.doctorworkstation.service.PerformItemService;
+import com.chisapp.modules.system.bean.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +45,7 @@ public class PerformItemHandler {
      * @param pageSize
      * @param mrmMemberId
      * @param cimItemName
+     * @param onlyClinic
      * @param showZero
      * @return
      */
@@ -52,10 +55,13 @@ public class PerformItemHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(required = false) Integer mrmMemberId,
             @RequestParam(required = false) String cimItemName,
+            @RequestParam(required = false) Boolean onlyClinic,
             @RequestParam(required = false) Boolean showZero){
 
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = performItemService.getByCriteria(mrmMemberId, cimItemName, showZero);
+        List<Map<String, Object>> pageList =
+                performItemService.getByCriteria(mrmMemberId, cimItemName, (onlyClinic ? user.getSysClinicId() : null), showZero);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

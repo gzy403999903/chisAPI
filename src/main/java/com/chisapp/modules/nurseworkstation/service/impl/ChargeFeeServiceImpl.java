@@ -377,6 +377,7 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
                     performItem.setOnceContainQuantity(sellRecord.getOnceContainQuantity()); // 单次可执行数量
                     performItem.setResidueQuantity(sellRecord.getQuantity() * sellRecord.getOnceContainQuantity()); // 剩余数量
                     performItem.setSellerId(sellRecord.getSellerId()); // 销售人ID
+                    performItem.setSysClinicId(sellRecord.getSysClinicId()); // 销售机构
                     performItem.setCreationDate(sellRecord.getDwtSellPrescriptionDate()); // 处方创建时间
 
                     performItemList.add(performItem);

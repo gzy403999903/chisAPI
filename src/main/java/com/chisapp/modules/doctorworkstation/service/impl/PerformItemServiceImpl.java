@@ -101,8 +101,8 @@ public class PerformItemServiceImpl implements PerformItemService {
     }
 
     @Override
-    public List<Map<String, Object>> getByCriteria(Integer mrmMemberId, String cimItemName, Boolean showZero) {
-        return performItemMapper.selectByCriteria(mrmMemberId, cimItemName, showZero);
+    public List<Map<String, Object>> getByCriteria(Integer mrmMemberId, String cimItemName, Integer sysClinicId, Boolean showZero) {
+        return performItemMapper.selectByCriteria(mrmMemberId, cimItemName, sysClinicId, showZero);
     }
 
 }

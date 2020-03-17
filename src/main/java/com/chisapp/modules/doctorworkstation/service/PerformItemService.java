@@ -49,9 +49,10 @@ public interface PerformItemService {
      * 根据条件获取对应的记录
      * @param mrmMemberId
      * @param cimItemName
+     * @param sysClinicId
      * @param showZero
      * @return
      */
-    List<Map<String, Object>> getByCriteria(Integer mrmMemberId, String cimItemName, Boolean showZero);
+    List<Map<String, Object>> getByCriteria(Integer mrmMemberId, String cimItemName,Integer sysClinicId, Boolean showZero);
 
 }

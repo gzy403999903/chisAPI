@@ -67,7 +67,7 @@ public class Supplier implements Serializable {
     @Length(max = 30)
     private String contacterPhone;
 
-    @Length(max = 100)
+    @Length(max = 300)
     private String businessScope;
 
     @Length(max = 100)

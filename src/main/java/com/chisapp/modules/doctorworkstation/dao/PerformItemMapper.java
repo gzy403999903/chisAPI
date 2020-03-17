@@ -17,6 +17,7 @@ public interface PerformItemMapper {
 
     int updateByPrimaryKey(PerformItem record);
 
+
     /* -------------------------------------------------------------------------------------------------------------- */
 
     void updateResidueQuantityById(@Param("id") Integer id, @Param("performQuantity") Integer performQuantity);
@@ -27,5 +28,6 @@ public interface PerformItemMapper {
 
     List<Map<String, Object>> selectByCriteria(@Param("mrmMemberId") Integer mrmMemberId,
                                                @Param("cimItemName") String cimItemName,
+                                               @Param("sysClinicId") Integer sysClinicId,
                                                @Param("showZero") Boolean showZero);
 }

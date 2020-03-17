@@ -10,6 +10,7 @@
     <result column="once_contain_quantity" jdbcType="INTEGER" property="onceContainQuantity" />
     <result column="residue_quantity" jdbcType="INTEGER" property="residueQuantity" />
     <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -19,12 +20,12 @@
   <insert id="insert" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItem">
     insert into dwt_perform_item (id, lsh, mrm_member_id,
       cim_item_id, quantity, once_contain_quantity,
-      residue_quantity, seller_id, creation_date
-      )
+      residue_quantity, seller_id, sys_clinic_id,
+      creation_date)
     values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{mrmMemberId,jdbcType=INTEGER},
       #{cimItemId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{onceContainQuantity,jdbcType=INTEGER},
-      #{residueQuantity,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}
-      )
+      #{residueQuantity,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.doctorworkstation.bean.PerformItem">
     update dwt_perform_item
@@ -35,20 +36,22 @@
       once_contain_quantity = #{onceContainQuantity,jdbcType=INTEGER},
       residue_quantity = #{residueQuantity,jdbcType=INTEGER},
       seller_id = #{sellerId,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, lsh, mrm_member_id, cim_item_id, quantity, once_contain_quantity, residue_quantity,
-    seller_id, creation_date
+    seller_id, sys_clinic_id, creation_date
     from dwt_perform_item
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, lsh, mrm_member_id, cim_item_id, quantity, once_contain_quantity, residue_quantity,
-    seller_id, creation_date
+    seller_id, sys_clinic_id, creation_date
     from dwt_perform_item
   </select>
+
 
 
   <!--***************************************************************************************************************-->
@@ -82,6 +85,9 @@
     select *
     from view_dwt_perform_item
     <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
       <if test="showZero != null &amp;&amp; !showZero">
         (residueQuantity > 0) and
       </if>
@@ -93,6 +99,7 @@
       </if>
     </trim>
   </select>
+
 
 
 

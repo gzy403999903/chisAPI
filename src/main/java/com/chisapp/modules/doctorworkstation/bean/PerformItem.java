@@ -35,6 +35,9 @@ public class PerformItem implements Serializable {
     private Integer residueQuantity;
 
     @NotNull
+    private Integer sysClinicId;
+
+    @NotNull
     private Integer sellerId;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -103,6 +106,14 @@ public class PerformItem implements Serializable {
 
     public void setSellerId(Integer sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public Integer getSysClinicId() {
+        return sysClinicId;
+    }
+
+    public void setSysClinicId(Integer sysClinicId) {
+        this.sysClinicId = sysClinicId;
     }
 
     public Date getCreationDate() {
