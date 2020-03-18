@@ -6,7 +6,6 @@ import com.chisapp.common.enums.SellTypeEnum;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.common.utils.KeyUtils;
 import com.chisapp.modules.datareport.bean.SellRecord;
-import com.chisapp.modules.datareport.bean.SellRecordAttach;
 import com.chisapp.modules.datareport.service.SellRecordService;
 import com.chisapp.modules.doctorworkstation.bean.PerformItem;
 import com.chisapp.modules.doctorworkstation.bean.SellPrescription;
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -397,20 +395,23 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
      * @param neglectQuantity
      */
     private void updatePerformItemResidueQuantity(List<SellRecord> sellRecordList, Boolean neglectQuantity) {
-        // 需要将剩余次数进行重置为 0 的医嘱执行项目
+        // 要进行处理的项目
         List<PerformItem> performItemList = new ArrayList<>();
 
         // 遍历所有销售项目
         for (SellRecord sellRecord : sellRecordList) {
-            // 如果销售类型为收费项目 并且为医技和辅助治疗项目
+            // 如果销售类型为收费项目
             if (sellRecord.getSysSellTypeId().intValue() == SellTypeEnum.ITEM.getIndex().intValue()) {
-                if (sellRecord.getEntityTypeId().intValue() == ItemTypeEnum.MEDICAL_ITEM.getIndex().intValue() ||
-                        sellRecord.getEntityTypeId().intValue() == ItemTypeEnum.ADJUVANT_ITEM.getIndex().intValue()) {
+                // 并且为医技和辅助治疗项目
+                if (
+                        sellRecord.getEntityTypeId().intValue() == ItemTypeEnum.MEDICAL_ITEM.getIndex().intValue() ||
+                        sellRecord.getEntityTypeId().intValue() == ItemTypeEnum.ADJUVANT_ITEM.getIndex().intValue()
+                ) {
                     // 创建医嘱执行项目
                     PerformItem performItem = new PerformItem();
                     performItem.setLsh(sellRecord.getDwtSellPrescriptionLsh()); // 处方流水号
                     performItem.setCimItemId(sellRecord.getEntityId()); // 项目ID
-                    performItem.setQuantity(neglectQuantity ? 0 : sellRecord.getQuantity()); // 销售数量
+                    performItem.setResidueQuantity(neglectQuantity ? 0 : sellRecord.getQuantity()); // 剩余数量 = 销售数量
 
                     performItemList.add(performItem);
                 }

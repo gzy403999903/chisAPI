@@ -138,12 +138,9 @@ public class DepositRecordServiceImpl implements DepositRecordService {
 
         // 判断是否会员余额不足
         BigDecimal depositAmount = depositRecord.getDepositAmount(); // 获取要退储值金额
-        System.out.println("depositAmount -----> " + depositAmount);
         BigDecimal givenAmount = depositRecord.getGivenAmount(); // 获取要退赠送金额
-        System.out.println("givenAmount ------> " + givenAmount);
         BigDecimal totalDepositAmount = depositAmount.add(givenAmount); // 合计退储值金额 = 要退储值金额 + 要退赠送金额
         BigDecimal balance = member.getBalance().subtract(totalDepositAmount); // 退后余额 = 会员余额 - 合计退储值金额
-        System.out.println("balance ------> " + balance);
         // 如果会员余额小于0 (返回 -1) 则停止执行
         if (balance.compareTo(new BigDecimal("0")) < 0) {
             throw new RuntimeException("会员余额不足");
