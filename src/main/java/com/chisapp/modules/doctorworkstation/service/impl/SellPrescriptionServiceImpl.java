@@ -5,12 +5,15 @@ import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.common.utils.KeyUtils;
 import com.chisapp.modules.datareport.bean.SellRecord;
 import com.chisapp.modules.datareport.service.SellRecordService;
+import com.chisapp.modules.doctorworkstation.bean.ClinicalHistory;
 import com.chisapp.modules.doctorworkstation.bean.SellPrescription;
 import com.chisapp.modules.doctorworkstation.dao.SellPrescriptionMapper;
+import com.chisapp.modules.doctorworkstation.service.ClinicalHistoryService;
 import com.chisapp.modules.doctorworkstation.service.SellPrescriptionService;
 import com.chisapp.modules.member.service.MemberService;
 import com.chisapp.modules.system.bean.User;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.sun.javafx.scene.control.ReadOnlyUnbackedObservableList;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,6 +58,12 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
         this.memberService = memberService;
     }
 
+    private ClinicalHistoryService clinicalHistoryService;
+    @Autowired
+    public void setClinicalHistoryService(ClinicalHistoryService clinicalHistoryService) {
+        this.clinicalHistoryService = clinicalHistoryService;
+    }
+
     private SqlSessionFactory sqlSessionFactory;
     @Autowired
     public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
@@ -72,35 +78,17 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
         List<SellPrescription> prescriptionList =
                 JSONUtils.parseJsonToObject(prescriptionJson, new TypeReference<List<SellPrescription>>() {});
 
-        // 初始化 会员ID、流水号、明细号
+        // 初始化流水号、明细号
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
-        Integer mrmMemberId = null;
-        String lsh = null;
+        String lsh = this.getSellPrescriptionLsh(prescriptionList, user);
         int mxh = 1; // 初始化明细号
 
-        // 获取流水号和会员ID (只要处方明细中包含流水号则使用该流水号)
-        for (SellPrescription prescription : prescriptionList) {
-            if (prescription.getLsh() != null && !prescription.getLsh().trim().equals("")) {
-                lsh = prescription.getLsh();
-            }
-            if (prescription.getMrmMemberId() != null) {
-                mrmMemberId = prescription.getMrmMemberId();
-            }
-            if (lsh != null && mrmMemberId != null) {
-                break;
-            }
-        }
-
-        // 如果没有从处方明细中获取到流水号则创建一个
-        if (lsh == null) {
-            lsh = KeyUtils.getLSH(user.getId());
-        }
-
         // 获取会员信息
-        if (mrmMemberId == null) {
-            throw new RuntimeException("未能获会员信息");
-        }
+        Integer mrmMemberId = this.getSellPrescriptionMrmMemberId(prescriptionList);
         Map<String, Object> member = memberService.getByIdForTreatment(mrmMemberId); // 获取会员
+
+        // 检查病例是否正确
+        this.checkDwtClinicalHistoryId(prescriptionList, user, mrmMemberId);
 
         // 赋值对应的属性
         for (SellPrescription prescription : prescriptionList) {
@@ -116,9 +104,100 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
         prescriptionJson = JSONUtils.parseObjectToJson(prescriptionList);
         // 向缓存插入一条记录(key, lsh, prescriptionJson)
         stringRedisTemplate.opsForHash().put(this.getRedisHashKey(), lsh, prescriptionJson);
-
         // 生成对应的销售记录
         this.saveOrUpdateToSellRecordCache(prescriptionList);
+    }
+
+    /**
+     * 获取处方流水号
+     * @param sellPrescriptionList
+     * @param user
+     * @return
+     */
+    private String getSellPrescriptionLsh (List<SellPrescription> sellPrescriptionList, User user) {
+        String lsh = null;
+
+        List<String> lshList = sellPrescriptionList.stream()
+                .map(SellPrescription::getLsh)
+                .distinct()
+                .filter(filterLsh -> (filterLsh != null && !filterLsh.trim().equals("")))
+                .collect(Collectors.toList());
+
+        if (lshList.size() == 0) {
+            lsh = KeyUtils.getLSH(user.getId());
+        }
+
+        if (lshList.size() == 1) {
+            lsh = lshList.get(0);
+        }
+
+        if (lshList.size() > 1) {
+            throw new RuntimeException("一个处方不能有多个流水号");
+        }
+
+        return lsh;
+    }
+
+    private Integer getSellPrescriptionMrmMemberId (List<SellPrescription> sellPrescriptionList) {
+        Integer mrmMemberId = null;
+
+        List<Integer> mrmMemberIdList = sellPrescriptionList.stream()
+                .map(SellPrescription::getMrmMemberId)
+                .distinct()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (mrmMemberIdList.size() == 0) {
+            throw new RuntimeException("未能获取会员信息");
+        }
+
+        if (mrmMemberIdList.size() == 1) {
+            mrmMemberId = mrmMemberIdList.get(0);
+        }
+
+        if (mrmMemberIdList.size() > 1) {
+            throw new RuntimeException("一个处方中不能有多个会员信息");
+        }
+
+        return mrmMemberId;
+    }
+
+    /**
+     * 检查病例是否正确
+     * @param sellPrescriptionList
+     * @param user
+     * @param mrmMemberId
+     */
+    private void checkDwtClinicalHistoryId(List<SellPrescription> sellPrescriptionList, User user, Integer mrmMemberId) {
+        // 查看是否可以获取到病例 ID
+        List<Integer> idList = sellPrescriptionList.stream()
+                .map(SellPrescription::getDwtClinicalHistoryId)
+                .distinct()
+                .filter(id -> (id != null && id != 0))
+                .collect(Collectors.toList());
+        if (idList.size() == 0) {
+            throw new RuntimeException("未能获取病例信息, 请刷新再次查看病例是否填写");
+        }
+
+        if (idList.size() > 1) {
+            throw new RuntimeException("同一个处方中不能包含多个病例");
+        }
+
+        Integer id = idList.get(0);
+        ClinicalHistory clinicalHistory = this.clinicalHistoryService.getById(id);
+
+        if (clinicalHistory == null) {
+            throw new RuntimeException("未能获取病例信息, 请刷新再次查看病例是否填写");
+        }
+
+        if (clinicalHistory.getSysDoctorId().intValue() != user.getId().intValue() ||
+            clinicalHistory.getMrmMemberId().intValue() != mrmMemberId.intValue()) {
+            throw new RuntimeException("不对应的病例信息");
+        }
+
+        if (clinicalHistory.getFinished()) {
+            throw new RuntimeException("该病例已归档, 不能继续使用");
+        }
     }
 
     private void saveOrUpdateToSellRecordCache(List<SellPrescription> prescriptionList) {

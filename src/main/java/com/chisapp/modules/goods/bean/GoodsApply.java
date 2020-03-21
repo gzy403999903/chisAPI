@@ -14,25 +14,25 @@ public class GoodsApply implements Serializable {
     private Integer gsmGoodsTypeId;
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 50)
     private String oid;
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 50)
     private String name;
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 50)
     private String code;
 
-    @Length(max = 20)
+    @Length(max = 50)
     private String spName;
 
-    @Length(max = 20)
+    @Length(max = 50)
     private String spCode;
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 50)
     private String specs;
 
     @NotNull

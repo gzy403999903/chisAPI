@@ -40,7 +40,7 @@ public class SellPrescription extends SellPrescriptionAttach implements Serializ
     @NotBlank
     private String name;
 
-    @Length(max = 20)
+    @Length(max = 50)
     private String specs;
 
     @Max(30000)

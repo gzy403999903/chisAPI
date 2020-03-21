@@ -66,8 +66,8 @@ public class ClinicalHistoryHandler {
         if (result.hasErrors()) {
             return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
         }
-        ClinicalHistory resultClinicalHistory = clinicalHistoryService.save(clinicalHistory);
-        return PageResult.success().resultSet("id", resultClinicalHistory.getId());
+        Integer id = clinicalHistoryService.save(clinicalHistory).getId();
+        return PageResult.success().resultSet("id", id);
     }
 
     /**
