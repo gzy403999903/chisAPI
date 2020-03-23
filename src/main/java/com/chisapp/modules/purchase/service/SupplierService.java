@@ -65,23 +65,25 @@ public interface SupplierService {
 
     /**
      * 根据查询条件 获取对应视图对象的集合
+     * @param oid
      * @param name
      * @param contacterPhone
      * @param state
      * @return
      */
-    List<Map<String, Object>> getByCriteria(String name, String contacterPhone, Boolean state);
+    List<Map<String, Object>> getByCriteria(String oid, String name, String contacterPhone, Boolean state);
 
     /**
      * 根据条件获取供应商集合
      * [供应商账款调用]
+     * @param oid
      * @param name
      * @param arrearagesAmount
      * @param arrearagesLimit
      * @param arrearagesDays
      * @return
      */
-    List<Map<String, Object>> getByCriteriaForAccount(String name, BigDecimal arrearagesAmount, BigDecimal arrearagesLimit, Integer arrearagesDays);
+    List<Map<String, Object>> getByCriteriaForAccount(String oid, String name, BigDecimal arrearagesAmount, BigDecimal arrearagesLimit, Integer arrearagesDays);
 
     /**
      * 根据 通用名称 或 助记码获取对应集合

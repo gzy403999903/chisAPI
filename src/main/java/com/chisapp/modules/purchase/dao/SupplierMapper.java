@@ -27,7 +27,8 @@ public interface SupplierMapper {
     void subtractArrearagesAmount(@Param("id") Integer id,
                                   @Param("amount") BigDecimal amount);
 
-    List<Map<String, Object>> selectByCriteria(@Param("name") String name,
+    List<Map<String, Object>> selectByCriteria(@Param("oid") String oid,
+                                               @Param("name") String name,
                                                @Param("contacterPhone") String contacterPhone,
                                                @Param("state") Boolean state,
                                                @Param("arrearagesAmount") BigDecimal arrearagesAmount,

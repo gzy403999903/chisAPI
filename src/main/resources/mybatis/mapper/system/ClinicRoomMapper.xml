@@ -37,18 +37,18 @@
 
   <!-- ************************************************************************************************************* -->
 
-  <select id="selectClinicListByCriteria" resultMap="BaseResultMap">
+  <select id="selectClinicListByCriteria" resultType="map">
     select *
-    from sys_clinic_room
+    from view_sys_clinic_room
     <trim prefix="where" suffixOverrides="and">
-      <if test="sysClinicId != null">
-        sys_clinic_id = #{sysClinicId} and
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != '' ">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
       </if>
       <if test="name != null &amp;&amp; name.trim() != ''">
         (name like '${name}%' or code like '${name}%') and
       </if>
     </trim>
-    order by id
+    order by sysClinicId, id
   </select>
 
   <select id="selectByClinicId" resultMap="BaseResultMap">

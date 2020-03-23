@@ -134,6 +134,7 @@ public class UserHandler {
 
     /**
      * 获取对应机构启用状态的用户
+     * [POS 调用]
      * @return
      */
     @GetMapping("/getClinicEnabled")
@@ -141,6 +142,17 @@ public class UserHandler {
         // 获取用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         return userService.getClinicEnabled(user.getSysClinicId());
+    }
+
+    /**
+     * 根据机构ID 获取对应启用状态的用户
+     * @param sysClinicId
+     * @return
+     */
+    @GetMapping("/getEnabledByClinicId")
+    public PageResult getEnabledByClinicId(@RequestParam Integer sysClinicId) {
+        List<Map<String, Object>> list = userService.getClinicEnabled(sysClinicId);
+        return PageResult.success().resultSet("list", list);
     }
 
 }

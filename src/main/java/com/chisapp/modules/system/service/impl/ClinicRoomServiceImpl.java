@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Tandy
@@ -28,9 +29,6 @@ public class ClinicRoomServiceImpl implements ClinicRoomService {
     @CacheEvict(key = "'clinicId' + #clinicRoom.sysClinicId")
     @Override
     public void save(ClinicRoom clinicRoom) {
-        // 获取用户信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        clinicRoom.setSysClinicId(user.getSysClinicId());
         clinicRoomMapper.insert(clinicRoom);
     }
 
@@ -66,8 +64,8 @@ public class ClinicRoomServiceImpl implements ClinicRoomService {
     }
 
     @Override
-    public List<ClinicRoom> getClinicListByCriteria(Integer sysClinicId,String name) {
-        return clinicRoomMapper.selectClinicListByCriteria(sysClinicId, name);
+    public List<Map<String, Object>> getClinicListByCriteria(String sysClinicName, String name) {
+        return clinicRoomMapper.selectClinicListByCriteria(sysClinicName, name);
     }
 
     @Cacheable(key = "'clinicId' + #sysClinicId")

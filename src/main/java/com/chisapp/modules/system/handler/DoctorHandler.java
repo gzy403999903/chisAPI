@@ -100,13 +100,11 @@ public class DoctorHandler {
     public PageResult getClinicListByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) String name){
 
-        // 获取用户信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = doctorService.getClinicListByCriteria(user.getSysClinicId(), name);
+        List<Map<String, Object>> pageList = doctorService.getClinicListByCriteria(sysClinicName, name);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -121,16 +119,6 @@ public class DoctorHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         return doctorService.getClinicEnabled(user.getSysClinicId());
     }
-
-    /**
-     * 查询所有启用状态的医生信息
-     * @return
-     */
-    @GetMapping("/getAllEnabled")
-    public List<Map<String, Object>> getAllEnabled() {
-        return doctorService.getAllEnabled();
-    }
-
 
 
 }

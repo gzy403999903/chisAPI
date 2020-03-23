@@ -1,8 +1,8 @@
 package com.chisapp.modules.system.bean;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -10,78 +10,29 @@ import java.util.Date;
 public class Doctor implements Serializable {
     private Integer id;
 
+    private Integer mainSysClinicId;
+
+    private Integer subSysClinicId;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date subSysClinicExpiryDate;
+
     @NotNull
     private Integer sysClinicRoomId;
 
-    @DateTimeFormat(pattern="HH:mm")
-    private Date monBeginTime;
+    private Integer doctorTitlesId;
 
-    @DateTimeFormat(pattern="HH:mm")
-    private Date monEndTime;
+    private Integer practiceTypeId;
 
-    @Max(500)
-    @NotNull
-    private Short monNo;
+    private Integer sysPracticeScopeId;
 
-    @DateTimeFormat(pattern="HH:mm")
-    private Date tueBeginTime;
+    @Length(max = 200)
+    private String intro;
 
-    @DateTimeFormat(pattern="HH:mm")
-    private Date tueEndTime;
+    private Integer creatorId;
 
-    @Max(500)
-    @NotNull
-    private Short tueNo;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date wedBeginTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date wedEndTime;
-
-    @Max(500)
-    @NotNull
-    private Short wedNo;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date thuBeginTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date thuEndTime;
-
-    @Max(500)
-    @NotNull
-    private Short thuNo;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date friBeginTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date friEndTime;
-
-    @Max(500)
-    @NotNull
-    private Short friNo;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date satBeginTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date satEndTime;
-
-    @Max(500)
-    @NotNull
-    private Short satNo;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date sunBeginTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private Date sunEndTime;
-
-    @Max(500)
-    @NotNull
-    private Short sunNo;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date creationDate;
 
     public Integer getId() {
         return id;
@@ -89,6 +40,30 @@ public class Doctor implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getMainSysClinicId() {
+        return mainSysClinicId;
+    }
+
+    public void setMainSysClinicId(Integer mainSysClinicId) {
+        this.mainSysClinicId = mainSysClinicId;
+    }
+
+    public Integer getSubSysClinicId() {
+        return subSysClinicId;
+    }
+
+    public void setSubSysClinicId(Integer subSysClinicId) {
+        this.subSysClinicId = subSysClinicId;
+    }
+
+    public Date getSubSysClinicExpiryDate() {
+        return subSysClinicExpiryDate;
+    }
+
+    public void setSubSysClinicExpiryDate(Date subSysClinicExpiryDate) {
+        this.subSysClinicExpiryDate = subSysClinicExpiryDate;
     }
 
     public Integer getSysClinicRoomId() {
@@ -99,171 +74,51 @@ public class Doctor implements Serializable {
         this.sysClinicRoomId = sysClinicRoomId;
     }
 
-    public Date getMonBeginTime() {
-        return monBeginTime;
+    public Integer getDoctorTitlesId() {
+        return doctorTitlesId;
     }
 
-    public void setMonBeginTime(Date monBeginTime) {
-        this.monBeginTime = monBeginTime;
+    public void setDoctorTitlesId(Integer doctorTitlesId) {
+        this.doctorTitlesId = doctorTitlesId;
     }
 
-    public Date getMonEndTime() {
-        return monEndTime;
+    public Integer getPracticeTypeId() {
+        return practiceTypeId;
     }
 
-    public void setMonEndTime(Date monEndTime) {
-        this.monEndTime = monEndTime;
+    public void setPracticeTypeId(Integer practiceTypeId) {
+        this.practiceTypeId = practiceTypeId;
     }
 
-    public Short getMonNo() {
-        return monNo;
+    public Integer getSysPracticeScopeId() {
+        return sysPracticeScopeId;
     }
 
-    public void setMonNo(Short monNo) {
-        this.monNo = monNo;
+    public void setSysPracticeScopeId(Integer sysPracticeScopeId) {
+        this.sysPracticeScopeId = sysPracticeScopeId;
     }
 
-    public Date getTueBeginTime() {
-        return tueBeginTime;
+    public String getIntro() {
+        return intro;
     }
 
-    public void setTueBeginTime(Date tueBeginTime) {
-        this.tueBeginTime = tueBeginTime;
+    public void setIntro(String intro) {
+        this.intro = intro == null ? null : intro.trim();
     }
 
-    public Date getTueEndTime() {
-        return tueEndTime;
+    public Integer getCreatorId() {
+        return creatorId;
     }
 
-    public void setTueEndTime(Date tueEndTime) {
-        this.tueEndTime = tueEndTime;
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public Short getTueNo() {
-        return tueNo;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setTueNo(Short tueNo) {
-        this.tueNo = tueNo;
-    }
-
-    public Date getWedBeginTime() {
-        return wedBeginTime;
-    }
-
-    public void setWedBeginTime(Date wedBeginTime) {
-        this.wedBeginTime = wedBeginTime;
-    }
-
-    public Date getWedEndTime() {
-        return wedEndTime;
-    }
-
-    public void setWedEndTime(Date wedEndTime) {
-        this.wedEndTime = wedEndTime;
-    }
-
-    public Short getWedNo() {
-        return wedNo;
-    }
-
-    public void setWedNo(Short wedNo) {
-        this.wedNo = wedNo;
-    }
-
-    public Date getThuBeginTime() {
-        return thuBeginTime;
-    }
-
-    public void setThuBeginTime(Date thuBeginTime) {
-        this.thuBeginTime = thuBeginTime;
-    }
-
-    public Date getThuEndTime() {
-        return thuEndTime;
-    }
-
-    public void setThuEndTime(Date thuEndTime) {
-        this.thuEndTime = thuEndTime;
-    }
-
-    public Short getThuNo() {
-        return thuNo;
-    }
-
-    public void setThuNo(Short thuNo) {
-        this.thuNo = thuNo;
-    }
-
-    public Date getFriBeginTime() {
-        return friBeginTime;
-    }
-
-    public void setFriBeginTime(Date friBeginTime) {
-        this.friBeginTime = friBeginTime;
-    }
-
-    public Date getFriEndTime() {
-        return friEndTime;
-    }
-
-    public void setFriEndTime(Date friEndTime) {
-        this.friEndTime = friEndTime;
-    }
-
-    public Short getFriNo() {
-        return friNo;
-    }
-
-    public void setFriNo(Short friNo) {
-        this.friNo = friNo;
-    }
-
-    public Date getSatBeginTime() {
-        return satBeginTime;
-    }
-
-    public void setSatBeginTime(Date satBeginTime) {
-        this.satBeginTime = satBeginTime;
-    }
-
-    public Date getSatEndTime() {
-        return satEndTime;
-    }
-
-    public void setSatEndTime(Date satEndTime) {
-        this.satEndTime = satEndTime;
-    }
-
-    public Short getSatNo() {
-        return satNo;
-    }
-
-    public void setSatNo(Short satNo) {
-        this.satNo = satNo;
-    }
-
-    public Date getSunBeginTime() {
-        return sunBeginTime;
-    }
-
-    public void setSunBeginTime(Date sunBeginTime) {
-        this.sunBeginTime = sunBeginTime;
-    }
-
-    public Date getSunEndTime() {
-        return sunEndTime;
-    }
-
-    public void setSunEndTime(Date sunEndTime) {
-        this.sunEndTime = sunEndTime;
-    }
-
-    public Short getSunNo() {
-        return sunNo;
-    }
-
-    public void setSunNo(Short sunNo) {
-        this.sunNo = sunNo;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

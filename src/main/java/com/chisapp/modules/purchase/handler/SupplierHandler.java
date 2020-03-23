@@ -100,12 +100,13 @@ public class SupplierHandler {
     public PageResult getByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(required = false) String oid,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String contacterPhone,
             @RequestParam(required = false) Boolean state){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = supplierService.getByCriteria(name, contacterPhone, state);
+        List<Map<String, Object>> pageList = supplierService.getByCriteria(oid, name, contacterPhone, state);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -122,13 +123,14 @@ public class SupplierHandler {
     public PageResult getByCriteriaForAccount (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(required = false) String oid,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) BigDecimal arrearagesAmount,
             @RequestParam(required = false) BigDecimal arrearagesLimit,
             @RequestParam(required = false) Integer arrearagesDays){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = supplierService.getByCriteriaForAccount(name, arrearagesAmount, arrearagesLimit, arrearagesDays);
+        List<Map<String, Object>> pageList = supplierService.getByCriteriaForAccount(oid, name, arrearagesAmount, arrearagesLimit, arrearagesDays);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

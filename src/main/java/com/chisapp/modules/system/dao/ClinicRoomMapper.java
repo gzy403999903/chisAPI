@@ -4,6 +4,7 @@ import com.chisapp.modules.system.bean.ClinicRoom;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClinicRoomMapper {
     int deleteByPrimaryKey(Integer id);
@@ -17,8 +18,8 @@ public interface ClinicRoomMapper {
     int updateByPrimaryKey(ClinicRoom record);
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    List<ClinicRoom> selectClinicListByCriteria(@Param("sysClinicId") Integer sysClinicId,
-                                                @Param("name") String name);
+    List<Map<String, Object>> selectClinicListByCriteria(@Param("sysClinicName") String sysClinicName,
+                                                         @Param("name") String name);
 
     List<ClinicRoom> selectByClinicId(@Param("sysClinicId") Integer sysClinicId);
 

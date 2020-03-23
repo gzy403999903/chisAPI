@@ -4,6 +4,7 @@ import com.chisapp.modules.system.bean.ClinicRoom;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Tandy
@@ -42,12 +43,12 @@ public interface ClinicRoomService {
     ClinicRoom getById(Integer id);
 
     /**
-     * 根据查询条件获取对应的集合
-     * @param sysClinicId
+     * 根据查询条件获取对应的诊室集合
+     * @param sysClinicName
      * @param name
      * @return
      */
-    List<ClinicRoom> getClinicListByCriteria(Integer sysClinicId, String name);
+    List<Map<String, Object>> getClinicListByCriteria(String sysClinicName, String name);
 
     /**
      * 获取对应机构所有的诊室

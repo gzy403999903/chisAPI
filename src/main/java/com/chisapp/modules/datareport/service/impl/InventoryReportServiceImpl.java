@@ -1,10 +1,13 @@
 package com.chisapp.modules.datareport.service.impl;
 
+import com.chisapp.common.utils.ExcelFileUtils;
 import com.chisapp.modules.datareport.dao.InventoryReportMapper;
 import com.chisapp.modules.datareport.service.InventoryReportService;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,32 @@ public class InventoryReportServiceImpl implements InventoryReportService {
     @Override
     public int countExpiryDateListByCriteria(Integer sysClinicId, Integer filterDays) {
         return inventoryReportMapper.countExpiryDateListByCriteria(sysClinicId, filterDays);
+    }
+
+    @Override
+    public XSSFWorkbook downloadExpiryDateExcel(Integer sysClinicId, String sysClinicName, Integer filterDays) {
+        // 获取近效期库存
+        List<Map<String, Object>> bodyList = this.getExpiryDateListByCriteria(sysClinicId, sysClinicName, filterDays);
+
+        // 生成 excel 报表
+        Map<String, String> titleMap = new LinkedHashMap<>();
+        titleMap.put("days", "距离过期天数");
+        titleMap.put("iymInventoryTypeName", "所在库房");
+        titleMap.put("gsmGoodsTypeName", "商品类型");
+        titleMap.put("gsmGoodsOid", "商品编码");
+        titleMap.put("gsmGoodsName", "商品名称");
+        titleMap.put("gsmGoodsSpecs", "整装规格");
+        titleMap.put("goodsUnitsName", "单位");
+        titleMap.put("retailPrice", "零售单价");
+        titleMap.put("quantity", "库存数量");
+        titleMap.put("ph", "批号");
+        titleMap.put("costPrice", "批次进价");
+        titleMap.put("expiryDate", "有效期至");
+        titleMap.put("originName", "产地");
+        titleMap.put("manufacturerName", "生产厂家");
+        titleMap.put("sysClinicName", "机构名称");
+
+        return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
     }
 
 

@@ -18,10 +18,10 @@ public interface DoctorMapper {
     int updateByPrimaryKey(Doctor record);
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    List<Map<String, Object>> selectClinicListByCriteria(@Param("sysClinicId") Integer sysClinicId,
+    List<Map<String, Object>> selectClinicListByCriteria(@Param("sysClinicName") String sysClinicName,
                                                          @Param("name") String name);
 
     List<Map<String, Object>> selectClinicEnabled(@Param("sysClinicId") Integer sysClinicId);
 
-    List<Map<String, Object>> selectAllEnabled();
+
 }

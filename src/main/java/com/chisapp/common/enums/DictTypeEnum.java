@@ -61,6 +61,9 @@ public enum DictTypeEnum {
     PRESCRIPTION_TYPE("处方类型", 412),
     DRUGS_PREPARE_METHOD("炮制方法", 413),
 
+    PRACTICE_TYPE("执业类别", 501),
+    DOCTOR_TITLES("医生职称", 502),
+
     OTHER("其他", 999);
 
     private String name;

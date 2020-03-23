@@ -99,13 +99,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<Map<String, Object>> getByCriteria(String name, String contacterPhone, Boolean state) {
-        return supplierMapper.selectByCriteria(name, contacterPhone, state,null, null, null);
+    public List<Map<String, Object>> getByCriteria(String oid, String name, String contacterPhone, Boolean state) {
+        return supplierMapper.selectByCriteria(oid, name, contacterPhone, state,null, null, null);
     }
 
     @Override
-    public List<Map<String, Object>> getByCriteriaForAccount(String name, BigDecimal arrearagesAmount, BigDecimal arrearagesLimit, Integer arrearagesDays) {
-        return supplierMapper.selectByCriteria(name, null, null,arrearagesAmount, arrearagesLimit, arrearagesDays);
+    public List<Map<String, Object>> getByCriteriaForAccount(String oid, String name, BigDecimal arrearagesAmount, BigDecimal arrearagesLimit, Integer arrearagesDays) {
+        return supplierMapper.selectByCriteria(oid, name, null, null,arrearagesAmount, arrearagesLimit, arrearagesDays);
     }
 
     @Override

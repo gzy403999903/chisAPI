@@ -44,11 +44,11 @@ public interface DoctorService {
 
     /**
      * 根据查询条件获取对应的集合
-     * @param sysClinicId
+     * @param sysClinicName
      * @param name
      * @return
      */
-    List<Map<String, Object>> getClinicListByCriteria(Integer sysClinicId, String name);
+    List<Map<String, Object>> getClinicListByCriteria(String sysClinicName, String name);
 
     /**
      * 查询对应机构启用状态的医生信息
@@ -56,10 +56,4 @@ public interface DoctorService {
      * @return
      */
     List<Map<String, Object>> getClinicEnabled(Integer sysClinicId);
-
-    /**
-     * 获取所有启用状态的医生信息
-     * @return
-     */
-    List<Map<String, Object>> getAllEnabled();
 }

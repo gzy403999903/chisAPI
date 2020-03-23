@@ -175,6 +175,9 @@
       <if test="arrearagesDays != null">
         (arrearagesDays >= #{arrearagesDays}) and
       </if>
+      <if test="oid != null &amp;&amp; oid.trim() != ''">
+        (oid like '${oid}%')  and
+      </if>
       <if test="name != null &amp;&amp; name.trim() != ''">
         (name like '${name}%' or code like '${name}%')  and
       </if>

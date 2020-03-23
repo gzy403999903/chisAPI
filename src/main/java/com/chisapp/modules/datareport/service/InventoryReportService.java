@@ -1,5 +1,7 @@
 package com.chisapp.modules.datareport.service;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,14 @@ public interface InventoryReportService {
      */
     int countExpiryDateListByCriteria(Integer sysClinicId, Integer filterDays);
 
+    /**
+     * 导出近效期 Excel
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param filterDays
+     * @return
+     */
+    XSSFWorkbook downloadExpiryDateExcel(Integer sysClinicId, String sysClinicName, Integer filterDays);
 
 
 }
