@@ -112,6 +112,7 @@ public class ChargeFeeHandler {
 
     /**
      * 根据流水号获取收费明细
+     * [收费记录--明细--打印小票调用]
      * @param lsh
      * @return
      */

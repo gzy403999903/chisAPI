@@ -11,16 +11,22 @@ import java.util.Map;
 public interface SellRecordReportService {
 
     /**
-     * 根据条件获取销售明细
-     * @param sysClinicId
+     * 销售明细
      * @param creationDate
+     * @param sysClinicId
+     * @param sysClinicName
      * @param lsh
+     * @param entityName
+     * @param mrmMemberName
      * @param sellerName
      * @return
      */
-    List<Map<String, Object>> getByCriteria(Integer sysClinicId,
-                                            String[] creationDate,
+    List<Map<String, Object>> getByCriteria(String[] creationDate,
+                                            Integer sysClinicId,
+                                            String sysClinicName,
                                             String lsh,
+                                            String entityName,
+                                            String mrmMemberName,
                                             String sellerName);
 
     /**
@@ -34,7 +40,30 @@ public interface SellRecordReportService {
                                                                 Integer sysClinicId,
                                                                 String sysClinicName);
 
-
+    /**
+     * 销售流水
+     * @param creationDate
+     * @param sysClinicId
+     * @param lsh
+     * @param sysClinicName
+     * @param goodsMarginRate
+     * @param marginRate
+     * @param goodsDiscountRate
+     * @param itemDiscountRate
+     * @param discountRate
+     * @param groupBy
+     * @return
+     */
+    List<Map<String, Object>> getMarginRateListByCriteria(String[] creationDate,
+                                                          Integer sysClinicId,
+                                                          String lsh,
+                                                          String sysClinicName,
+                                                          Integer goodsMarginRate,
+                                                          Integer marginRate,
+                                                          Integer goodsDiscountRate,
+                                                          Integer itemDiscountRate,
+                                                          Integer discountRate,
+                                                          String groupBy);
 
 
 

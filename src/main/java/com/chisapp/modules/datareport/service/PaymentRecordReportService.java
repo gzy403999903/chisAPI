@@ -18,12 +18,23 @@ public interface PaymentRecordReportService {
      * @param creatorName
      * @return
      */
-    List<Map<String, Object>> getCreatorGroupListByCriteria(String[] creationDate,
+    List<Map<String, Object>> getPaymentRecordListByCriteria(String[] creationDate,
                                                             Integer sysClinicId,
                                                             String sysClinicName,
                                                             String creatorName);
 
-
+    /**
+     * 获取储值收费记录汇总
+     * @param creationDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param creatorName
+     * @return
+     */
+    List<Map<String, Object>> getDepositPaymentRecordListByCriteria(String[] creationDate,
+                                                                    Integer sysClinicId,
+                                                                    String sysClinicName,
+                                                                    String creatorName);
 
 
 }

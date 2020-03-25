@@ -17,37 +17,41 @@ public class PaymentRecord implements Serializable {
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal cash;
+    private BigDecimal cash = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal memberBalance;
+    private BigDecimal memberBalance = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal unionpay;
+    private BigDecimal unionpay = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal alipay;
+    private BigDecimal alipay = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal wechatpay;
+    private BigDecimal wechatpay = new BigDecimal("0");
+
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
+    private BigDecimal creditpay = new BigDecimal("0");
 
     private Integer sysPaymentWayId;
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal sysPaymentWayAmount;
+    private BigDecimal sysPaymentWayAmount = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal actualAmount;
+    private BigDecimal actualAmount = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal disparityAmount;
+    private BigDecimal disparityAmount = new BigDecimal("0");
 
     private Integer sysClinicId;
 
@@ -60,7 +64,6 @@ public class PaymentRecord implements Serializable {
     @Digits(integer = 8, fraction = 2)
     @NotNull
     private BigDecimal cashBackAmount;
-
 
 
     public Integer getId() {
@@ -117,6 +120,14 @@ public class PaymentRecord implements Serializable {
 
     public void setWechatpay(BigDecimal wechatpay) {
         this.wechatpay = wechatpay;
+    }
+
+    public BigDecimal getCreditpay() {
+        return creditpay;
+    }
+
+    public void setCreditpay(BigDecimal creditpay) {
+        this.creditpay = creditpay;
     }
 
     public Integer getSysPaymentWayId() {

@@ -33,11 +33,44 @@ public class SellRecordReportHandler {
     /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * 获取机构对应的销售明细
+     * 获取所有机构 销售明细
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sysClinicName
+     * @param lsh
+     * @param entityName
+     * @param mrmMemberName
+     * @param sellerName
+     * @return
+     */
+    @GetMapping("/getByCriteria")
+    public PageResult getByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sysClinicName,
+            @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) String entityName,
+            @RequestParam(required = false) String mrmMemberName,
+            @RequestParam(required = false) String sellerName){
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getByCriteria(creationDate, null, sysClinicName, lsh, entityName,
+                        mrmMemberName, sellerName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取当前机构 销售明细
      * @param pageNum
      * @param pageSize
      * @param creationDate
      * @param lsh
+     * @param entityName
+     * @param mrmMemberName
      * @param sellerName
      * @return
      */
@@ -47,37 +80,16 @@ public class SellRecordReportHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
             @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) String entityName,
+            @RequestParam(required = false) String mrmMemberName,
             @RequestParam(required = false) String sellerName){
 
         // 获取用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                sellRecordReportService.getByCriteria(user.getSysClinicId(), creationDate, lsh, sellerName);
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-        return PageResult.success().resultSet("page", pageInfo);
-    }
-
-    /**
-     * 获取所有机构对应的销售明细
-     * @param pageNum
-     * @param pageSize
-     * @param creationDate
-     * @param lsh
-     * @param sellerName
-     * @return
-     */
-    @GetMapping("/getByCriteria")
-    public PageResult getByCriteria (
-            @RequestParam(defaultValue="1") Integer pageNum,
-            @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
-            @RequestParam(required = false) String lsh,
-            @RequestParam(required = false) String sellerName){
-
-        PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                sellRecordReportService.getByCriteria(null, creationDate, lsh, sellerName);
+                sellRecordReportService.getByCriteria(creationDate,user.getSysClinicId(), null, lsh,
+                        entityName, mrmMemberName, sellerName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -123,7 +135,76 @@ public class SellRecordReportHandler {
         return PageResult.success().resultSet("page", pageInfo);
     }
 
+    /**
+     * 获取全机构 销售毛利(按流水号)
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param lsh
+     * @param sysClinicName
+     * @param goodsMarginRate
+     * @param marginRate
+     * @param goodsDiscountRate
+     * @param itemDiscountRate
+     * @param discountRate
+     * @return
+     */
+    @GetMapping("/getLshMarginRateListByCriteria")
+    public PageResult getLshMarginRateListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
+                                                     @RequestParam(defaultValue="1") Integer pageSize,
+                                                     @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                                     @RequestParam(required = false) String lsh,
+                                                     @RequestParam(required = false) String sysClinicName,
+                                                     @RequestParam(required = false) Integer goodsMarginRate,
+                                                     @RequestParam(required = false) Integer marginRate,
+                                                     @RequestParam(required = false) Integer goodsDiscountRate,
+                                                     @RequestParam(required = false) Integer itemDiscountRate,
+                                                     @RequestParam(required = false) Integer discountRate) {
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getMarginRateListByCriteria(
+                        creationDate, null, lsh, sysClinicName, goodsMarginRate, marginRate,
+                        goodsDiscountRate, itemDiscountRate, discountRate, "lsh");
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取当前机构 销售毛利(按流水号)
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param lsh
+     * @param goodsMarginRate
+     * @param marginRate
+     * @param goodsDiscountRate
+     * @param itemDiscountRate
+     * @param discountRate
+     * @return
+     */
+    @GetMapping("/getClinicLshMarginRateListByCriteria")
+    public PageResult getClinicLshMarginRateListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
+                                                           @RequestParam(defaultValue="1") Integer pageSize,
+                                                           @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                                           @RequestParam(required = false) String lsh,
+                                                           @RequestParam(required = false) Integer goodsMarginRate,
+                                                           @RequestParam(required = false) Integer marginRate,
+                                                           @RequestParam(required = false) Integer goodsDiscountRate,
+                                                           @RequestParam(required = false) Integer itemDiscountRate,
+                                                           @RequestParam(required = false) Integer discountRate) {
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getMarginRateListByCriteria(
+                        creationDate, user.getSysClinicId(), lsh, null, goodsMarginRate, marginRate,
+                        goodsDiscountRate, itemDiscountRate, discountRate, "lsh");
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
 

@@ -12,15 +12,28 @@ import java.util.Map;
  */
 public interface SellRecordReportMapper {
 
-    List<Map<String, Object>> selectByCriteria(@Param("sysClinicId") Integer sysClinicId,
-                                               @Param("creationDate") String[] creationDate,
+    List<Map<String, Object>> selectByCriteria(@Param("creationDate") String[] creationDate,
+                                               @Param("sysClinicId") Integer sysClinicId,
+                                               @Param("sysClinicName") String sysClinicName,
                                                @Param("lsh") String lsh,
+                                               @Param("entityName") String entityName,
+                                               @Param("mrmMemberName") String mrmMemberName,
                                                @Param("sellerName") String sellerName);
 
     List<Map<String, Object>> selectBillingTypeGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                                    @Param("sysClinicId") Integer sysClinicId,
                                                                    @Param("sysClinicName") String sysClinicName);
 
+    List<Map<String, Object>> selectMarginRateListByCriteria(@Param("creationDate") String[] creationDate,
+                                                             @Param("sysClinicId") Integer sysClinicId,
+                                                             @Param("lsh") String lsh,
+                                                             @Param("sysClinicName") String sysClinicName,
+                                                             @Param("goodsMarginRate") Integer goodsMarginRate,
+                                                             @Param("marginRate") Integer marginRate,
+                                                             @Param("goodsDiscountRate") Integer goodsDiscountRate,
+                                                             @Param("itemDiscountRate") Integer itemDiscountRate,
+                                                             @Param("discountRate") Integer discountRate,
+                                                             @Param("groupBy") String groupBy);
 
 
 

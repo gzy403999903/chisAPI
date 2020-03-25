@@ -9,6 +9,7 @@
     <result column="unionpay" jdbcType="DECIMAL" property="unionpay" />
     <result column="alipay" jdbcType="DECIMAL" property="alipay" />
     <result column="wechatpay" jdbcType="DECIMAL" property="wechatpay" />
+    <result column="creditpay" jdbcType="DECIMAL" property="creditpay" />
     <result column="sys_payment_way_id" jdbcType="INTEGER" property="sysPaymentWayId" />
     <result column="sys_payment_way_amount" jdbcType="DECIMAL" property="sysPaymentWayAmount" />
     <result column="actual_amount" jdbcType="DECIMAL" property="actualAmount" />
@@ -24,14 +25,16 @@
   <insert id="insert" parameterType="com.chisapp.modules.nurseworkstation.bean.PaymentRecord">
     insert into nwt_payment_record (id, lsh, cash,
       member_balance, unionpay, alipay,
-      wechatpay, sys_payment_way_id, sys_payment_way_amount,
-      actual_amount, disparity_amount, sys_clinic_id,
-      creator_id, creation_date)
+      wechatpay, creditpay, sys_payment_way_id,
+      sys_payment_way_amount, actual_amount, disparity_amount,
+      sys_clinic_id, creator_id, creation_date
+      )
     values (#{id,jdbcType=INTEGER}, #{lsh,jdbcType=VARCHAR}, #{cash,jdbcType=DECIMAL},
       #{memberBalance,jdbcType=DECIMAL}, #{unionpay,jdbcType=DECIMAL}, #{alipay,jdbcType=DECIMAL},
-      #{wechatpay,jdbcType=DECIMAL}, #{sysPaymentWayId,jdbcType=INTEGER}, #{sysPaymentWayAmount,jdbcType=DECIMAL},
-      #{actualAmount,jdbcType=DECIMAL}, #{disparityAmount,jdbcType=DECIMAL}, #{sysClinicId,jdbcType=INTEGER},
-      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP})
+      #{wechatpay,jdbcType=DECIMAL}, #{creditpay,jdbcType=DECIMAL}, #{sysPaymentWayId,jdbcType=INTEGER},
+      #{sysPaymentWayAmount,jdbcType=DECIMAL}, #{actualAmount,jdbcType=DECIMAL}, #{disparityAmount,jdbcType=DECIMAL},
+      #{sysClinicId,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.nurseworkstation.bean.PaymentRecord">
     update nwt_payment_record
@@ -41,6 +44,7 @@
       unionpay = #{unionpay,jdbcType=DECIMAL},
       alipay = #{alipay,jdbcType=DECIMAL},
       wechatpay = #{wechatpay,jdbcType=DECIMAL},
+      creditpay = #{creditpay,jdbcType=DECIMAL},
       sys_payment_way_id = #{sysPaymentWayId,jdbcType=INTEGER},
       sys_payment_way_amount = #{sysPaymentWayAmount,jdbcType=DECIMAL},
       actual_amount = #{actualAmount,jdbcType=DECIMAL},
@@ -51,14 +55,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, lsh, cash, member_balance, unionpay, alipay, wechatpay, sys_payment_way_id,
+    select id, lsh, cash, member_balance, unionpay, alipay, wechatpay, creditpay, sys_payment_way_id,
     sys_payment_way_amount, actual_amount, disparity_amount, sys_clinic_id, creator_id,
     creation_date
     from nwt_payment_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, lsh, cash, member_balance, unionpay, alipay, wechatpay, sys_payment_way_id,
+    select id, lsh, cash, member_balance, unionpay, alipay, wechatpay, creditpay, sys_payment_way_id,
     sys_payment_way_amount, actual_amount, disparity_amount, sys_clinic_id, creator_id,
     creation_date
     from nwt_payment_record
@@ -94,17 +98,14 @@
   </select>
 
   <select id="selectClinicGroupByLsh" resultType="map">
-    SELECT a.*,b.creatorName FROM
-    (
-    SELECT
-      MAX(id) AS id, lsh, SUM(cash) AS cash, SUM(member_balance) AS memberBalance, SUM(unionpay) AS unionpay, SUM(alipay) AS alipay,
-      SUM(wechatpay) AS wechatpay, SUM(sys_payment_way_amount) AS sysPaymentWayAmount, SUM(actual_amount) AS actualAmount,
-      SUM(disparity_amount) AS disparityAmount, sys_clinic_id as sysClinicId
-    FROM nwt_payment_record
-    WHERE sys_clinic_id = #{sysClinicId} and lsh = #{lsh}
+    select
+      lsh, SUM(cash) AS cash, SUM(memberBalance) AS memberBalance, SUM(unionpay) AS unionpay, SUM(alipay) AS alipay,
+      SUM(wechatpay) AS wechatpay, SUM(creditpay) AS creditpay, SUM(sysPaymentWayAmount) AS sysPaymentWayAmount,
+      SUM(actualAmount) AS actualAmount, SUM(disparityAmount) AS disparityAmount, sysClinicId, creatorName
+    from view_nwt_payment_record
+    where sysClinicId = #{sysClinicId} and lsh = #{lsh}
     GROUP BY lsh
-    ) a
-    LEFT JOIN view_nwt_payment_record b ON a.id = b.id
+
   </select>
 
 

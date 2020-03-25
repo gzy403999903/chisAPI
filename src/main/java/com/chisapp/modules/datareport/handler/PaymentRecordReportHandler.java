@@ -41,8 +41,8 @@ public class PaymentRecordReportHandler {
      * @param creatorName
      * @return
      */
-    @GetMapping("/getCreatorGroupListByCriteria")
-    public PageResult getCreatorGroupListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+    @GetMapping("/getPaymentRecordListByCriteria")
+    public PageResult getPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                      @RequestParam(defaultValue="1") Integer pageSize,
                                                      @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                      @RequestParam(required = false) String sysClinicName,
@@ -50,7 +50,7 @@ public class PaymentRecordReportHandler {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getCreatorGroupListByCriteria(creationDate, null, sysClinicName, creatorName);
+                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -63,8 +63,8 @@ public class PaymentRecordReportHandler {
      * @param creationDate
      * @return
      */
-    @GetMapping("/getClinicCreatorGroupListByCriteria")
-    public PageResult getClinicCreatorGroupListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+    @GetMapping("/getClinicPaymentRecordListByCriteria")
+    public PageResult getClinicPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                            @RequestParam(defaultValue="1") Integer pageSize,
                                                            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                            @RequestParam(required = false) String creatorName) {
@@ -72,15 +72,59 @@ public class PaymentRecordReportHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getCreatorGroupListByCriteria(creationDate, user.getSysClinicId(), null, creatorName);
+                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
     }
 
 
+    /**
+     * 获取全机构 储值收费记录汇总
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sysClinicName
+     * @param creatorName
+     * @return
+     */
+    @GetMapping("/getDepositPaymentRecordListByCriteria")
+    public PageResult getDepositPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
+                                                            @RequestParam(defaultValue="1") Integer pageSize,
+                                                            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                                            @RequestParam(required = false) String sysClinicName,
+                                                            @RequestParam(required = false) String creatorName) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
+    /**
+     * 获取当前机构 储值收费记录汇总
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @return
+     */
+    @GetMapping("/getClinicDepositPaymentRecordListByCriteria")
+    public PageResult getClinicDepositPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
+                                                                  @RequestParam(defaultValue="1") Integer pageSize,
+                                                                  @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                                                  @RequestParam(required = false) String creatorName) {
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
 }

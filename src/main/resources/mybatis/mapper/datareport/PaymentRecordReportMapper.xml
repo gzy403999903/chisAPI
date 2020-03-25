@@ -2,22 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chisapp.modules.datareport.dao.PaymentRecordReportMapper">
 
-  <!--
-      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
-        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
-      </if>
-      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
-        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
-      </if>
-  -->
-
-  <select id="selectCreatorGroupListByCriteria" resultType="map">
+  <!-- 收款汇总 -->
+  <select id="selectPaymentRecordListByCriteria" resultType="map">
     SELECT
       ROUND(SUM(cash), 2) AS cash,
       ROUND(SUM(memberBalance), 2) AS memberBalance,
       ROUND(SUM(unionpay), 2) AS unionpay,
       ROUND(SUM(alipay), 2) AS alipay,
       ROUND(SUM(wechatpay), 2) AS wechatpay,
+      ROUND(SUM(creditpay), 2) AS creditpay,
       ROUND(SUM(CASE WHEN sysPaymentWayId = 1 THEN sysPaymentWayAmount ELSE 0 END), 2) AS shengyb,
       ROUND(SUM(CASE WHEN sysPaymentWayId = 2 THEN sysPaymentWayAmount ELSE 0 END), 2) AS shiyb,
       ROUND(SUM(CASE WHEN sysPaymentWayId = 3 THEN sysPaymentWayAmount ELSE 0 END), 2) AS dkq,
@@ -47,6 +40,54 @@
     </trim>
     GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
     ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+  </select>
+
+  <!-- 储值汇总 -->
+  <select id="selectDepositPaymentRecordListByCriteria" resultType="map">
+    SELECT
+      ROUND(SUM(b.cash), 2) AS cash,
+      ROUND(SUM(b.memberBalance), 2) AS memberBalance,
+      ROUND(SUM(b.unionpay), 2) AS unionpay,
+      ROUND(SUM(b.alipay), 2) AS alipay,
+      ROUND(SUM(b.wechatpay), 2) AS wechatpay,
+      ROUND(SUM(creditpay), 2) AS creditpay,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 1 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS shengyb,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 2 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS shiyb,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 3 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS dkq,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 4 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS ybk,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 5 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS bgflk,
+      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 6 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS yky,
+      ROUND(SUM(b.actualAmount), 2) AS actualAmount,
+      ROUND(SUM(b.disparityAmount), 2) AS disparityAmount,
+      DATE_FORMAT(b.creationDate, '%Y-%m-%d') AS creationDate,
+      b.creatorId,
+      b.creatorName,
+      b.sysClinicName
+    FROM
+       (
+         SELECT *
+         FROM mrm_deposit_record
+         <trim prefix="where" suffixOverrides="and">
+           <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+             (DATE_FORMAT(creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+           </if>
+         </trim>
+         GROUP BY lsh
+       ) a
+    LEFT JOIN view_nwt_payment_record b ON a.lsh = b.lsh
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicId != null">
+        (b.sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (b.sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="creatorName != null &amp;&amp; creatorName.trim() != ''">
+        (b.creatorName like '${creatorName}%' or creatorCode like '${creatorName}%') and
+      </if>
+    </trim>
+    GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
+    ORDER BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
   </select>
 
 

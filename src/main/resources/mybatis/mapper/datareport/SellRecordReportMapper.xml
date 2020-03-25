@@ -2,35 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chisapp.modules.datareport.dao.SellRecordReportMapper">
 
-  <!--
-      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
-        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
-      </if>
-      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
-        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
-      </if>
-  -->
-
+  <!-- 销售明细 -->
   <select id="selectByCriteria" resultType="map">
     select *
     from view_dr_sell_record
     <trim prefix="where" suffixOverrides="and">
-      <if test="sysClinicId != null">
-        (sysClinicId = #{sysClinicId}) and
-      </if>
       <if test="creationDate != null &amp;&amp; creationDate.length == 2">
         (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
       </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
       <if test="lsh != null &amp;&amp; lsh.trim() != ''">
         (lsh like '${lsh}%') and
+      </if>
+      <if test="entityName != null &amp;&amp; entityName.trim() != ''">
+        (entityName like '${entityName}%' or entityCode like '${entityName}%') and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%') and
       </if>
       <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
         (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
       </if>
     </trim>
-    order by creationDate desc, sysSellTypeId, entityTypeId, entityId
+    order by creationDate desc, sysClinicId, sysSellTypeId, entityTypeId, entityId
   </select>
 
+  <!-- 计费类型汇总 -->
   <select id="selectBillingTypeGroupListByCriteria" resultType="map">
     SELECT
       ROUND(SUM( CASE WHEN billingTypeId = 4 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS xyf , /*西药费*/
@@ -60,6 +62,81 @@
     </trim>
     GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
     ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+  </select>
+
+  <!-- 销售毛利 -->
+  <select id="selectMarginRateListByCriteria" resultType="map">
+    SELECT
+      a.*,
+      ROUND((CASE WHEN a.goodsRetailAmount &lt;= 0 THEN 0 ELSE ((a.goodsRetailAmount - a.goodsCostAmount) / a.goodsRetailAmount * 100) END ), 2) AS goodsRetailMarginRate,
+      ROUND((CASE WHEN a.goodsActualAmount &lt;= 0 THEN 0 ELSE ((a.goodsActualAmount - a.goodsCostAmount) / a.goodsActualAmount * 100) END ), 2) AS goodsActualMarginRate,
+      ROUND((CASE WHEN a.retailAmount &lt;= 0 THEN 0 ELSE ((a.retailAmount - a.costAmount) / a.retailAmount * 100) END ), 2) AS retailMarginRate,
+      ROUND((CASE WHEN a.actualAmount &lt;= 0 THEN 0 ELSE ((a.actualAmount - a.costAmount) / a.actualAmount * 100) END ), 2) AS actualMarginRate,
+      ROUND((CASE WHEN a.goodsActualAmount &lt;= 0 THEN 0 ELSE (a.goodsActualAmount / a.goodsRetailAmount * 100) END ), 0) AS goodsDiscountRate,
+      ROUND((CASE WHEN a.itemActualAmount &lt;= 0 THEN 0 ELSE (a.itemActualAmount / a.itemRetailAmount * 100) END ), 0) AS itemDiscountRate,
+      ROUND((CASE WHEN a.actualAmount &lt;= 0 THEN 0 ELSE (a.actualAmount / a.retailAmount * 100) END ), 0) AS discountRate
+    FROM (
+      SELECT
+        creationDate,
+        lsh,
+        sysSellWayName,
+        ROUND(SUM(CASE WHEN sysSellTypeId = 1 THEN quantity * retailPrice ELSE 0 END), 2) AS goodsRetailAmount,
+        ROUND(SUM(CASE WHEN sysSellTypeId = 1 THEN quantity * actualRetailPrice ELSE 0 END), 2) AS goodsActualAmount,
+        ROUND(SUM(CASE WHEN sysSellTypeId = 1 THEN quantity * costPrice ELSE 0 END), 2) AS goodsCostAmount,
+        ROUND(SUM(CASE WHEN sysSellTypeId = 2 THEN quantity * retailPrice ELSE 0 END), 2) AS itemRetailAmount,
+        ROUND(SUM(CASE WHEN sysSellTypeId = 2 THEN quantity * actualRetailPrice ELSE 0 END), 2) AS itemActualAmount,
+        ROUND(SUM(quantity * retailPrice), 2) AS retailAmount,
+        ROUND(SUM(quantity * actualRetailPrice), 2) AS actualAmount,
+        ROUND(SUM(quantity * costPrice), 2) AS costAmount,
+        sellerId,
+        sellerName,
+        cashierId,
+        cashierName,
+        sysClinicId,
+        sysClinicName
+      FROM view_dr_sell_record
+      <trim prefix="where" suffixOverrides="and">
+        <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+          (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+        </if>
+        <if test="sysClinicId != null">
+          (sysClinicId = #{sysClinicId}) and
+        </if>
+        <if test="true">
+          (returned = 0) and
+        </if>
+        <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+          (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+        </if>
+        <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+          (lsh like '${lsh}%') and
+        </if>
+      </trim>
+      <if test="groupBy != null &amp;&amp; groupBy.trim() != ''">
+        GROUP BY ${groupBy}
+      </if>
+      <if test="groupBy == null || groupBy.trim() == ''">
+        GROUP BY sysClinicId
+      </if>
+    ) a
+    <trim prefix="HAVING" suffixOverrides="and">
+      <if test="goodsMarginRate != null &amp;&amp; goodsMarginRate != 0">
+        ((goodsRetailMarginRate -goodsActualMarginRate) &gt;= #{goodsMarginRate}) and
+      </if>
+      <if test="marginRate != null &amp;&amp; marginRate != 0">
+        ((retailMarginRate - actualMarginRate) &gt;= #{marginRate}) and
+      </if>
+      <if test="goodsDiscountRate != null &amp;&amp; goodsDiscountRate != 0">
+        (goodsDiscountRate &lt;= #{goodsDiscountRate}) and
+      </if>
+      <if test="itemDiscountRate != null &amp;&amp; itemDiscountRate != 0">
+        (itemDiscountRate &lt;= #{itemDiscountRate}) and
+      </if>
+      <if test="discountRate != null &amp;&amp; discountRate != 0">
+        (discountRate &lt;= #{discountRate}) and
+      </if>
+    </trim>
+    ORDER BY a.sysClinicId, a.creationDate
   </select>
 
 
