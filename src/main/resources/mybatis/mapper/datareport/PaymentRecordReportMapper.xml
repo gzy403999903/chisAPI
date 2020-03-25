@@ -39,7 +39,7 @@
       </if>
     </trim>
     GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
-    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d') desc, sysClinicId, creatorId
   </select>
 
   <!-- 储值汇总 -->
@@ -87,7 +87,7 @@
       </if>
     </trim>
     GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
-    ORDER BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
+    ORDER BY DATE_FORMAT(b.creationDate, '%Y-%m-%d') desc, b.sysClinicId, b.creatorId
   </select>
 
 

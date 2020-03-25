@@ -61,7 +61,7 @@
       </if>
     </trim>
     GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
-    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+    ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d') desc, sysClinicId
   </select>
 
   <!-- 销售毛利 -->
@@ -136,7 +136,7 @@
         (discountRate &lt;= #{discountRate}) and
       </if>
     </trim>
-    ORDER BY a.sysClinicId, a.creationDate
+    ORDER BY a.creationDate desc, a.sysClinicId
   </select>
 
 
