@@ -49,7 +49,7 @@
     </trim>
   </select>
 
-  <!-- 滞销(销售频次)分析 -->
+  <!-- 库存动销分析 -->
   <select id="selectSellFrequencyListByCriteria" resultType="map">
     SELECT
       a.*,

@@ -39,7 +39,7 @@ public interface InventoryReportService {
     XSSFWorkbook downloadExpiryDateExcel(Integer sysClinicId, String sysClinicName, Integer filterDays);
 
     /**
-     * 销售频次(滞销)库存
+     * 库存动销分析
      * @param sysClinicId
      * @param sysClinicName
      * @param quantity 库存数量

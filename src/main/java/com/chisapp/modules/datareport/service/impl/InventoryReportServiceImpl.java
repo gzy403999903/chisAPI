@@ -78,7 +78,7 @@ public class InventoryReportServiceImpl implements InventoryReportService {
                                                                     Integer minAge) {
 
         quantity = quantity == null ? 1 : quantity; // 默认库存数量为大于等于 1
-        days = days == null ? 30 : days; // 滞销天数默认 30
+        days = days == null ? 30 : days; // 动销天数默认 30
 
         return inventoryReportMapper.selectSellFrequencyListByCriteria(
                 sysClinicId, sysClinicName, quantity, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, days, sellFrequency, sellQuantity, minAge);

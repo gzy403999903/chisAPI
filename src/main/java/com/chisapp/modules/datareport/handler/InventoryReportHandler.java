@@ -139,7 +139,7 @@ public class InventoryReportHandler {
     }
 
     /**
-     * 获取全机构 商品销售分析
+     * 获取全机构 库存动销分析
      * @param pageNum
      * @param pageSize
      * @param sysClinicName
@@ -172,7 +172,7 @@ public class InventoryReportHandler {
     }
 
     /**
-     * 获取当前机构 商品销售分析
+     * 获取当前机构 库存动销分析
      * @param pageNum
      * @param pageSize
      * @param gsmGoodsOid
