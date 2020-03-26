@@ -63,9 +63,10 @@ public class ShelfGoodsServiceImpl implements ShelfGoodsService {
     @Override
     public List<Map<String, Object>> getClinicListByCriteria(Integer sysClinicId,
                                                              Integer gsmGoodsTypeId,
+                                                             String gsmGoodsOid,
                                                              String gsmGoodsName,
                                                              String iymShelfPositionName) {
-        return shelfGoodsMapper.selectClinicListByCriteria(sysClinicId, gsmGoodsTypeId, gsmGoodsName, iymShelfPositionName);
+        return shelfGoodsMapper.selectClinicListByCriteria(sysClinicId, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, iymShelfPositionName);
     }
 
 

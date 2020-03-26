@@ -64,6 +64,9 @@
       <if test="gsmGoodsTypeId != null">
         (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
       </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid like '${gsmGoodsOid}%') and
+      </if>
       <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
         (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
       </if>

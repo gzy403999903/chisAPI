@@ -24,12 +24,14 @@ public interface ShelfGoodsService {
      * 根据条件获取机构货位商品明细
      * @param sysClinicId
      * @param gsmGoodsTypeId
+     * @param gsmGoodsOid
      * @param gsmGoodsName
      * @param iymShelfPositionName
      * @return
      */
     List<Map<String, Object>> getClinicListByCriteria(Integer sysClinicId,
                                                       Integer gsmGoodsTypeId,
+                                                      String gsmGoodsOid,
                                                       String gsmGoodsName,
                                                       String iymShelfPositionName);
 

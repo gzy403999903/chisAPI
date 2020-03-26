@@ -54,9 +54,9 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                                  Integer discountRate,
                                                                  String groupBy) {
         // 格式化折扣率
-        goodsDiscountRate = goodsDiscountRate == null ? 0 : goodsDiscountRate < 10 ? goodsDiscountRate * 10 : goodsDiscountRate;
-        itemDiscountRate = itemDiscountRate == null ? 0 : itemDiscountRate < 10 ? itemDiscountRate * 10 : itemDiscountRate;
-        discountRate = discountRate == null ? 0 : discountRate < 10 ? discountRate * 10 : discountRate;
+        goodsDiscountRate = goodsDiscountRate == null ? null : goodsDiscountRate < 10 ? goodsDiscountRate * 10 : goodsDiscountRate;
+        itemDiscountRate = itemDiscountRate == null ? null : itemDiscountRate < 10 ? itemDiscountRate * 10 : itemDiscountRate;
+        discountRate = discountRate == null ? null : discountRate < 10 ? discountRate * 10 : discountRate;
 
         return sellRecordReportMapper.selectMarginRateListByCriteria(creationDate,
                 sysClinicId, lsh, sysClinicName, goodsMarginRate, marginRate, goodsDiscountRate, itemDiscountRate,

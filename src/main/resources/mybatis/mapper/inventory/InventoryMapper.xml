@@ -157,7 +157,7 @@
 
   <select id="selectPhGroupListByCriteria" resultType="map">
     select
-    iymInventoryTypeName, gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName, ph,
+    iymInventoryTypeName, gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName, ph, splitQuantity,
     sum(quantity) as quantity, retailPrice, costPrice, producedDate, expiryDate, originName, manufacturerName,
     sysClinicName
     from view_iym_inventory
@@ -174,6 +174,9 @@
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
         (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
       </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid like '${gsmGoodsOid}%') and
+      </if>
       <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
         (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
       </if>
@@ -181,7 +184,7 @@
         (ph like '${ph}%') and
       </if>
     </trim>
-    group by sysClinicId, iymInventoryTypeId, gsmGoodsId, ph, costPrice, expiryDate
+    group by sysClinicId, iymInventoryTypeId, gsmGoodsId, ph, splitQuantity
     order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
   </select>
 
@@ -198,6 +201,9 @@
       <if test="showZero != null &amp;&amp; !showZero">
         (quantity > 0) and
       </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid like '${gsmGoodsOid}%') and
+      </if>
       <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
         (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
       </if>
@@ -205,7 +211,7 @@
         (ph like '${ph}%') and
       </if>
     </trim>
-    order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
+    order by iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
   </select>
 
 

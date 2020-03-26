@@ -7,7 +7,7 @@
       &gt; >
       &amp; &
   -->
-
+  <!-- 近效期商品 -->
   <select id="selectExpiryDateListByCriteria" resultType="map">
     SELECT *, DATEDIFF(expiryDate, NOW()) AS days
     FROM view_iym_inventory
@@ -28,6 +28,7 @@
     ORDER BY days
   </select>
 
+  <!-- 获取近效期商品数 -->
   <select id="countExpiryDateListByCriteria" resultType="int">
     select count(a.id) as sums
     from iym_inventory a
@@ -47,6 +48,75 @@
       </if>
     </trim>
   </select>
+
+  <!-- 滞销(销售频次)分析 -->
+  <select id="selectSellFrequencyListByCriteria" resultType="map">
+    SELECT
+      a.*,
+      IFNULL(b.lastCreationDate, '') AS lastCreationDate,
+      IFNULL(b.sellFrequency, 0) AS sellFrequency,
+      IFNULL(b.sellQuantity, 0) AS sellQuantity,
+      IFNULL(b.averageQuantity, 0) AS averageQuantity,
+      IFNULL(b.maxQuantity, 0) AS maxQuantity,
+      IFNULL(b.minQuantity, 0) AS minQuantity,
+      DATEDIFF(NOW(),c.`creation_date`) AS minAge
+    FROM (
+      SELECT
+        sysClinicId, sysClinicName, sysClinicCode,
+        gsmGoodsTypeId, gsmGoodsTypeName, gsmGoodsId, gsmGoodsOid, gsmGoodsName,
+        gsmGoodsCode, gsmGoodsSpecs, goodsUnitsName, retailPrice, originName,
+        manufacturerName, goodsClassifyName, SUM(quantity) AS quantity, splitQuantity,
+        MAX(iymInventoryAddId) AS iymInventoryAddId
+      FROM view_iym_inventory
+      <trim prefix="where" suffixOverrides="and">
+        <if test="sysClinicId != null">
+          (sysClinicId = #{sysClinicId}) and
+        </if>
+        <if test="quantity != null">
+          (quantity &gt;= #{quantity}) and
+        </if>
+        <if test="gsmGoodsTypeId != null">
+          (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
+        </if>
+        <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+          (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+        </if>
+        <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+          (gsmGoodsOid like '${gsmGoodsOid}%') and
+        </if>
+        <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+          (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+        </if>
+      </trim>
+      GROUP BY sysClinicId, gsmGoodsId, splitQuantity
+    ) a
+    LEFT JOIN (
+      SELECT
+        sys_clinic_id AS sysClinicId, entity_id AS gsmGoodsId, split_quantity AS splitQuantity,
+        MAX(creation_date) AS lastCreationDate, COUNT(lsh) AS sellFrequency, SUM(quantity) AS sellQuantity,
+        ROUND((SUM(quantity) / COUNT(lsh)), 0) AS averageQuantity, MAX(quantity) AS maxQuantity, MIN(quantity) AS minQuantity
+      FROM dr_sell_record
+      WHERE
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_SUB(NOW(),INTERVAL ${days} DAY) AND NOW()) AND
+        sys_sell_type_id = 1 AND
+        returned = 0
+      GROUP BY sys_clinic_id, entity_id, split_quantity
+    ) b ON a.sysClinicId = b.sysClinicId AND a.gsmGoodsId = b.gsmGoodsId AND a.splitQuantity = b.splitQuantity
+    LEFT JOIN iym_inventory_add c ON a.iymInventoryAddId = c.`id`
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sellFrequency != null">
+        (IFNULL(sellFrequency, 0) &lt;= #{sellFrequency}) AND
+      </if>
+      <if test="sellQuantity != null">
+        (IFNULL(sellQuantity, 0) &lt;= #{sellQuantity}) AND
+      </if>
+    </trim>
+    <if test="minAge != null">
+      HAVING minAge >= ${minAge}
+    </if>
+    ORDER BY minAge desc, quantity desc, sellFrequency, sellQuantity
+  </select>
+
 
 
 </mapper>

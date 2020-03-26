@@ -29,11 +29,13 @@ public class InventoryReportServiceImpl implements InventoryReportService {
 
     @Override
     public List<Map<String, Object>> getExpiryDateListByCriteria(Integer sysClinicId, String sysClinicName, Integer filterDays) {
+        filterDays = filterDays == null ? 120 : filterDays; // 默认效期查询天数 120 天
         return inventoryReportMapper.selectExpiryDateListByCriteria(sysClinicId, sysClinicName, filterDays);
     }
 
     @Override
     public int countExpiryDateListByCriteria(Integer sysClinicId, Integer filterDays) {
+        filterDays = filterDays == null ? 120 : filterDays; // 默认效期查询天数 120 天
         return inventoryReportMapper.countExpiryDateListByCriteria(sysClinicId, filterDays);
     }
 
@@ -61,6 +63,25 @@ public class InventoryReportServiceImpl implements InventoryReportService {
         titleMap.put("sysClinicName", "机构名称");
 
         return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
+    }
+
+    @Override
+    public List<Map<String, Object>> getSellFrequencyListByCriteria(Integer sysClinicId,
+                                                                    String sysClinicName,
+                                                                    Integer quantity,
+                                                                    Integer gsmGoodsTypeId,
+                                                                    String gsmGoodsOid,
+                                                                    String gsmGoodsName,
+                                                                    Integer days,
+                                                                    Integer sellFrequency,
+                                                                    Integer sellQuantity,
+                                                                    Integer minAge) {
+
+        quantity = quantity == null ? 1 : quantity; // 默认库存数量为大于等于 1
+        days = days == null ? 30 : days; // 滞销天数默认 30
+
+        return inventoryReportMapper.selectSellFrequencyListByCriteria(
+                sysClinicId, sysClinicName, quantity, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, days, sellFrequency, sellQuantity, minAge);
     }
 
 

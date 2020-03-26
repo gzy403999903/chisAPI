@@ -46,19 +46,30 @@ public class ShelfGoodsHandler {
         return PageResult.success();
     }
 
-
+    /**
+     * 根据条件查询
+     * @param pageNum
+     * @param pageSize
+     * @param gsmGoodsTypeId
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param iymShelfPositionName
+     * @return
+     */
     @GetMapping("/getClinicListByCriteria")
     public PageResult getClinicListByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(required = false) Integer gsmGoodsTypeId,
+            @RequestParam(required = false) String gsmGoodsOid,
             @RequestParam(required = false) String gsmGoodsName,
             @RequestParam(required = false) String iymShelfPositionName){
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();  // 获取用户信息
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                shelfGoodsService.getClinicListByCriteria(user.getSysClinicId(), gsmGoodsTypeId, gsmGoodsName, iymShelfPositionName);
+                shelfGoodsService.getClinicListByCriteria(
+                        user.getSysClinicId(), gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, iymShelfPositionName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

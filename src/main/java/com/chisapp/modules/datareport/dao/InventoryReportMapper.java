@@ -19,6 +19,17 @@ public interface InventoryReportMapper {
     int countExpiryDateListByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                       @Param("filterDays") Integer filterDays);
 
+    List<Map<String, Object>> selectSellFrequencyListByCriteria(@Param("sysClinicId") Integer sysClinicId,
+                                                                @Param("sysClinicName") String sysClinicName,
+                                                                @Param("quantity") Integer quantity,
+                                                                @Param("gsmGoodsTypeId")  Integer gsmGoodsTypeId,
+                                                                @Param("gsmGoodsOid") String gsmGoodsOid,
+                                                                @Param("gsmGoodsName") String gsmGoodsName,
+                                                                @Param("days") Integer days,
+                                                                @Param("sellFrequency") Integer sellFrequency,
+                                                                @Param("sellQuantity") Integer sellQuantity,
+                                                                @Param("minAge") Integer minAge);
+
 
 
 

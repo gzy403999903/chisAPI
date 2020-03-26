@@ -106,6 +106,7 @@ public class InventoryHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(required = false) Integer iymInventoryTypeId,
             @RequestParam(defaultValue = "false") Boolean showZero,
+            @RequestParam(required = false) String gsmGoodsOid,
             @RequestParam(required = false) String gsmGoodsName,
             @RequestParam(required = false) String ph){
 
@@ -113,8 +114,8 @@ public class InventoryHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-               inventoryService.getClinicPhGroupListByCriteria(user.getSysClinicId(), iymInventoryTypeId, showZero, gsmGoodsName, ph);
+        List<Map<String, Object>> pageList = inventoryService.getClinicPhGroupListByCriteria(
+                user.getSysClinicId(), iymInventoryTypeId, showZero, gsmGoodsOid, gsmGoodsName, ph);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -135,12 +136,13 @@ public class InventoryHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(defaultValue = "false") Boolean showZero,
             @RequestParam(required = false) String sysClinicName,
+            @RequestParam(required = false) String gsmGoodsOid,
             @RequestParam(required = false) String gsmGoodsName,
             @RequestParam(required = false) String ph){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventoryService.getPhGroupListByCriteria(showZero, sysClinicName, gsmGoodsName, ph);
+        List<Map<String, Object>> pageList = inventoryService.getPhGroupListByCriteria(
+                showZero, sysClinicName, gsmGoodsOid, gsmGoodsName, ph);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -151,6 +153,7 @@ public class InventoryHandler {
      * @param pageSize
      * @param iymInventoryTypeId
      * @param showZero
+     * @param gsmGoodsOid
      * @param gsmGoodsName
      * @param ph
      * @return
@@ -161,15 +164,14 @@ public class InventoryHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(required = false) Integer iymInventoryTypeId,
             @RequestParam(defaultValue = "false") Boolean showZero,
+            @RequestParam(required = false) String gsmGoodsOid,
             @RequestParam(required = false) String gsmGoodsName,
             @RequestParam(required = false) String ph){
 
-        // 获取用户信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-
+        User user = (User) SecurityUtils.getSubject().getPrincipal();  // 获取用户信息
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventoryService.getClinicPchListByCriteria(user.getSysClinicId(), iymInventoryTypeId, showZero, gsmGoodsName, ph);
+        List<Map<String, Object>> pageList = inventoryService.getClinicPchListByCriteria(
+                user.getSysClinicId(), iymInventoryTypeId, showZero, gsmGoodsOid, gsmGoodsName, ph);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

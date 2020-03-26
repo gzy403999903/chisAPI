@@ -38,5 +38,28 @@ public interface InventoryReportService {
      */
     XSSFWorkbook downloadExpiryDateExcel(Integer sysClinicId, String sysClinicName, Integer filterDays);
 
+    /**
+     * 销售频次(滞销)库存
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param quantity 库存数量
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param days
+     * @param sellFrequency
+     * @return
+     */
+    List<Map<String, Object>> getSellFrequencyListByCriteria(Integer sysClinicId,
+                                                             String sysClinicName,
+                                                             Integer quantity,
+                                                             Integer gsmGoodsTypeId,
+                                                             String gsmGoodsOid,
+                                                             String gsmGoodsName,
+                                                             Integer days,
+                                                             Integer sellFrequency,
+                                                             Integer sellQuantity,
+                                                             Integer minAge);
+
+
 
 }

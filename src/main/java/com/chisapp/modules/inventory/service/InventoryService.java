@@ -98,6 +98,7 @@ public interface InventoryService {
      * @param sysClinicId 机构ID
      * @param iymInventoryTypeId 仓库ID
      * @param showZero 是否显示为 0 的库存
+     * @param gsmGoodsOid 商品编码
      * @param gsmGoodsName 商品名称
      * @param ph 批号
      * @return
@@ -105,6 +106,7 @@ public interface InventoryService {
     List<Map<String, Object>> getClinicPhGroupListByCriteria(Integer sysClinicId,
                                                              Integer iymInventoryTypeId,
                                                              Boolean showZero,
+                                                             String gsmGoodsOid,
                                                              String gsmGoodsName,
                                                              String ph);
 
@@ -112,12 +114,14 @@ public interface InventoryService {
      * 获取全机构批号库存
      * @param showZero 是否显示为 0 的库存
      * @param sysClinicName 机构名称
+     * @param gsmGoodsOid 商品编码
      * @param gsmGoodsName 商品名称
      * @param ph 批号
      * @return
      */
     List<Map<String, Object>> getPhGroupListByCriteria(Boolean showZero,
                                                        String sysClinicName,
+                                                       String gsmGoodsOid,
                                                        String gsmGoodsName,
                                                        String ph);
 
@@ -126,6 +130,7 @@ public interface InventoryService {
      * @param sysClinicId 机构ID
      * @param iymInventoryTypeId 仓库ID
      * @param showZero 是否显示为 0 的库存
+     * @param gsmGoodsOid 商品编码
      * @param gsmGoodsName 商品名称
      * @param ph 批号
      * @return
@@ -133,6 +138,7 @@ public interface InventoryService {
     List<Map<String, Object>> getClinicPchListByCriteria(Integer sysClinicId,
                                                          Integer iymInventoryTypeId,
                                                          Boolean showZero,
+                                                         String gsmGoodsOid,
                                                          String gsmGoodsName,
                                                          String ph);
 

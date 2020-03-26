@@ -120,19 +120,19 @@
       </if>
     ) a
     <trim prefix="HAVING" suffixOverrides="and">
-      <if test="goodsMarginRate != null &amp;&amp; goodsMarginRate != 0">
+      <if test="goodsMarginRate != null">
         ((goodsRetailMarginRate -goodsActualMarginRate) &gt;= #{goodsMarginRate}) and
       </if>
-      <if test="marginRate != null &amp;&amp; marginRate != 0">
+      <if test="marginRate != null">
         ((retailMarginRate - actualMarginRate) &gt;= #{marginRate}) and
       </if>
-      <if test="goodsDiscountRate != null &amp;&amp; goodsDiscountRate != 0">
+      <if test="goodsDiscountRate != null">
         (goodsDiscountRate &lt;= #{goodsDiscountRate}) and
       </if>
-      <if test="itemDiscountRate != null &amp;&amp; itemDiscountRate != 0">
+      <if test="itemDiscountRate != null">
         (itemDiscountRate &lt;= #{itemDiscountRate}) and
       </if>
-      <if test="discountRate != null &amp;&amp; discountRate != 0">
+      <if test="discountRate != null">
         (discountRate &lt;= #{discountRate}) and
       </if>
     </trim>

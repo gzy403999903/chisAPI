@@ -69,8 +69,7 @@ public class InventoryReportHandler {
                                         @RequestParam(required = false) String sysClinicName,
                                         @RequestParam(required = false) Integer filterDays) {
 
-        XSSFWorkbook workbook = this.inventoryReportService.downloadExpiryDateExcel(
-                null, sysClinicName, (filterDays == null ? 120 : filterDays));
+        XSSFWorkbook workbook = this.inventoryReportService.downloadExpiryDateExcel(null, sysClinicName, filterDays);
         // 如果为 null 则不继续执行
         if (workbook == null) {
             return;
@@ -104,8 +103,7 @@ public class InventoryReportHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                inventoryReportService.getExpiryDateListByCriteria(
-                        user.getSysClinicId(), null, (filterDays == null ? 120 : filterDays));
+                inventoryReportService.getExpiryDateListByCriteria(user.getSysClinicId(), null, filterDays);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -140,19 +138,70 @@ public class InventoryReportHandler {
         }
     }
 
+    /**
+     * 获取全机构 商品销售分析
+     * @param pageNum
+     * @param pageSize
+     * @param sysClinicName
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param days
+     * @param sellFrequency
+     * @return
+     */
+    @GetMapping("/getSellFrequencyListByCriteria")
+    public PageResult getSellFrequencyListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+                                                      @RequestParam(defaultValue="1") Integer pageSize,
+                                                      @RequestParam(required = false) String sysClinicName,
+                                                      @RequestParam(required = false) Integer quantity,
+                                                      @RequestParam(required = false) Integer gsmGoodsTypeId,
+                                                      @RequestParam(required = false) String gsmGoodsOid,
+                                                      @RequestParam(required = false) String gsmGoodsName,
+                                                      @RequestParam(required = false) Integer days,
+                                                      @RequestParam(required = false) Integer sellFrequency,
+                                                      @RequestParam(required = false) Integer sellQuantity,
+                                                      @RequestParam(required = false) Integer minAge) {
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = inventoryReportService.getSellFrequencyListByCriteria(
+                null, sysClinicName, quantity, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, days,
+                sellFrequency, sellQuantity, minAge);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
+    /**
+     * 获取当前机构 商品销售分析
+     * @param pageNum
+     * @param pageSize
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param days
+     * @param sellFrequency
+     * @return
+     */
+    @GetMapping("/getClinicSellFrequencyListByCriteria")
+    public PageResult getClinicSellFrequencyListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+                                                            @RequestParam(defaultValue="1") Integer pageSize,
+                                                            @RequestParam(required = false) Integer quantity,
+                                                            @RequestParam(required = false) Integer gsmGoodsTypeId,
+                                                            @RequestParam(required = false) String gsmGoodsOid,
+                                                            @RequestParam(required = false) String gsmGoodsName,
+                                                            @RequestParam(required = false) Integer days,
+                                                            @RequestParam(required = false) Integer sellFrequency,
+                                                            @RequestParam(required = false) Integer sellQuantity,
+                                                            @RequestParam(required = false) Integer minAge) {
 
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = inventoryReportService.getSellFrequencyListByCriteria(
+                user.getSysClinicId(), null, quantity, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName,
+                days, sellFrequency, sellQuantity, minAge);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
-
-
-
-
-
-
-
-
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
 

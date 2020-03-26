@@ -26,6 +26,7 @@ public interface ShelfGoodsMapper {
 
     List<Map<String, Object>> selectClinicListByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                                          @Param("gsmGoodsTypeId") Integer gsmGoodsTypeId,
+                                                         @Param("gsmGoodsOid") String gsmGoodsOid,
                                                          @Param("gsmGoodsName") String gsmGoodsName,
                                                          @Param("iymShelfPositionName") String iymShelfPositionName);
 

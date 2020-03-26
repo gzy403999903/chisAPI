@@ -44,12 +44,14 @@ public interface InventoryMapper {
                                                           @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
                                                           @Param("showZero") Boolean showZero,
                                                           @Param("sysClinicName") String sysClinicName,
+                                                          @Param("gsmGoodsOid") String gsmGoodsOid,
                                                           @Param("gsmGoodsName") String gsmGoodsName,
                                                           @Param("ph") String ph);
 
     List<Map<String, Object>> selectClinicPchListByCriteria(@Param("sysClinicId") Integer sysClinicId,
                                                             @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
                                                             @Param("showZero") Boolean showZero,
+                                                            @Param("gsmGoodsOid") String gsmGoodsOid,
                                                             @Param("gsmGoodsName") String gsmGoodsName,
                                                             @Param("ph") String ph);
 
