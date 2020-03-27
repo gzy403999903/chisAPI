@@ -64,6 +64,15 @@ public interface SellRecordService {
      */
     List<SellRecord> getClinicListByPrescriptionLshFromCache(String prescriptionLsh);
 
+    /**
+     * 获取应机构 对应医生 对应会员的销售明细, 并计算出一些结果进行返回
+     * [医生问诊: 合计处方数, 金额等]
+     * @param sysDoctorId
+     * @param mrmMemberId
+     * @return
+     */
+    Map<String, Object> countPrescriptionByCriteriaFromCache(Integer sysDoctorId, Integer mrmMemberId);
+
     /* --------------------------------------------------------------------------------------------------------------- */
     /**
      * 保存销售记录集合

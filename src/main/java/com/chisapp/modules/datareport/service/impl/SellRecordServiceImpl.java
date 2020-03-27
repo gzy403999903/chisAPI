@@ -1,5 +1,6 @@
 package com.chisapp.modules.datareport.service.impl;
 
+import com.chisapp.common.enums.GoodsTypeEnum;
 import com.chisapp.common.enums.SellTypeEnum;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.modules.datareport.bean.SellRecord;
@@ -13,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -156,6 +159,47 @@ public class SellRecordServiceImpl implements SellRecordService {
                 JSONUtils.parseJsonToObject(o.toString(), new TypeReference<List<SellRecord>>() {});
 
         return this.sellRecordListSort(recordList);
+    }
+
+    @Override
+    public Map<String, Object> countPrescriptionByCriteriaFromCache(Integer sysDoctorId, Integer mrmMemberId) {
+        // 获取当前机构对应会员 对应医生的销售明细
+        List<SellRecord> sellRecordList = this.getClinicListByMrmMemberIdFromCache(mrmMemberId)
+                .stream().filter(prescription -> prescription.getSellerId().intValue() == sysDoctorId)
+                .collect(Collectors.toList());
+
+        // 计算处方数
+        long countPrescription = sellRecordList.stream()
+                .filter(sellRecord -> !sellRecord.getRegistrationFeeFlag())
+                .map(SellRecord::getDwtSellPrescriptionLsh).distinct().count();
+
+        // 计算处方金额
+        BigDecimal countAmount = sellRecordList.stream()
+                .map(sellRecord -> sellRecord.getRetailPrice().multiply(new BigDecimal(sellRecord.getQuantity())))
+                .reduce(new BigDecimal("0"), BigDecimal::add);
+
+        // 获取中药销售明细
+        List<SellRecord> chineseDrugsSellRecordList = sellRecordList.stream().
+                filter(prescription ->
+                        prescription.getSysSellTypeId().intValue() == SellTypeEnum.GOODS.getIndex().intValue() &&
+                        prescription.getEntityTypeId().intValue() == GoodsTypeEnum.CHINESE_DRUGS.getIndex().intValue())
+                .collect(Collectors.toList());
+
+        // 获取中药处方数
+        long countChineseDrugsPrescription = chineseDrugsSellRecordList.stream()
+                .map(SellRecord::getDwtSellPrescriptionLsh).distinct().count();
+
+        // 获取中药处方克数
+        Integer countChineseDrugsQuantity = chineseDrugsSellRecordList.stream()
+                .map(SellRecord::getQuantity).reduce(0, (pre, curr) -> pre + curr);
+
+        // 返回数据
+        Map<String, Object> countMap = new HashMap<>();
+        countMap.put("countPrescription", countPrescription);
+        countMap.put("countAmount", countAmount);
+        countMap.put("countChineseDrugsPrescription", countChineseDrugsPrescription);
+        countMap.put("countChineseDrugsQuantity", countChineseDrugsQuantity);
+        return countMap;
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */

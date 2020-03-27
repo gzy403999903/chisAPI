@@ -86,6 +86,19 @@ public class SellRecordHandler {
         return PageResult.success().resultSet("list", list);
     }
 
+    /**
+     * 获取应机构 对应医生 对应会员的销售明细, 并计算出一些结果进行返回
+     * [医生问诊调用: 显示处方数量, 合计金额, 中药处方数量, 中药克数]
+     * @param mrmMemberId
+     * @return
+     */
+    @GetMapping("/countPrescriptionByCriteriaFromCache")
+    public PageResult countPrescriptionByCriteriaFromCache(@RequestParam Integer mrmMemberId) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        Map<String, Object> countMap = sellRecordService.countPrescriptionByCriteriaFromCache(user.getId(), mrmMemberId);
+        return PageResult.success().resultSet("countMap", countMap);
+    }
+
     /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
