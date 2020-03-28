@@ -64,6 +64,8 @@ public interface PaidAccountService {
     List<Map<String, Object>> getLshGroupListByCriteria(String[] creationDate,
                                                         Integer pemSupplierId,
                                                         Integer sysClinicId,
+                                                        String invoiceNo,
+                                                        String paymentNo,
                                                         Byte approveState);
 
     /**

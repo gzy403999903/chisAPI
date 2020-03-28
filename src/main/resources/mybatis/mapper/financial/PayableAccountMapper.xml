@@ -100,7 +100,7 @@
     group by flm_payable_account_lsh
     ) b on a.lsh = b.flm_payable_account_lsh
     <trim prefix="where" suffixOverrides="and">
-      <if test="arrearagesAmount != null &amp;&amp; arrearagesAmount != 0">
+      <if test="arrearagesAmount != null">
         ((a.payableAmount - ifnull(b.paidAmount, 0)) >= #{arrearagesAmount}) and
       </if>
     </trim>

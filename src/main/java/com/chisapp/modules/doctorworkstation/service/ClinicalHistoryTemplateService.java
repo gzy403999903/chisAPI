@@ -29,10 +29,10 @@ public interface ClinicalHistoryTemplateService {
 
     /**
      * 删除操作
-     * @param id
+     * @param clinicalHistoryTemplate
      */
     @Transactional
-    void delete(Integer id);
+    void delete(ClinicalHistoryTemplate clinicalHistoryTemplate);
 
     /**
      * 根据 ID 获取对象

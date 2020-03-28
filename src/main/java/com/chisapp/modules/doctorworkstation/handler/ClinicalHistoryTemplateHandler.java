@@ -79,12 +79,12 @@ public class ClinicalHistoryTemplateHandler {
 
     /**
      * 删除操作
-     * @param id
+     * @param clinicalHistoryTemplate
      * @return
      */
     @DeleteMapping("/delete")
-    public PageResult delete (@RequestParam Integer id) {
-      clinicalHistoryTemplateService.delete(id);
+    public PageResult delete (ClinicalHistoryTemplate clinicalHistoryTemplate) {
+      clinicalHistoryTemplateService.delete(clinicalHistoryTemplate);
       return PageResult.success();
     }
 

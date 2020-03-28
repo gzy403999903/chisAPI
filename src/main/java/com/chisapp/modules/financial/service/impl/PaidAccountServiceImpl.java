@@ -145,8 +145,14 @@ public class PaidAccountServiceImpl implements PaidAccountService {
 
 
     @Override
-    public List<Map<String, Object>> getLshGroupListByCriteria(String[] creationDate, Integer pemSupplierId, Integer sysClinicId, Byte approveState) {
-        return paidAccountMapper.selectLshGroupListByCriteria(creationDate, pemSupplierId, sysClinicId, approveState);
+    public List<Map<String, Object>> getLshGroupListByCriteria(String[] creationDate,
+                                                               Integer pemSupplierId,
+                                                               Integer sysClinicId,
+                                                               String invoiceNo,
+                                                               String paymentNo,
+                                                               Byte approveState) {
+        return paidAccountMapper.selectLshGroupListByCriteria(
+                creationDate, pemSupplierId, sysClinicId, invoiceNo, paymentNo, approveState);
     }
 
     @Override

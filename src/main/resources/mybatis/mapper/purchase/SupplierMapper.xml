@@ -170,10 +170,10 @@
         (arrearagesAmount >= #{arrearagesAmount}) and
       </if>
       <if test="arrearagesLimit != null">
-        (arrearagesLimit >= #{arrearagesLimit}) and
+        (arrearagesLimit &lt;= #{arrearagesLimit}) and
       </if>
       <if test="arrearagesDays != null">
-        (arrearagesDays >= #{arrearagesDays}) and
+        (arrearagesDays &lt;= #{arrearagesDays}) and
       </if>
       <if test="oid != null &amp;&amp; oid.trim() != ''">
         (oid like '${oid}%')  and

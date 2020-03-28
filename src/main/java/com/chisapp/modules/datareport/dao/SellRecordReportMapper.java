@@ -13,12 +13,30 @@ import java.util.Map;
 public interface SellRecordReportMapper {
 
     List<Map<String, Object>> selectByCriteria(@Param("creationDate") String[] creationDate,
+                                               @Param("invoiceDate") String[] invoiceDate,
                                                @Param("sysClinicId") Integer sysClinicId,
                                                @Param("sysClinicName") String sysClinicName,
                                                @Param("lsh") String lsh,
+                                               @Param("sysSellTypeId") Integer sysSellTypeId,
+                                               @Param("entityTypeId") Integer entityTypeId,
+                                               @Param("entityOid") String entityOid,
                                                @Param("entityName") String entityName,
                                                @Param("mrmMemberName") String mrmMemberName,
+                                               @Param("phone") String phone,
                                                @Param("sellerName") String sellerName);
+
+    Map<String, Object> countSellRecordByCriteria(@Param("creationDate") String[] creationDate,
+                                                  @Param("invoiceDate") String[] invoiceDate,
+                                                  @Param("sysClinicId") Integer sysClinicId,
+                                                  @Param("sysClinicName") String sysClinicName,
+                                                  @Param("lsh") String lsh,
+                                                  @Param("sysSellTypeId") Integer sysSellTypeId,
+                                                  @Param("entityTypeId") Integer entityTypeId,
+                                                  @Param("entityOid") String entityOid,
+                                                  @Param("entityName") String entityName,
+                                                  @Param("mrmMemberName") String mrmMemberName,
+                                                  @Param("phone") String phone,
+                                                  @Param("sellerName") String sellerName);
 
     List<Map<String, Object>> selectBillingTypeGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                                    @Param("sysClinicId") Integer sysClinicId,

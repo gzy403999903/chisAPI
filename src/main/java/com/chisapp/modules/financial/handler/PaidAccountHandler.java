@@ -130,16 +130,18 @@ public class PaidAccountHandler {
      * @return
      */
     @GetMapping("/getLshGroupListByCriteria")
-    public PageResult getLshGroupListByCriteria (
-            @RequestParam(defaultValue="1") Integer pageNum,
-            @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
-            @RequestParam(required = false) Integer pemSupplierId,
-            @RequestParam(required = false) Integer sysClinicId,
-            @RequestParam(required = false) Byte approveState){
+    public PageResult getLshGroupListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+                                                 @RequestParam(defaultValue="1") Integer pageSize,
+                                                 @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
+                                                 @RequestParam(required = false) Integer pemSupplierId,
+                                                 @RequestParam(required = false) Integer sysClinicId,
+                                                 @RequestParam(required = false) String invoiceNo,
+                                                 @RequestParam(required = false) String paymentNo,
+                                                 @RequestParam(required = false) Byte approveState){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = paidAccountService.getLshGroupListByCriteria(creationDate, pemSupplierId, sysClinicId, approveState);
+        List<Map<String, Object>> pageList = paidAccountService.getLshGroupListByCriteria(
+                creationDate, pemSupplierId, sysClinicId, invoiceNo, paymentNo, approveState);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

@@ -27,14 +27,40 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
 
     @Override
     public List<Map<String, Object>> getByCriteria(String[] creationDate,
+                                                   String[] invoiceDate,
                                                    Integer sysClinicId,
                                                    String sysClinicName,
                                                    String lsh,
+                                                   Integer sysSellTypeId,
+                                                   Integer entityTypeId,
+                                                   String entityOid,
                                                    String entityName,
                                                    String mrmMemberName,
+                                                   String phone,
                                                    String sellerName) {
-        return sellRecordReportMapper.selectByCriteria(creationDate, sysClinicId, sysClinicName,
-                lsh, entityName, mrmMemberName, sellerName);
+
+        return sellRecordReportMapper.selectByCriteria(
+                creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
+                entityOid, entityName, mrmMemberName, phone, sellerName);
+    }
+
+    @Override
+    public Map<String, Object> countSellRecordByCriteria(String[] creationDate,
+                                                         String[] invoiceDate,
+                                                         Integer sysClinicId,
+                                                         String sysClinicName,
+                                                         String lsh,
+                                                         Integer sysSellTypeId,
+                                                         Integer entityTypeId,
+                                                         String entityOid,
+                                                         String entityName,
+                                                         String mrmMemberName,
+                                                         String phone,
+                                                         String sellerName) {
+
+        return sellRecordReportMapper.countSellRecordByCriteria(
+                creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
+                entityOid, entityName, mrmMemberName, phone, sellerName);
     }
 
     @Override

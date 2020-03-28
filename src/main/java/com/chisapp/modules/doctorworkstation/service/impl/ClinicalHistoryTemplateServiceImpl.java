@@ -39,12 +39,20 @@ public class ClinicalHistoryTemplateServiceImpl implements ClinicalHistoryTempla
 
     @Override
     public void update(ClinicalHistoryTemplate clinicalHistoryTemplate) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
+        if (user.getId().intValue() != clinicalHistoryTemplate.getSysDoctorId().intValue()) {
+            throw new RuntimeException("不能编辑他人创建的病例模板");
+        }
         clinicalHistoryTemplateMapper.updateByPrimaryKey(clinicalHistoryTemplate);
     }
 
     @Override
-    public void delete(Integer id) {
-        clinicalHistoryTemplateMapper.deleteByPrimaryKey(id);
+    public void delete(ClinicalHistoryTemplate clinicalHistoryTemplate) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
+        if (user.getId().intValue() != clinicalHistoryTemplate.getSysDoctorId().intValue()) {
+            throw new RuntimeException("不能删除他人创建的病例模板");
+        }
+        clinicalHistoryTemplateMapper.deleteByPrimaryKey(clinicalHistoryTemplate.getId());
     }
 
     @Override

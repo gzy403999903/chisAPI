@@ -38,6 +38,8 @@ public interface PaidAccountMapper {
     List<Map<String, Object>> selectLshGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                            @Param("pemSupplierId") Integer pemSupplierId,
                                                            @Param("sysClinicId") Integer sysClinicId,
+                                                           @Param("invoiceNo") String invoiceNo,
+                                                           @Param("paymentNo") String paymentNo,
                                                            @Param("approveState") Byte approveState);
 
     List<Map<String, Object>> selectByLsh(@Param("lsh") String lsh);

@@ -260,9 +260,10 @@ public class SellPrescriptionServiceImpl implements SellPrescriptionService {
 
     @Override
     public void deleteByLshFromCache(String lsh) {
-        stringRedisTemplate.opsForHash().delete(this.getRedisHashKey(), lsh);
         // 清除销售记录中对应的缓存记录
         this.sellRecordService.deleteByPrescriptionLshFromCache(lsh);
+        // 清除销售处方中对应的缓存记录
+        stringRedisTemplate.opsForHash().delete(this.getRedisHashKey(), lsh);
     }
 
     @Override

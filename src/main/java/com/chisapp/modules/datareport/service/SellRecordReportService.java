@@ -13,21 +13,60 @@ public interface SellRecordReportService {
     /**
      * 销售明细
      * @param creationDate
+     * @param invoiceDate
      * @param sysClinicId
      * @param sysClinicName
      * @param lsh
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
      * @param entityName
      * @param mrmMemberName
+     * @param phone
      * @param sellerName
      * @return
      */
     List<Map<String, Object>> getByCriteria(String[] creationDate,
+                                            String[] invoiceDate,
                                             Integer sysClinicId,
                                             String sysClinicName,
                                             String lsh,
+                                            Integer sysSellTypeId,
+                                            Integer entityTypeId,
+                                            String entityOid,
                                             String entityName,
                                             String mrmMemberName,
+                                            String phone,
                                             String sellerName);
+
+    /**
+     * 计算销售明细 部分数值
+     * @param creationDate
+     * @param invoiceDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param lsh
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
+     * @param entityName
+     * @param mrmMemberName
+     * @param phone
+     * @param sellerName
+     * @return
+     */
+    Map<String, Object> countSellRecordByCriteria(String[] creationDate,
+                                                  String[] invoiceDate,
+                                                  Integer sysClinicId,
+                                                  String sysClinicName,
+                                                  String lsh,
+                                                  Integer sysSellTypeId,
+                                                  Integer entityTypeId,
+                                                  String entityOid,
+                                                  String entityName,
+                                                  String mrmMemberName,
+                                                  String phone,
+                                                  String sellerName);
 
     /**
      * 计费类型汇总表

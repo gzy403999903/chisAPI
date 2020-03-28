@@ -49,18 +49,26 @@ public class SellRecordReportHandler {
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(value = "invoiceDate[]",required = false) String[] invoiceDate,
             @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) Integer sysSellTypeId,
+            @RequestParam(required = false) Integer entityTypeId,
+            @RequestParam(required = false) String entityOid,
             @RequestParam(required = false) String entityName,
             @RequestParam(required = false) String mrmMemberName,
+            @RequestParam(required = false) String phone,
             @RequestParam(required = false) String sellerName){
 
+        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(creationDate, invoiceDate, null,
+                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerName);
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                sellRecordReportService.getByCriteria(creationDate, null, sysClinicName, lsh, entityName,
-                        mrmMemberName, sellerName);
+        List<Map<String, Object>> pageList = sellRecordReportService.getByCriteria(creationDate, invoiceDate, null,
+                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-        return PageResult.success().resultSet("page", pageInfo);
+
+        return PageResult.success().resultSet("page", pageInfo).resultSet("countMap", countMap);
     }
 
     /**
@@ -79,19 +87,28 @@ public class SellRecordReportHandler {
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(value = "invoiceDate[]",required = false) String[] invoiceDate,
             @RequestParam(required = false) String lsh,
+            @RequestParam(required = false) Integer sysSellTypeId,
+            @RequestParam(required = false) Integer entityTypeId,
+            @RequestParam(required = false) String entityOid,
             @RequestParam(required = false) String entityName,
             @RequestParam(required = false) String mrmMemberName,
+            @RequestParam(required = false) String phone,
             @RequestParam(required = false) String sellerName){
 
         // 获取用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
+
+        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(creationDate, invoiceDate, user.getSysClinicId(),
+                null, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerName);
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                sellRecordReportService.getByCriteria(creationDate,user.getSysClinicId(), null, lsh,
-                        entityName, mrmMemberName, sellerName);
+        List<Map<String, Object>> pageList = sellRecordReportService.getByCriteria(creationDate, invoiceDate, user.getSysClinicId(),
+                null, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-        return PageResult.success().resultSet("page", pageInfo);
+
+        return PageResult.success().resultSet("page", pageInfo).resultSet("countMap", countMap);
     }
 
     /**

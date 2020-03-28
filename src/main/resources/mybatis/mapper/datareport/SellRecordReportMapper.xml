@@ -10,8 +10,17 @@
       <if test="creationDate != null &amp;&amp; creationDate.length == 2">
         (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
       </if>
+      <if test="invoiceDate != null &amp;&amp; invoiceDate.length == 2">
+        (DATE_FORMAT(invoiceDate, '%Y-%m-%d') between #{invoiceDate[0]} and #{invoiceDate[1]}) and
+      </if>
       <if test="sysClinicId != null">
         (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysSellTypeId != null">
+        (sysSellTypeId = #{sysSellTypeId}) and
+      </if>
+      <if test="entityTypeId != null">
+        (entityTypeId = #{entityTypeId}) and
       </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
         (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
@@ -19,17 +28,77 @@
       <if test="lsh != null &amp;&amp; lsh.trim() != ''">
         (lsh like '${lsh}%') and
       </if>
+      <if test="entityOid != null &amp;&amp; entityOid.trim() != ''">
+        (entityOid like '${entityOid}%') and
+      </if>
       <if test="entityName != null &amp;&amp; entityName.trim() != ''">
         (entityName like '${entityName}%' or entityCode like '${entityName}%') and
       </if>
       <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
         (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%') and
       </if>
+      <if test="phone != null &amp;&amp; phone.trim() != ''">
+        (phone like '${phone}%') and
+      </if>
       <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
         (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
       </if>
     </trim>
     order by creationDate desc, sysClinicId, sysSellTypeId, entityTypeId, entityId
+  </select>
+
+  <select id="countSellRecordByCriteria" resultType="map">
+    SELECT
+      a.*,
+      (a.hsxs - a.hscb) AS hsml,
+      (a.wsxs - a.wscb) AS wsml,
+      ROUND(((a.hsxs - a.hscb) / a.hsxs * 100),2) AS mll
+    FROM (
+    SELECT
+      ROUND(SUM(quantity * actualRetailPrice),2) AS hsxs,
+      ROUND(SUM(quantity * (actualRetailPrice / ((100 + sellTaxRate) / 100))), 2) AS wsxs,
+      ROUND(SUM(quantity * costPrice),2) AS hscb,
+      ROUND(SUM(quantity * (costPrice / ((100 + purchaseTaxRate) / 100))),2) AS wscb
+    FROM view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="invoiceDate != null &amp;&amp; invoiceDate.length == 2">
+        (DATE_FORMAT(invoiceDate, '%Y-%m-%d') between #{invoiceDate[0]} and #{invoiceDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysSellTypeId != null">
+        (sysSellTypeId = #{sysSellTypeId}) and
+      </if>
+      <if test="entityTypeId != null">
+        (entityTypeId = #{entityTypeId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="lsh != null &amp;&amp; lsh.trim() != ''">
+        (lsh like '${lsh}%') and
+      </if>
+      <if test="entityOid != null &amp;&amp; entityOid.trim() != ''">
+        (entityOid like '${entityOid}%') and
+      </if>
+      <if test="entityName != null &amp;&amp; entityName.trim() != ''">
+        (entityName like '${entityName}%' or entityCode like '${entityName}%') and
+      </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%') and
+      </if>
+      <if test="phone != null &amp;&amp; phone.trim() != ''">
+        (phone like '${phone}%') and
+      </if>
+      <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
+        (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
+      </if>
+    </trim>
+    ) a
   </select>
 
   <!-- 计费类型汇总 -->

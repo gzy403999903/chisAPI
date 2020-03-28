@@ -129,6 +129,12 @@
       <if test="sysClinicId != null">
         (sysClinicId = #{sysClinicId}) and
       </if>
+      <if test="invoiceNo != null &amp;&amp; invoiceNo.trim() != ''">
+        (invoiceNo like '${invoiceNo}%') and
+      </if>
+      <if test="paymentNo != null &amp;&amp; paymentNo.trim() != ''">
+        (paymentNo like '${paymentNo}%') and
+      </if>
       <if test="approveState != null">
         (approveState = #{approveState}) and
       </if>
