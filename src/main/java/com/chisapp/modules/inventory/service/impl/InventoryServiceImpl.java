@@ -1,6 +1,5 @@
 package com.chisapp.modules.inventory.service.impl;
 
-import com.chisapp.common.utils.DecimalUtils;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.modules.goods.bean.Goods;
 import com.chisapp.modules.goods.service.GoodsService;

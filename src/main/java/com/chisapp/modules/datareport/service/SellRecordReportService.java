@@ -85,8 +85,8 @@ public interface SellRecordReportService {
      * @param sysClinicId
      * @param lsh
      * @param sysClinicName
-     * @param goodsMarginRate
-     * @param marginRate
+     * @param goodsMarginRate 注入查询 参数携带表达式运算符
+     * @param marginRate 注入查询 参数携带表达式运算符
      * @param goodsDiscountRate
      * @param itemDiscountRate
      * @param discountRate
@@ -97,13 +97,19 @@ public interface SellRecordReportService {
                                                           Integer sysClinicId,
                                                           String lsh,
                                                           String sysClinicName,
-                                                          Integer goodsMarginRate,
-                                                          Integer marginRate,
+                                                          String goodsMarginRate,
+                                                          String marginRate,
                                                           Integer goodsDiscountRate,
                                                           Integer itemDiscountRate,
                                                           Integer discountRate,
                                                           String groupBy);
 
+    /**
+     * 日销售报表
+     * @param creationDate
+     * @return
+     */
+    List<Map<String, Object>> getDaySellRecordByCreationDate(String[] creationDate);
 
 
 

@@ -47,6 +47,7 @@
     order by creationDate desc, sysClinicId, sysSellTypeId, entityTypeId, entityId
   </select>
 
+  <!-- 计算销售明细属性 -->
   <select id="countSellRecordByCriteria" resultType="map">
     SELECT
       a.*,
@@ -189,11 +190,13 @@
       </if>
     ) a
     <trim prefix="HAVING" suffixOverrides="and">
-      <if test="goodsMarginRate != null">
-        ((goodsRetailMarginRate -goodsActualMarginRate) &gt;= #{goodsMarginRate}) and
+      <if test="goodsMarginRate != null &amp;&amp; goodsMarginRate.trim() != ''">
+        /*注入查询 参数携带表达式运算符*/
+        ((goodsRetailMarginRate - ABS(goodsActualMarginRate)) ${goodsMarginRate}) and
       </if>
       <if test="marginRate != null">
-        ((retailMarginRate - actualMarginRate) &gt;= #{marginRate}) and
+        /*注入查询 参数携带表达式运算符*/
+        (ABS(retailMarginRate - ABS(actualMarginRate)) ${marginRate}) and
       </if>
       <if test="goodsDiscountRate != null">
         (goodsDiscountRate &lt;= #{goodsDiscountRate}) and
@@ -206,6 +209,32 @@
       </if>
     </trim>
     ORDER BY a.creationDate desc, a.sysClinicId
+  </select>
+
+  <!--日销售报表-->
+  <select id="selectDaySellRecordByCreationDate" resultType="map">
+    SELECT
+      a.sys_clinic_id AS sysClinicId,
+      c.`name` AS sysClinicName,
+      ROUND(IFNULL(b.rxs, 0), 2) AS rxs,
+      ROUND(SUM(a.quantity * a.actual_retail_price), 2) AS yxs
+    FROM dr_sell_record a
+    LEFT JOIN (
+      SELECT
+        sys_clinic_id,
+        SUM(quantity * actual_retail_price) AS rxs
+      FROM dr_sell_record
+      WHERE DATE_FORMAT(creation_date, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+      GROUP BY sys_clinic_id
+    ) b ON a.`sys_clinic_id` = b.sys_clinic_id
+    LEFT JOIN sys_clinic c ON a.`sys_clinic_id` = c.`id`
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(a.creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+    </trim>
+    GROUP BY a.sys_clinic_id
+    ORDER BY a.`sys_clinic_id`
   </select>
 
 

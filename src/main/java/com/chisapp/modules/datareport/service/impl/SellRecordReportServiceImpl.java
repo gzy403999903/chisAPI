@@ -73,8 +73,8 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                                  Integer sysClinicId,
                                                                  String lsh,
                                                                  String sysClinicName,
-                                                                 Integer goodsMarginRate,
-                                                                 Integer marginRate,
+                                                                 String goodsMarginRate,
+                                                                 String marginRate,
                                                                  Integer goodsDiscountRate,
                                                                  Integer itemDiscountRate,
                                                                  Integer discountRate,
@@ -87,6 +87,11 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         return sellRecordReportMapper.selectMarginRateListByCriteria(creationDate,
                 sysClinicId, lsh, sysClinicName, goodsMarginRate, marginRate, goodsDiscountRate, itemDiscountRate,
                 discountRate, groupBy);
+    }
+
+    @Override
+    public List<Map<String, Object>> getDaySellRecordByCreationDate(String[] creationDate) {
+        return sellRecordReportMapper.selectDaySellRecordByCreationDate(creationDate);
     }
 
 

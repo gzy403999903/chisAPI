@@ -172,8 +172,8 @@ public class SellRecordReportHandler {
                                                      @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                      @RequestParam(required = false) String lsh,
                                                      @RequestParam(required = false) String sysClinicName,
-                                                     @RequestParam(required = false) Integer goodsMarginRate,
-                                                     @RequestParam(required = false) Integer marginRate,
+                                                     @RequestParam(required = false) String goodsMarginRate,
+                                                     @RequestParam(required = false) String marginRate,
                                                      @RequestParam(required = false) Integer goodsDiscountRate,
                                                      @RequestParam(required = false) Integer itemDiscountRate,
                                                      @RequestParam(required = false) Integer discountRate) {
@@ -206,8 +206,8 @@ public class SellRecordReportHandler {
                                                            @RequestParam(defaultValue="1") Integer pageSize,
                                                            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                            @RequestParam(required = false) String lsh,
-                                                           @RequestParam(required = false) Integer goodsMarginRate,
-                                                           @RequestParam(required = false) Integer marginRate,
+                                                           @RequestParam(required = false) String goodsMarginRate,
+                                                           @RequestParam(required = false) String marginRate,
                                                            @RequestParam(required = false) Integer goodsDiscountRate,
                                                            @RequestParam(required = false) Integer itemDiscountRate,
                                                            @RequestParam(required = false) Integer discountRate) {
@@ -223,7 +223,25 @@ public class SellRecordReportHandler {
         return PageResult.success().resultSet("page", pageInfo);
     }
 
+    /**
+     * 获取销售日报
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @return
+     */
+    @GetMapping("/getDaySellRecordByCreationDate")
+    public PageResult getDaySellRecordByCreationDate(
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = sellRecordReportService.getDaySellRecordByCreationDate(creationDate);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
 

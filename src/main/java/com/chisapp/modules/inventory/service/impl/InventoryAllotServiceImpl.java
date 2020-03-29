@@ -81,26 +81,6 @@ public class InventoryAllotServiceImpl implements InventoryAllotService {
     // 放弃审核, 直接保存即可审核通过, 同时不再拆分调拨数量, 将操作数据行直接更改为目标仓库类型 Date: 2020-03-03, By: Tandy
     // *****************************************************************************************************************
     private void updateIymInventoryTypeId (List<InventoryAllot> allotList) {
-        /*
-        // 声明要进行提交的集合 key 为仓库ID, value 为 库存记录 ID 集合
-        Map<Integer, List<Integer>> groupMap = new HashMap<>();
-
-        // 对目标仓库进行分组
-        List<Integer> iymInventoryTypeIdList = allotList.stream()
-                .map(InventoryAllot::getToIymInventoryTypeId)
-                .distinct()
-                .collect(Collectors.toList());
-
-        // 根据目标仓库获取对应的库存记录ID集合
-        iymInventoryTypeIdList.forEach(iymInventoryTypeId -> {
-            List<Integer> idList = allotList.stream()
-                    .filter(allot -> allot.getToIymInventoryTypeId().intValue() == iymInventoryTypeId.intValue())
-                    .map(InventoryAllot::getIymInventoryId)
-                    .collect(Collectors.toList());
-
-            groupMap.put(iymInventoryTypeId, idList);
-        });
-        */
         List<Inventory> inventoryList = new ArrayList<>();
         for (InventoryAllot inventoryAllot : allotList) {
             Inventory inventory = new Inventory();
