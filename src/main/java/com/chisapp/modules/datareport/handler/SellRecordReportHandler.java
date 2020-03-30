@@ -5,6 +5,7 @@ import com.chisapp.modules.datareport.service.SellRecordReportService;
 import com.chisapp.modules.system.bean.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -224,7 +230,7 @@ public class SellRecordReportHandler {
     }
 
     /**
-     * 获取销售日报
+     * 日销售报表
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -234,7 +240,7 @@ public class SellRecordReportHandler {
     public PageResult getDaySellRecordByCreationDate(
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
+            @RequestParam(value = "creationDate[]") String[] creationDate) {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = sellRecordReportService.getDaySellRecordByCreationDate(creationDate);
@@ -242,6 +248,44 @@ public class SellRecordReportHandler {
 
         return PageResult.success().resultSet("page", pageInfo);
     }
+
+    /**
+     * 导出日销售报表
+     * @param response
+     */
+    @GetMapping("/downloadDaySellRecordExcel")
+    public void downloadDaySellRecordExcel(HttpServletResponse response,
+                                           @RequestParam(value = "creationDate[]") String[] creationDate) {
+
+        XSSFWorkbook workbook = sellRecordReportService.downloadDaySellRecordExcel(creationDate);
+        // 如果为 null 则不继续执行
+        if (workbook == null) {
+            return;
+        }
+
+        // DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        String fileName = "日销售报表.xlsx";
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

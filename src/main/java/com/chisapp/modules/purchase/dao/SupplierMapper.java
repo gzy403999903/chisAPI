@@ -18,7 +18,6 @@ public interface SupplierMapper {
 
     int updateByPrimaryKey(Supplier record);
 
-
     /*----------------------------------------------------------------------------------------------------------------*/
 
     void addArrearagesAmount(@Param("id") Integer id,

@@ -1,5 +1,7 @@
 package com.chisapp.modules.datareport.service;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +113,11 @@ public interface SellRecordReportService {
      */
     List<Map<String, Object>> getDaySellRecordByCreationDate(String[] creationDate);
 
-
-
+    /**
+     * 导出日销售报表
+     * @param creationDate
+     * @return
+     */
+    XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate);
 
 }

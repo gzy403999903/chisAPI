@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,48 +27,65 @@ public class Supplier implements Serializable {
     private String code;
 
     @Length(max = 30)
+    @NotBlank
     private String accountLicence;
 
     @Length(max = 30)
+    @NotBlank
     private String bankName;
 
     @Length(max = 30)
+    @NotBlank
     private String cardNo;
 
+    @NotNull
     private Integer invoiceTypeId;
 
+    @NotNull
     private Integer paymentTypeId;
 
     @Digits(integer = 8, fraction = 2)
     @Min(0)
+    @NotNull
     private BigDecimal arrearagesAmount = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @Min(0)
+    @NotNull
     private BigDecimal arrearagesLimit = new BigDecimal("0");
 
     @Min(0)
+    @NotNull
     private Byte arrearagesDays;
 
     @Length(max = 10)
+    @NotBlank
     private String legalPerson;
 
     @Length(max = 30)
+    @NotBlank
     private String tel;
 
     @Length(max = 30)
     private String fax;
 
+    @NotNull
+    private Integer taxpayerTypeId;
+
     @Length(max = 50)
+    @NotBlank
     private String address;
 
     @Length(max = 10)
+    @NotBlank
     private String contacter;
 
     @Length(max = 30)
+    @NotBlank
     private String contacterPhone;
 
     @Length(max = 300)
+    @NotBlank
     private String businessScope;
 
     @Length(max = 100)
@@ -251,6 +269,14 @@ public class Supplier implements Serializable {
 
     public void setFax(String fax) {
         this.fax = fax == null ? null : fax.trim();
+    }
+
+    public Integer getTaxpayerTypeId() {
+        return taxpayerTypeId;
+    }
+
+    public void setTaxpayerTypeId(Integer taxpayerTypeId) {
+        this.taxpayerTypeId = taxpayerTypeId;
     }
 
     public String getAddress() {

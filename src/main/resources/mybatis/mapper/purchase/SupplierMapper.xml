@@ -17,6 +17,7 @@
     <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
     <result column="tel" jdbcType="VARCHAR" property="tel" />
     <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="taxpayer_type_id" jdbcType="INTEGER" property="taxpayerTypeId" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="contacter" jdbcType="VARCHAR" property="contacter" />
     <result column="contacter_phone" jdbcType="VARCHAR" property="contacterPhone" />
@@ -54,29 +55,31 @@
       card_no, invoice_type_id, payment_type_id,
       arrearages_amount, arrearages_limit, arrearages_days,
       legal_person, tel, fax,
-      address, contacter, contacter_phone,
-      business_scope, remarks, business_licence,
-      bl_expiry_date, hygienic_license, hl_expiry_date,
-      production_licence, pl_expiry_date, gsp_licence,
-      gsp_expiry_date, gmp_licence, gmp_expiry_date,
-      instrument_licence, il_expiry_date, food_license,
-      fl_expiry_date, food_production_licence, fpl_expiry_date,
-      state, creator_id, creation_date,
-      last_updater_id, last_update_date)
+      taxpayer_type_id, address, contacter,
+      contacter_phone, business_scope, remarks,
+      business_licence, bl_expiry_date, hygienic_license,
+      hl_expiry_date, production_licence, pl_expiry_date,
+      gsp_licence, gsp_expiry_date, gmp_licence,
+      gmp_expiry_date, instrument_licence, il_expiry_date,
+      food_license, fl_expiry_date, food_production_licence,
+      fpl_expiry_date, state, creator_id,
+      creation_date, last_updater_id, last_update_date
+      )
     values (#{id,jdbcType=INTEGER}, #{oid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
       #{code,jdbcType=VARCHAR}, #{accountLicence,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},
       #{cardNo,jdbcType=VARCHAR}, #{invoiceTypeId,jdbcType=INTEGER}, #{paymentTypeId,jdbcType=INTEGER},
       #{arrearagesAmount,jdbcType=DECIMAL}, #{arrearagesLimit,jdbcType=DECIMAL}, #{arrearagesDays,jdbcType=TINYINT},
       #{legalPerson,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR},
-      #{address,jdbcType=VARCHAR}, #{contacter,jdbcType=VARCHAR}, #{contacterPhone,jdbcType=VARCHAR},
-      #{businessScope,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{businessLicence,jdbcType=VARCHAR},
-      #{blExpiryDate,jdbcType=DATE}, #{hygienicLicense,jdbcType=VARCHAR}, #{hlExpiryDate,jdbcType=DATE},
-      #{productionLicence,jdbcType=VARCHAR}, #{plExpiryDate,jdbcType=DATE}, #{gspLicence,jdbcType=VARCHAR},
-      #{gspExpiryDate,jdbcType=DATE}, #{gmpLicence,jdbcType=VARCHAR}, #{gmpExpiryDate,jdbcType=DATE},
-      #{instrumentLicence,jdbcType=VARCHAR}, #{ilExpiryDate,jdbcType=DATE}, #{foodLicense,jdbcType=VARCHAR},
-      #{flExpiryDate,jdbcType=DATE}, #{foodProductionLicence,jdbcType=VARCHAR}, #{fplExpiryDate,jdbcType=DATE},
-      #{state,jdbcType=BIT}, #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE},
-      #{lastUpdaterId,jdbcType=INTEGER}, #{lastUpdateDate,jdbcType=DATE})
+      #{taxpayerTypeId,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{contacter,jdbcType=VARCHAR},
+      #{contacterPhone,jdbcType=VARCHAR}, #{businessScope,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
+      #{businessLicence,jdbcType=VARCHAR}, #{blExpiryDate,jdbcType=DATE}, #{hygienicLicense,jdbcType=VARCHAR},
+      #{hlExpiryDate,jdbcType=DATE}, #{productionLicence,jdbcType=VARCHAR}, #{plExpiryDate,jdbcType=DATE},
+      #{gspLicence,jdbcType=VARCHAR}, #{gspExpiryDate,jdbcType=DATE}, #{gmpLicence,jdbcType=VARCHAR},
+      #{gmpExpiryDate,jdbcType=DATE}, #{instrumentLicence,jdbcType=VARCHAR}, #{ilExpiryDate,jdbcType=DATE},
+      #{foodLicense,jdbcType=VARCHAR}, #{flExpiryDate,jdbcType=DATE}, #{foodProductionLicence,jdbcType=VARCHAR},
+      #{fplExpiryDate,jdbcType=DATE}, #{state,jdbcType=BIT}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=DATE}, #{lastUpdaterId,jdbcType=INTEGER}, #{lastUpdateDate,jdbcType=DATE}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.purchase.bean.Supplier">
     update pem_supplier
@@ -94,6 +97,7 @@
       legal_person = #{legalPerson,jdbcType=VARCHAR},
       tel = #{tel,jdbcType=VARCHAR},
       fax = #{fax,jdbcType=VARCHAR},
+      taxpayer_type_id = #{taxpayerTypeId,jdbcType=INTEGER},
       address = #{address,jdbcType=VARCHAR},
       contacter = #{contacter,jdbcType=VARCHAR},
       contacter_phone = #{contacterPhone,jdbcType=VARCHAR},
@@ -125,22 +129,22 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, oid, name, code, account_licence, bank_name, card_no, invoice_type_id,
     payment_type_id, arrearages_amount, arrearages_limit, arrearages_days, legal_person,
-    tel, fax, address, contacter, contacter_phone, business_scope, remarks, business_licence,
-    bl_expiry_date, hygienic_license, hl_expiry_date, production_licence, pl_expiry_date,
-    gsp_licence, gsp_expiry_date, gmp_licence, gmp_expiry_date, instrument_licence, il_expiry_date,
-    food_license, fl_expiry_date, food_production_licence, fpl_expiry_date, state, creator_id,
-    creation_date, last_updater_id, last_update_date
+    tel, fax, taxpayer_type_id, address, contacter, contacter_phone, business_scope,
+    remarks, business_licence, bl_expiry_date, hygienic_license, hl_expiry_date, production_licence,
+    pl_expiry_date, gsp_licence, gsp_expiry_date, gmp_licence, gmp_expiry_date, instrument_licence,
+    il_expiry_date, food_license, fl_expiry_date, food_production_licence, fpl_expiry_date,
+    state, creator_id, creation_date, last_updater_id, last_update_date
     from pem_supplier
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, oid, name, code, account_licence, bank_name, card_no, invoice_type_id,
     payment_type_id, arrearages_amount, arrearages_limit, arrearages_days, legal_person,
-    tel, fax, address, contacter, contacter_phone, business_scope, remarks, business_licence,
-    bl_expiry_date, hygienic_license, hl_expiry_date, production_licence, pl_expiry_date,
-    gsp_licence, gsp_expiry_date, gmp_licence, gmp_expiry_date, instrument_licence, il_expiry_date,
-    food_license, fl_expiry_date, food_production_licence, fpl_expiry_date, state, creator_id,
-    creation_date, last_updater_id, last_update_date
+    tel, fax, taxpayer_type_id, address, contacter, contacter_phone, business_scope,
+    remarks, business_licence, bl_expiry_date, hygienic_license, hl_expiry_date, production_licence,
+    pl_expiry_date, gsp_licence, gsp_expiry_date, gmp_licence, gmp_expiry_date, instrument_licence,
+    il_expiry_date, food_license, fl_expiry_date, food_production_licence, fpl_expiry_date,
+    state, creator_id, creation_date, last_updater_id, last_update_date
     from pem_supplier
   </select>
 

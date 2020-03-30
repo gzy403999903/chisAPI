@@ -118,8 +118,7 @@ public class InventoryReportHandler {
                                               @RequestParam(required = false) Integer filterDays) {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
-        XSSFWorkbook workbook = this.inventoryReportService.downloadExpiryDateExcel(
-                user.getSysClinicId(), null, (filterDays == null ? 120 : filterDays));
+        XSSFWorkbook workbook = this.inventoryReportService.downloadExpiryDateExcel(user.getSysClinicId(), null, filterDays);
         // 如果为 null 则不继续执行
         if (workbook == null) {
             return;

@@ -19,6 +19,7 @@ public enum DictTypeEnum {
     INVOICE_TYPE("发票类型", 202),
     PAYMENT_TYPE("结算类型", 203),
     PAYMENT_WAY("结算方式", 204),
+    TAXPAYER_TYPE("纳税人类别", 205),
 
     GENDER("性别", 301),
     NATIONALITY("民族", 302),

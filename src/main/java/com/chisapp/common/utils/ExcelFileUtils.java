@@ -74,9 +74,9 @@ public class ExcelFileUtils {
                 cell.setCellStyle(bodyCellStyle); // 设置该列样式
                 XSSFRichTextString text;
                 if (bodyMap.get(key) == null) {
-                    text = new XSSFRichTextString(""); // 将该列的标题转成字符串
+                    text = new XSSFRichTextString(""); // 如果获取到内容为空则写入空串
                 } else {
-                    text = new XSSFRichTextString(bodyMap.get(key).toString()); // 将该列的标题转成字符串
+                    text = new XSSFRichTextString(bodyMap.get(key).toString()); // 将其转成字符串写入表格
                 }
                 cell.setCellValue(text); // 设置该列内容
                 // bodyRow.createCell(cellIndex++).setCellValue(bodyMap.get(key).toString());
