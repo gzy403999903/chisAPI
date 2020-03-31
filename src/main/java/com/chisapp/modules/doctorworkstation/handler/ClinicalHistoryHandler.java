@@ -105,7 +105,8 @@ public class ClinicalHistoryHandler {
 
         // 获取病例信息
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(null, mrmMemberId, null);
+        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
+                null, mrmMemberId, null, null, null);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         // 获取病例对应的处方信息
@@ -135,7 +136,31 @@ public class ClinicalHistoryHandler {
 
         // 获取病例信息
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(creationDate, mrmMemberId, dwtDiagnoseTypeId);
+        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
+                creationDate, mrmMemberId, dwtDiagnoseTypeId, null, null);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取对应会员的病例信息 用于病例检查
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/getByCriteriaForCheck")
+    public PageResult getByCriteriaForCheck (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) Integer dwtDiagnoseTypeId,
+            @RequestParam(required = false) String sysDoctorName,
+            @RequestParam(required = false) String sysClinicName){
+
+        // 获取病例信息
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
+                creationDate, null, dwtDiagnoseTypeId, sysDoctorName, sysClinicName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

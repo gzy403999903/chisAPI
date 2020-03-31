@@ -91,7 +91,15 @@
       <if test="dwtDiagnoseTypeId != null">
         (dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
       </if>
-      (finished is true)
+      <if test="true">
+        (finished is true) and
+      </if>
+      <if test="sysDoctorName != null &amp;&amp; sysDoctorName.trim() != ''">
+        (sysDoctorName like '${sysDoctorName}%' or sysDoctorCode like '{sysDoctorName}%') and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '{sysClinicName}%') and
+      </if>
     </trim>
     order by creationDate desc
   </select>

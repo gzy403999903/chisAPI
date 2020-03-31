@@ -120,4 +120,23 @@ public interface SellRecordReportService {
      */
     XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate);
 
+    /**
+     * 销售排行表
+     * @param creationDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
+     * @param entityName
+     * @return
+     */
+    List<Map<String, Object>> getSortSellRecordByCriteria(String[] creationDate,
+                                                          Integer sysClinicId,
+                                                          String sysClinicName,
+                                                          Integer sysSellTypeId,
+                                                          Integer entityTypeId,
+                                                          String entityOid,
+                                                          String entityName);
+
 }

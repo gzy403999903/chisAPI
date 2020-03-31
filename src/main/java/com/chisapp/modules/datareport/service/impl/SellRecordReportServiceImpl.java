@@ -134,5 +134,18 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
     }
 
+    @Override
+    public List<Map<String, Object>> getSortSellRecordByCriteria(String[] creationDate,
+                                                                 Integer sysClinicId,
+                                                                 String sysClinicName,
+                                                                 Integer sysSellTypeId,
+                                                                 Integer entityTypeId,
+                                                                 String entityOid,
+                                                                 String entityName) {
+
+        return sellRecordReportMapper.selectSortSellRecordByCriteria(
+                creationDate, sysClinicId, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
+    }
+
 
 }

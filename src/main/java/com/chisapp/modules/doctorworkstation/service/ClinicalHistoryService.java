@@ -52,9 +52,15 @@ public interface ClinicalHistoryService {
      * @param creationDate
      * @param mrmMemberId
      * @param dwtDiagnoseTypeId
+     * @param sysDoctorName
+     * @param sysClinicName
      * @return
      */
-    List<Map<String, Object>> getByCriteria(String[] creationDate, Integer mrmMemberId, Integer dwtDiagnoseTypeId);
+    List<Map<String, Object>> getByCriteria(String[] creationDate,
+                                            Integer mrmMemberId,
+                                            Integer dwtDiagnoseTypeId,
+                                            String sysDoctorName,
+                                            String sysClinicName);
 
     /**
      * 获取未最近一个归档的病例

@@ -24,7 +24,9 @@ public interface ClinicalHistoryMapper {
 
     List<Map<String, Object>> selectByCriteria(@Param("creationDate") String[] creationDate,
                                                @Param("mrmMemberId") Integer mrmMemberId,
-                                               @Param("dwtDiagnoseTypeId") Integer dwtDiagnoseTypeId);
+                                               @Param("dwtDiagnoseTypeId") Integer dwtDiagnoseTypeId,
+                                               @Param("sysDoctorName") String sysDoctorName,
+                                               @Param("sysClinicName") String sysClinicName);
 
     Map<String, Object> selectLastUnfinishedByCriteria(@Param("mrmMemberId") Integer mrmMemberId,
                                                        @Param("sysDoctorId") Integer sysDoctorId);

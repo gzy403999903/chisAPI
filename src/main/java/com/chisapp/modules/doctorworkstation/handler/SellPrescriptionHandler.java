@@ -192,7 +192,7 @@ public class SellPrescriptionHandler {
 
     /**
      * 根据条件获取处方汇总
-     * [处方配药调用]
+     * [处方查询调用]
      * @param pageNum
      * @param pageSize
      * @param creationDate

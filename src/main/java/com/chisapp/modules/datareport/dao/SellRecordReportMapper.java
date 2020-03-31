@@ -55,7 +55,13 @@ public interface SellRecordReportMapper {
 
     List<Map<String, Object>> selectDaySellRecordByCreationDate(@Param("creationDate")String[] creationDate);
 
-
+    List<Map<String, Object>> selectSortSellRecordByCriteria(@Param("creationDate") String[] creationDate,
+                                                             @Param("sysClinicId") Integer sysClinicId,
+                                                             @Param("sysClinicName") String sysClinicName,
+                                                             @Param("sysSellTypeId") Integer sysSellTypeId,
+                                                             @Param("entityTypeId") Integer entityTypeId,
+                                                             @Param("entityOid") String entityOid,
+                                                             @Param("entityName") String entityName);
 
 
 }

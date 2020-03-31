@@ -275,6 +275,69 @@ public class SellRecordReportHandler {
         }
     }
 
+    /**
+     * 获取全机构 销售排行
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sysClinicName
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
+     * @param entityName
+     * @return
+     */
+    @GetMapping("/getSortSellRecordByCriteria")
+    public PageResult getSortSellRecordByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sysClinicName,
+            @RequestParam(required = false) Integer sysSellTypeId,
+            @RequestParam(required = false) Integer entityTypeId,
+            @RequestParam(required = false) String entityOid,
+            @RequestParam(required = false) String entityName){
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = sellRecordReportService.getSortSellRecordByCriteria(
+                creationDate, null, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取当前机构 销售排行
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
+     * @param entityName
+     * @return
+     */
+    @GetMapping("/getClinicSortSellRecordByCriteria")
+    public PageResult getClinicSortSellRecordByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) Integer sysSellTypeId,
+            @RequestParam(required = false) Integer entityTypeId,
+            @RequestParam(required = false) String entityOid,
+            @RequestParam(required = false) String entityName){
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = sellRecordReportService.getSortSellRecordByCriteria(
+                creationDate, user.getSysClinicId(), null, sysSellTypeId, entityTypeId, entityOid, entityName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+
+
 
 
 

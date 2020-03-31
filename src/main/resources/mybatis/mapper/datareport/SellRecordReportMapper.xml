@@ -259,5 +259,39 @@
     ORDER BY a.sys_clinic_id
   </select>
 
+  <!--销售排行-->
+  <select id="selectSortSellRecordByCriteria" resultType="map">
+    SELECT
+      sysSellTypeId, sysSellTypeName, entityTypeId, entityTypeName,entityId, entityOid, entityName, entityCode,
+      specs, unitsId, unitsName, SUM(quantity) AS quantity,originName, manufacturerName, billingTypeId,
+      billingTypeName, goodsClassifyId, goodsClassifyName, sysClinicId, sysClinicName
+    FROM view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="sysSellTypeId != null">
+        (sysSellTypeId = #{sysSellTypeId}) and
+      </if>
+      <if test="entityTypeId != null">
+        (entityTypeId = #{entityTypeId}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="entityOid != null &amp;&amp; entityOid.trim() != ''">
+        (entityOid like '${entityOid}%') and
+      </if>
+      <if test="entityName != null &amp;&amp; entityName.trim() != ''">
+        (entityName like '${entityName}%' or entityCode like '${entityName}%') and
+      </if>
+    </trim>
+    GROUP BY sysClinicId, sysSellTypeId, entityId
+    ORDER BY quantity DESC
+  </select>
+
 
 </mapper>
