@@ -5,7 +5,7 @@
   <select id="selectClinicByCriteriaForCurrent" resultType="map">
     select
       b.id as gsmGoodsId, b.oid as gsmGoodsOid, b.name as gsmGoodsName, b.goodsUnitsName, b.splitUnitsName,
-      b.specs as gsmGoodsSpecs, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
+      b.specs as gsmGoodsSpecs, b.retailPrice, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
       d.name as iymShelfPositionName, a.ph, a.expiryDate, a.inventoryIntactQuantity, a.inventorySplitQuantity, a.totalCostAmount
     from (
       select
@@ -52,7 +52,7 @@
   <select id="selectClinicByCriteriaForChanged" resultType="map">
     select
       b.id as gsmGoodsId, b.oid as gsmGoodsOid, b.name as gsmGoodsName, b.goodsUnitsName, b.splitUnitsName,
-      b.specs as gsmGoodsSpecs, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
+      b.specs as gsmGoodsSpecs, b.retailPrice, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
       d.name as iymShelfPositionName, a.ph, a.expiryDate, a.totalCostAmount,
       sum(a.inventoryIntactQuantity) as inventoryIntactQuantity,
       sum(a.inventorySplitQuantity) as inventorySplitQuantity,

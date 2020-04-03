@@ -1,6 +1,7 @@
 package com.chisapp.modules.goods.handler;
 
 import com.chisapp.common.component.PageResult;
+import com.chisapp.common.enums.GoodsTypeEnum;
 import com.chisapp.common.utils.JSRMessageUtils;
 import com.chisapp.modules.goods.bean.GoodsApply;
 import com.chisapp.modules.goods.service.GoodsApplyService;
@@ -44,18 +45,68 @@ public class GoodsApplyHandler {
     }
 
     /**
-     * 保存操作
+     * 保存西药操作
      * @param goodsApply
      * @param result
      * @return
      */
-    @PostMapping("/save")
-    public PageResult save (@Valid GoodsApply goodsApply, BindingResult result) {
+    @PostMapping("/westernDrugs/save")
+    public PageResult westernDrugsSave (@Valid GoodsApply goodsApply, BindingResult result) {
         if (result.hasErrors()) {
             return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
         }
 
+        goodsApply.setGsmGoodsTypeId(GoodsTypeEnum.WESTERN_DRUGS.getIndex());
         goodsApplyService.save(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 保存中药操作
+     * @param goodsApply
+     * @param result
+     * @return
+     */
+    @PostMapping("/chineseDrugs/save")
+    public PageResult chineseDrugsSave (@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApply.setGsmGoodsTypeId(GoodsTypeEnum.CHINESE_DRUGS.getIndex());
+        goodsApplyService.save(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 保存卫生材料操作
+     * @param goodsApply
+     * @param result
+     * @return
+     */
+    @PostMapping("/hygienicMaterial/save")
+    public PageResult hygienicMaterialSave (@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApply.setGsmGoodsTypeId(GoodsTypeEnum.HYGIENIC_MATERIAL.getIndex());
+        goodsApplyService.save(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 编辑操作
+     * @param goodsApply
+     * @return
+     */
+    @PutMapping("/update")
+    public PageResult update(@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApplyService.update(goodsApply);
         return PageResult.success();
     }
 
@@ -90,7 +141,7 @@ public class GoodsApplyHandler {
     }
 
     /**
-     * 定价驳回操作
+     * 审核定价驳回操作
      * @param goodsApply
      * @return
      */
@@ -105,7 +156,7 @@ public class GoodsApplyHandler {
     }
 
     /**
-     * 项目驳回操作
+     * 审核商品驳回操作
      * @param goodsApply
      * @return
      */
@@ -120,7 +171,7 @@ public class GoodsApplyHandler {
     }
 
     /**
-     * 通过操作
+     * 审核通过操作
      * @param goodsApply
      * @return
      */
@@ -131,6 +182,51 @@ public class GoodsApplyHandler {
         }
 
         goodsApplyService.approved(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 审批定价驳回操作
+     * @param goodsApply
+     * @return
+     */
+    @PutMapping("/lastCancelPricing")
+    public PageResult lastCancelPricing(@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApplyService.lastCancelPricing(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 审批项目驳回操作
+     * @param goodsApply
+     * @return
+     */
+    @PutMapping("/lastUnapproved")
+    public PageResult lastUnapproved(@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApplyService.lastUnapproved(goodsApply);
+        return PageResult.success();
+    }
+
+    /**
+     * 审批通过操作
+     * @param goodsApply
+     * @return
+     */
+    @PutMapping("/lastApproved")
+    public PageResult lastApproved(@Valid GoodsApply goodsApply, BindingResult result) {
+        if (result.hasErrors()) {
+            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
+        }
+
+        goodsApplyService.lastApproved(goodsApply);
         return PageResult.success();
     }
 

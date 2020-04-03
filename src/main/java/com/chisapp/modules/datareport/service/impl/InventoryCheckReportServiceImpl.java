@@ -42,6 +42,7 @@ public class InventoryCheckReportServiceImpl implements InventoryCheckReportServ
         titleMap.put("gsmGoodsName", "名称");
         titleMap.put("gsmGoodsSpecs", "规格");
         titleMap.put("goodsUnitsName", "单位(整)");
+        titleMap.put("retailPrice", "零售单价(整)");
         titleMap.put("splitUnitsName", "单位(拆)");
         titleMap.put("originName", "产地");
         titleMap.put("manufacturerName", "生产厂家");
@@ -87,6 +88,7 @@ public class InventoryCheckReportServiceImpl implements InventoryCheckReportServ
         titleMap.put("gsmGoodsName", "名称");
         titleMap.put("gsmGoodsSpecs", "规格");
         titleMap.put("goodsUnitsName", "单位(整)");
+        titleMap.put("retailPrice", "零售单价(整)");
         titleMap.put("splitUnitsName", "单位(拆)");
         titleMap.put("originName", "产地");
         titleMap.put("manufacturerName", "生产厂家");

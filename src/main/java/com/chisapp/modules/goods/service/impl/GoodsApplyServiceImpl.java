@@ -49,7 +49,34 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     }
 
     @Override
+    public void update(GoodsApply goodsApply) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if (user.getId().intValue() != goodsApply.getCreatorId().intValue()) {
+            throw new RuntimeException("操作未被允许, 操作人和创建人不一致");
+        }
+
+        if (goodsApply.getApproveState() != ApproveStateEnum.UNAPPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为驳回状态");
+        }
+
+        // 重置部分属性
+        goodsApply.setPricerId(null);
+        goodsApply.setPricingDate(null);
+        goodsApply.setApproverId(null);
+        goodsApply.setApproveDate(null);
+        goodsApply.setLastApproverId(null);
+        goodsApply.setLastApproveDate(null);
+        goodsApply.setApproveState(ApproveStateEnum.PRICING.getIndex());
+        goodsApplyMapper.updateByPrimaryKey(goodsApply);
+    }
+
+    @Override
     public void cancel(GoodsApply goodsApply) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if (user.getId().intValue() != goodsApply.getCreatorId().intValue()) {
+            throw new RuntimeException("操作未被允许, 操作人和创建人不一致");
+        }
+
         if (goodsApply.getApproveState() != ApproveStateEnum.PRICING.getIndex()) {
             throw new RuntimeException("操作未被允许, 单据需为待定价状态");
         }
@@ -107,6 +134,54 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
         goodsApply.setApproverId(user.getId());
         goodsApply.setApproveDate(new Date());
         goodsApply.setApproveState(ApproveStateEnum.APPROVED.getIndex());
+        goodsApplyMapper.updateByPrimaryKey(goodsApply);
+    }
+
+    @Override
+    public void lastCancelPricing(GoodsApply goodsApply) {
+        if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+        }
+        if (goodsApply.getLastApproverId() != null) {
+            throw new RuntimeException("操作未被允许, 单据已审批完成");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        goodsApply.setApproverId(user.getId());
+        goodsApply.setApproveDate(new Date());
+        goodsApply.setApproveState(ApproveStateEnum.PRICING.getIndex());
+        goodsApplyMapper.updateByPrimaryKey(goodsApply);
+    }
+
+    @Override
+    public void lastUnapproved(GoodsApply goodsApply) {
+        if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+        }
+        if (goodsApply.getLastApproverId() != null) {
+            throw new RuntimeException("操作未被允许, 单据已审批完成");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        goodsApply.setLastApproverId(user.getId());
+        goodsApply.setLastApproveDate(new Date());
+        goodsApply.setApproveState(ApproveStateEnum.UNAPPROVED.getIndex());
+        goodsApplyMapper.updateByPrimaryKey(goodsApply);
+    }
+
+    @Override
+    public void lastApproved(GoodsApply goodsApply) {
+        if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+        }
+
+        if (goodsApply.getLastApproverId() != null) {
+            throw new RuntimeException("操作未被允许, 单据已审批完成");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        goodsApply.setLastApproverId(user.getId());
+        goodsApply.setLastApproveDate(new Date());
         goodsApplyMapper.updateByPrimaryKey(goodsApply);
 
         Goods goods = new Goods();

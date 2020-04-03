@@ -100,7 +100,7 @@ public class Goods implements Serializable {
     @NotNull
     private Boolean splitable = false;
 
-    @Max(30000) // 此处数据类型应和库存数量一致  全部使用 Integer 第二个版本更正
+    @Max(30000)
     @Min(1)
     private Integer splitQuantity = 1;
 

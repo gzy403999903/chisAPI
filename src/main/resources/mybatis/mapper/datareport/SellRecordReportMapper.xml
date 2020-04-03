@@ -57,9 +57,9 @@
     FROM (
     SELECT
       ROUND(SUM(quantity * actualRetailPrice),2) AS hsxs,
-      ROUND(SUM(quantity * (actualRetailPrice / ((100 + sellTaxRate) / 100))), 2) AS wsxs,
+      ROUND(SUM(quantity * (actualRetailPrice / ((100 + IFNULL(sellTaxRate, 0)) / 100))), 2) AS wsxs,
       ROUND(SUM(quantity * costPrice),2) AS hscb,
-      ROUND(SUM(quantity * (costPrice / ((100 + purchaseTaxRate) / 100))),2) AS wscb
+      ROUND(SUM(quantity * (costPrice / ((100 + IFNULL(purchaseTaxRate, 0)) / 100))),2) AS wscb
     FROM view_dr_sell_record
     <trim prefix="where" suffixOverrides="and">
       <if test="creationDate != null &amp;&amp; creationDate.length == 2">
@@ -116,6 +116,7 @@
       ROUND(SUM( CASE WHEN billingTypeId = 12 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS zlf , /*治疗费*/
       ROUND(SUM( CASE WHEN billingTypeId = 13 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS czf , /*出诊费*/
       ROUND(SUM( CASE WHEN billingTypeId = 177 THEN (actualRetailPrice * quantity) ELSE 0 END), 2) AS clf , /*材料费*/
+      ROUND(SUM(actualRetailPrice * quantity), 2) AS xj, /*小计*/
       DATE_FORMAT(creationDate, '%Y-%m-%d') as creationDate,
       sysClinicName
     FROM view_dr_sell_record

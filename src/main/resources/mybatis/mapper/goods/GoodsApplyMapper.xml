@@ -53,6 +53,8 @@
     <result column="pricing_date" jdbcType="DATE" property="pricingDate" />
     <result column="approver_id" jdbcType="INTEGER" property="approverId" />
     <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="last_approver_id" jdbcType="INTEGER" property="lastApproverId" />
+    <result column="last_approve_date" jdbcType="DATE" property="lastApproveDate" />
     <result column="approve_state" jdbcType="TINYINT" property="approveState" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -76,8 +78,8 @@
       yb_drug, yb_oid, yb_price,
       approval_num, approval_num_expiry_date, creator_id,
       creation_date, pricer_id, pricing_date,
-      approver_id, approve_date, approve_state
-      )
+      approver_id, approve_date, last_approver_id,
+      last_approve_date, approve_state)
     values (#{id,jdbcType=INTEGER}, #{gsmGoodsTypeId,jdbcType=INTEGER}, #{oid,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{spName,jdbcType=VARCHAR},
       #{spCode,jdbcType=VARCHAR}, #{specs,jdbcType=VARCHAR}, #{goodsUnitsId,jdbcType=INTEGER},
@@ -94,8 +96,8 @@
       #{ybDrug,jdbcType=BIT}, #{ybOid,jdbcType=VARCHAR}, #{ybPrice,jdbcType=DECIMAL},
       #{approvalNum,jdbcType=VARCHAR}, #{approvalNumExpiryDate,jdbcType=DATE}, #{creatorId,jdbcType=INTEGER},
       #{creationDate,jdbcType=DATE}, #{pricerId,jdbcType=INTEGER}, #{pricingDate,jdbcType=DATE},
-      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT}
-      )
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{lastApproverId,jdbcType=INTEGER},
+      #{lastApproveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.goods.bean.GoodsApply">
     update gsm_goods_apply
@@ -149,6 +151,8 @@
       pricing_date = #{pricingDate,jdbcType=DATE},
       approver_id = #{approverId,jdbcType=INTEGER},
       approve_date = #{approveDate,jdbcType=DATE},
+      last_approver_id = #{lastApproverId,jdbcType=INTEGER},
+      last_approve_date = #{lastApproveDate,jdbcType=DATE},
       approve_state = #{approveState,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -160,7 +164,8 @@
     split_quantity, split_units_id, split_price, dose_type_id, dose, dose_units_id, special_drug_id,
     drug_usage_id, odored, storage_temperature_id, conservation_days, prescription, prescription_type_id,
     yb_drug, yb_oid, yb_price, approval_num, approval_num_expiry_date, creator_id, creation_date,
-    pricer_id, pricing_date, approver_id, approve_date, approve_state
+    pricer_id, pricing_date, approver_id, approve_date, last_approver_id, last_approve_date,
+    approve_state
     from gsm_goods_apply
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -172,7 +177,8 @@
     split_quantity, split_units_id, split_price, dose_type_id, dose, dose_units_id, special_drug_id,
     drug_usage_id, odored, storage_temperature_id, conservation_days, prescription, prescription_type_id,
     yb_drug, yb_oid, yb_price, approval_num, approval_num_expiry_date, creator_id, creation_date,
-    pricer_id, pricing_date, approver_id, approve_date, approve_state
+    pricer_id, pricing_date, approver_id, approve_date, last_approver_id, last_approve_date,
+    approve_state
     from gsm_goods_apply
   </select>
 

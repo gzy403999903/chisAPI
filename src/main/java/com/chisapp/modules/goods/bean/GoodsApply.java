@@ -100,6 +100,7 @@ public class GoodsApply implements Serializable {
     @NotNull
     private Boolean splitable;
 
+    @Max(30000)
     @Min(1)
     private Integer splitQuantity;
 
@@ -112,7 +113,6 @@ public class GoodsApply implements Serializable {
     private Integer doseTypeId;
 
     @Digits(integer = 8, fraction = 4)
-    @Min(1)
     private BigDecimal dose;
 
     private Integer doseUnitsId;
@@ -136,13 +136,14 @@ public class GoodsApply implements Serializable {
     @NotNull
     private Boolean ybDrug;
 
+    @Length(max = 50)
     private String ybOid;
 
     @Digits(integer = 8, fraction = 4)
     @Min(0)
     private BigDecimal ybPrice;
 
-    @Length(max = 20)
+    @Length(max = 50)
     private String approvalNum;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -162,6 +163,11 @@ public class GoodsApply implements Serializable {
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date approveDate;
+
+    private Integer lastApproverId;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date lastApproveDate;
 
     private Byte approveState;
 
@@ -571,6 +577,22 @@ public class GoodsApply implements Serializable {
 
     public void setApproveDate(Date approveDate) {
         this.approveDate = approveDate;
+    }
+
+    public Integer getLastApproverId() {
+        return lastApproverId;
+    }
+
+    public void setLastApproverId(Integer lastApproverId) {
+        this.lastApproverId = lastApproverId;
+    }
+
+    public Date getLastApproveDate() {
+        return lastApproveDate;
+    }
+
+    public void setLastApproveDate(Date lastApproveDate) {
+        this.lastApproveDate = lastApproveDate;
     }
 
     public Byte getApproveState() {
