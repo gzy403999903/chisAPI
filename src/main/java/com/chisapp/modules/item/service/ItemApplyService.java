@@ -21,14 +21,6 @@ public interface ItemApplyService {
     void save(ItemApply itemApply);
 
     /**
-     * 撤销操作
-     * @param itemApply
-     * @return
-     */
-    @Transactional
-    void cancel(ItemApply itemApply);
-
-    /**
      * 定价操作
      * @param itemApply
      * @return

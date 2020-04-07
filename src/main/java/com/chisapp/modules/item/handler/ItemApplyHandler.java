@@ -60,21 +60,6 @@ public class ItemApplyHandler {
     }
 
     /**
-     * 撤销操作
-     * @param itemApply
-     * @return
-     */
-    @PutMapping("/cancel")
-    public PageResult cancel(@Valid ItemApply itemApply, BindingResult result) {
-        if (result.hasErrors()) {
-            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
-        }
-
-        itemApplyService.cancel(itemApply);
-        return PageResult.success();
-    }
-
-    /**
      * 定价操作
      * @param itemApply
      * @return

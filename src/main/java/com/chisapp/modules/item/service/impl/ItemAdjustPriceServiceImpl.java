@@ -77,21 +77,6 @@ public class ItemAdjustPriceServiceImpl implements ItemAdjustPriceService {
     }
 
     @Override
-    public void cancel(String lsh) {
-        List<ItemAdjustPrice> itemAdjustPriceList = this.parseMapToItemAdjustPrice(this.getByLsh(lsh));
-        if (!this.examineApproveState(itemAdjustPriceList, ApproveStateEnum.PENDING.getIndex())) {
-            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
-        }
-
-        // 检查单据是否过期
-        if (!this.examineCreationDate(itemAdjustPriceList)) {
-            throw new RuntimeException("调价单已过期");
-        }
-
-        itemAdjustPriceMapper.updateByLsh(lsh, null, null, ApproveStateEnum.CANCEL.getIndex());
-    }
-
-    @Override
     public void unapproved(String lsh) {
         List<ItemAdjustPrice> itemAdjustPriceList = this.parseMapToItemAdjustPrice(this.getByLsh(lsh));
         if (!this.examineApproveState(itemAdjustPriceList, ApproveStateEnum.PENDING.getIndex())) {

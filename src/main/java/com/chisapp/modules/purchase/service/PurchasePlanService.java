@@ -22,13 +22,6 @@ public interface PurchasePlanService {
     void save(List<PurchasePlan> purchasePlanList);
 
     /**
-     * 撤销操作
-     * @param planList
-     */
-    @Transactional
-    void cancel(List<PurchasePlan> planList);
-
-    /**
      * 驳回操作
      * @param planList
      */

@@ -28,14 +28,6 @@ public interface GoodsApplyService {
     void update(GoodsApply goodsApply);
 
     /**
-     * 撤销操作
-     * @param goodsApply
-     * @return
-     */
-    @Transactional
-    void cancel(GoodsApply goodsApply);
-
-    /**
      * 定价操作
      * @param goodsApply
      * @return

@@ -24,13 +24,6 @@ public interface GoodsAdjustPriceService {
     void save(List<GoodsAdjustPrice> goodsAdjustPriceList);
 
     /**
-     * 撤销操作
-     * @param lsh
-     */
-    @Transactional
-    void cancel(String lsh);
-
-    /**
      * 驳回操作
      * @param lsh
      */

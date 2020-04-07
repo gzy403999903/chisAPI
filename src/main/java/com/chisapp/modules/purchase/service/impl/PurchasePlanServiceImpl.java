@@ -68,16 +68,6 @@ public class PurchasePlanServiceImpl implements PurchasePlanService {
     }
 
     @Override
-    public void cancel(List<PurchasePlan> planList) {
-        if (!this.examineApproveState(planList, ApproveStateEnum.PENDING.getIndex())) {
-            throw new RuntimeException("操作未被允许, 明细审批状态已发生改变");
-        }
-
-        purchasePlanMapper.updateApproveStateByPlanIdList(
-                ApproveStateEnum.CANCEL.getIndex(), null, null, planList);
-    }
-
-    @Override
     public void unapproved(List<PurchasePlan> planList) {
         if (!this.examineApproveState(planList, ApproveStateEnum.PENDING.getIndex())) {
             throw new RuntimeException("操作未被允许, 单据明细需为待审批状态");

@@ -50,17 +50,6 @@ public class PurchasePlanHandler {
     }
 
     /**
-     * 撤销计划
-     * @param planIdArray
-     * @return
-     */
-    @PutMapping("/cancel")
-    public PageResult cancel(@RequestParam("planIdArray[]") Integer[] planIdArray) {
-        purchasePlanService.cancel(purchasePlanService.getByPlanIdList(Arrays.asList(planIdArray)));
-        return PageResult.success();
-    }
-
-    /**
      * 驳回计划
      * @param planIdArray
      * @return

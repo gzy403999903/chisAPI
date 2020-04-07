@@ -111,21 +111,6 @@ public class GoodsApplyHandler {
     }
 
     /**
-     * 撤销操作
-     * @param goodsApply
-     * @return
-     */
-    @PutMapping("/cancel")
-    public PageResult cancel(@Valid GoodsApply goodsApply, BindingResult result) {
-        if (result.hasErrors()) {
-            return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
-        }
-
-        goodsApplyService.cancel(goodsApply);
-        return PageResult.success();
-    }
-
-    /**
      * 定价操作
      * @param goodsApply
      * @return

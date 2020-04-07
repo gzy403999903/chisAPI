@@ -8,8 +8,8 @@ package com.chisapp.common.enums;
 public enum ApproveStateEnum {
 
     UNAPPROVED("驳回", (byte)0),
-    APPROVED("通过", (byte)1),
-    CANCEL("撤销", (byte)2),
+    APPROVED("审核通过", (byte)1),
+    LAST_APPROVED("审批通过", (byte)2),
     PURCHASING("待采购", (byte)97),
     PRICING("待定价", (byte)98),
     PENDING("待审批", (byte)99);

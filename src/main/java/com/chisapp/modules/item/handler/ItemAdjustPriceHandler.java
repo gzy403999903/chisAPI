@@ -47,17 +47,6 @@ public class ItemAdjustPriceHandler {
     }
 
     /**
-     * 撤销操作
-     * @param lsh
-     * @return
-     */
-    @PutMapping("/cancel")
-    public PageResult cancel (String lsh) {
-        itemAdjustPriceService.cancel(lsh);
-        return PageResult.success();
-    }
-
-    /**
      * 驳回操作
      * @param lsh
      * @return

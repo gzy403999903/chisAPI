@@ -51,16 +51,6 @@ public class ItemApplyServiceImpl implements ItemApplyService {
     }
 
     @Override
-    public void cancel(ItemApply itemApply) {
-        if (itemApply.getApproveState() != ApproveStateEnum.PRICING.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为待定价状态");
-        }
-
-        itemApply.setApproveState(ApproveStateEnum.CANCEL.getIndex());
-        itemApplyMapper.updateByPrimaryKey(itemApply);
-    }
-
-    @Override
     public void pricing(ItemApply itemApply) {
         if (itemApply.getApproveState() != ApproveStateEnum.PRICING.getIndex()) {
             throw new RuntimeException("操作未被允许, 单据需为待定价状态");
