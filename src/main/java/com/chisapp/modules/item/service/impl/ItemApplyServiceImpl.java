@@ -51,6 +51,27 @@ public class ItemApplyServiceImpl implements ItemApplyService {
     }
 
     @Override
+    public void update(ItemApply itemApply) {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if (user.getId().intValue() != itemApply.getCreatorId().intValue()) {
+            throw new RuntimeException("操作未被允许, 操作人和创建人不一致");
+        }
+        if (itemApply.getApproveState() != ApproveStateEnum.UNAPPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为驳回状态");
+        }
+
+        // 重置部分属性
+        itemApply.setPricerId(null);
+        itemApply.setPricingDate(null);
+        itemApply.setApproverId(null);
+        itemApply.setApproveDate(null);
+        itemApply.setLastApproverId(null);
+        itemApply.setLastApproveDate(null);
+        itemApply.setApproveState(ApproveStateEnum.PRICING.getIndex());
+        itemApplyMapper.updateByPrimaryKey(itemApply);
+    }
+
+    @Override
     public void pricing(ItemApply itemApply) {
         if (itemApply.getApproveState() != ApproveStateEnum.PRICING.getIndex()) {
             throw new RuntimeException("操作未被允许, 单据需为待定价状态");
@@ -66,7 +87,7 @@ public class ItemApplyServiceImpl implements ItemApplyService {
     @Override
     public void cancelPricing(ItemApply itemApply) {
         if (itemApply.getApproveState() != ApproveStateEnum.PENDING.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审核状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -92,7 +113,7 @@ public class ItemApplyServiceImpl implements ItemApplyService {
     @Override
     public void approved(ItemApply itemApply) {
         if (itemApply.getApproveState() != ApproveStateEnum.PENDING.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审核状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -100,10 +121,50 @@ public class ItemApplyServiceImpl implements ItemApplyService {
         itemApply.setApproveDate(new Date());
         itemApply.setApproveState(ApproveStateEnum.APPROVED.getIndex());
         itemApplyMapper.updateByPrimaryKey(itemApply);
+    }
 
+    @Override
+    public void lastCancelPricing(ItemApply itemApply) {
+        if (itemApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        itemApply.setApproverId(user.getId());
+        itemApply.setApproveDate(new Date());
+        itemApply.setApproveState(ApproveStateEnum.PRICING.getIndex());
+        itemApplyMapper.updateByPrimaryKey(itemApply);
+    }
+
+    @Override
+    public void lastUnapproved(ItemApply itemApply) {
+        if (itemApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        itemApply.setLastApproverId(user.getId());
+        itemApply.setLastApproveDate(new Date());
+        itemApply.setApproveState(ApproveStateEnum.UNAPPROVED.getIndex());
+        itemApplyMapper.updateByPrimaryKey(itemApply);
+    }
+
+    @Override
+    public void lastApproved(ItemApply itemApply) {
+        if (itemApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+        }
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        itemApply.setLastApproverId(user.getId());
+        itemApply.setLastApproveDate(new Date());
+        itemApply.setApproveState(ApproveStateEnum.LAST_APPROVED.getIndex());
+        itemApplyMapper.updateByPrimaryKey(itemApply);
+
+        // 复制到正式项目信息表
         Item item = new Item();
         BeanUtils.copyProperties(itemApply, item);
-        item.setId(null); // 重置 ID, 以便重新生成ID
+        item.setId(null); // 设置 ID 为 NULL
         itemService.save(item);
     }
 

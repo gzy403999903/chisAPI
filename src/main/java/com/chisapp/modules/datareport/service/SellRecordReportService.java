@@ -25,6 +25,7 @@ public interface SellRecordReportService {
      * @param entityName
      * @param mrmMemberName
      * @param phone
+     * @param sellerId
      * @param sellerName
      * @return
      */
@@ -39,6 +40,7 @@ public interface SellRecordReportService {
                                             String entityName,
                                             String mrmMemberName,
                                             String phone,
+                                            Integer sellerId,
                                             String sellerName);
 
     /**
@@ -54,6 +56,7 @@ public interface SellRecordReportService {
      * @param entityName
      * @param mrmMemberName
      * @param phone
+     * @param sellerId
      * @param sellerName
      * @return
      */
@@ -68,6 +71,7 @@ public interface SellRecordReportService {
                                                   String entityName,
                                                   String mrmMemberName,
                                                   String phone,
+                                                  Integer sellerId,
                                                   String sellerName);
 
     /**

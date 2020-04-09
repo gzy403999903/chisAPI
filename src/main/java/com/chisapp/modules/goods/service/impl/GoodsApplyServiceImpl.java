@@ -85,7 +85,7 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     @Override
     public void cancelPricing(GoodsApply goodsApply) {
         if (goodsApply.getApproveState() != ApproveStateEnum.PENDING.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审核状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -111,7 +111,7 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     @Override
     public void approved(GoodsApply goodsApply) {
         if (goodsApply.getApproveState() != ApproveStateEnum.PENDING.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审核状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -124,7 +124,7 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     @Override
     public void lastCancelPricing(GoodsApply goodsApply) {
         if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -137,7 +137,7 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     @Override
     public void lastUnapproved(GoodsApply goodsApply) {
         if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -150,7 +150,7 @@ public class GoodsApplyServiceImpl implements GoodsApplyService {
     @Override
     public void lastApproved(GoodsApply goodsApply) {
         if (goodsApply.getApproveState() != ApproveStateEnum.APPROVED.getIndex()) {
-            throw new RuntimeException("操作未被允许, 单据需为审核通过状态");
+            throw new RuntimeException("操作未被允许, 单据需为待审批状态");
         }
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();

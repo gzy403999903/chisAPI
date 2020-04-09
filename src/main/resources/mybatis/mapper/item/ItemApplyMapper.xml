@@ -22,6 +22,8 @@
     <result column="pricing_date" jdbcType="DATE" property="pricingDate" />
     <result column="approver_id" jdbcType="INTEGER" property="approverId" />
     <result column="approve_date" jdbcType="DATE" property="approveDate" />
+    <result column="last_approver_id" jdbcType="INTEGER" property="lastApproverId" />
+    <result column="last_approve_date" jdbcType="DATE" property="lastApproveDate" />
     <result column="approve_state" jdbcType="TINYINT" property="approveState" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -35,16 +37,16 @@
       retail_price, explains, discountable,
       returnable, yb_item, creator_id,
       creation_date, pricer_id, pricing_date,
-      approver_id, approve_date, approve_state
-      )
+      approver_id, approve_date, last_approver_id,
+      last_approve_date, approve_state)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
       #{cimItemTypeId,jdbcType=INTEGER}, #{itemUnitsId,jdbcType=INTEGER}, #{befitGenderId,jdbcType=INTEGER},
       #{billingTypeId,jdbcType=INTEGER}, #{itemClassifyId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
       #{retailPrice,jdbcType=DECIMAL}, #{explains,jdbcType=VARCHAR}, #{discountable,jdbcType=BIT},
       #{returnable,jdbcType=BIT}, #{ybItem,jdbcType=BIT}, #{creatorId,jdbcType=INTEGER},
       #{creationDate,jdbcType=DATE}, #{pricerId,jdbcType=INTEGER}, #{pricingDate,jdbcType=DATE},
-      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT}
-      )
+      #{approverId,jdbcType=INTEGER}, #{approveDate,jdbcType=DATE}, #{lastApproverId,jdbcType=INTEGER},
+      #{lastApproveDate,jdbcType=DATE}, #{approveState,jdbcType=TINYINT})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.item.bean.ItemApply">
     update cim_item_apply
@@ -67,20 +69,24 @@
       pricing_date = #{pricingDate,jdbcType=DATE},
       approver_id = #{approverId,jdbcType=INTEGER},
       approve_date = #{approveDate,jdbcType=DATE},
+      last_approver_id = #{lastApproverId,jdbcType=INTEGER},
+      last_approve_date = #{lastApproveDate,jdbcType=DATE},
       approve_state = #{approveState,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
     item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
-    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, approve_state
+    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, last_approver_id,
+    last_approve_date, approve_state
     from cim_item_apply
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, name, code, cim_item_type_id, item_units_id, befit_gender_id, billing_type_id,
     item_classify_id, quantity, retail_price, explains, discountable, returnable, yb_item,
-    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, approve_state
+    creator_id, creation_date, pricer_id, pricing_date, approver_id, approve_date, last_approver_id,
+    last_approve_date, approve_state
     from cim_item_apply
   </select>
 

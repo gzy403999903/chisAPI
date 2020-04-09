@@ -89,15 +89,13 @@
     FROM iym_inventory
     WHERE
     id IN (
-    SELECT MAX(id)
-    FROM iym_inventory
-    WHERE
-    gsm_goods_id IN
-    <foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
-      #{goodsId}
-    </foreach>
-    GROUP BY gsm_goods_id
-    ORDER BY id DESC
+      SELECT MAX(id)
+      FROM iym_inventory
+      WHERE gsm_goods_id IN
+        <foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+          #{goodsId}
+        </foreach>
+      GROUP BY gsm_goods_id
     )
   </select>
 
@@ -155,7 +153,7 @@
     </foreach>
   </select>
 
-  <select id="selectPhGroupListByCriteria" resultType="map">
+  <select id="selectPhListByCriteria" resultType="map">
     select
     iymInventoryTypeName, gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName, ph, splitQuantity,
     sum(quantity) as quantity, retailPrice, costPrice, producedDate, expiryDate, originName, manufacturerName,
@@ -188,7 +186,7 @@
     order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
   </select>
 
-  <select id="selectClinicPchListByCriteria" resultType="map">
+  <select id="selectPchListByCriteria" resultType="map">
     select *
     from view_iym_inventory
     <trim prefix="where" suffixOverrides="and">
@@ -201,6 +199,9 @@
       <if test="showZero != null &amp;&amp; !showZero">
         (quantity > 0) and
       </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
       <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
         (gsmGoodsOid like '${gsmGoodsOid}%') and
       </if>
@@ -211,7 +212,7 @@
         (ph like '${ph}%') and
       </if>
     </trim>
-    order by iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
+    order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
   </select>
 
 

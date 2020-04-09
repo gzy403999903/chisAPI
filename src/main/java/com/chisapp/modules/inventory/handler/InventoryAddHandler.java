@@ -96,6 +96,15 @@ public class InventoryAddHandler {
     }
 
     /**
+     * 打印采购入库单 (仅做权限判断使用)
+     * @return
+     */
+    @GetMapping("/printPurchaseAddBill")
+    public PageResult printPurchaseAddBill () {
+        return PageResult.success();
+    }
+
+    /**
      * 根据查询条件获取机构入库记录明细
      * [计划入库调用]
      * @param pageNum

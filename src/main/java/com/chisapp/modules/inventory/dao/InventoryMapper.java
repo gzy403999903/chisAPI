@@ -40,19 +40,21 @@ public interface InventoryMapper {
 
     List<Map<String, Object>> selectByIdList(@Param("idList") List<Integer> idList);
 
-    List<Map<String, Object>> selectPhGroupListByCriteria(@Param("sysClinicId") Integer sysClinicId,
-                                                          @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
-                                                          @Param("showZero") Boolean showZero,
-                                                          @Param("sysClinicName") String sysClinicName,
-                                                          @Param("gsmGoodsOid") String gsmGoodsOid,
-                                                          @Param("gsmGoodsName") String gsmGoodsName,
-                                                          @Param("ph") String ph);
+    List<Map<String, Object>>selectPhListByCriteria(@Param("sysClinicId") Integer sysClinicId,
+                                                    @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
+                                                    @Param("showZero") Boolean showZero,
+                                                    @Param("sysClinicName") String sysClinicName,
+                                                    @Param("gsmGoodsOid") String gsmGoodsOid,
+                                                    @Param("gsmGoodsName") String gsmGoodsName,
+                                                    @Param("ph") String ph);
 
-    List<Map<String, Object>> selectClinicPchListByCriteria(@Param("sysClinicId") Integer sysClinicId,
-                                                            @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
-                                                            @Param("showZero") Boolean showZero,
-                                                            @Param("gsmGoodsOid") String gsmGoodsOid,
-                                                            @Param("gsmGoodsName") String gsmGoodsName,
-                                                            @Param("ph") String ph);
+    List<Map<String, Object>> selectPchListByCriteria(@Param("sysClinicId") Integer sysClinicId,
+                                                      @Param("iymInventoryTypeId") Integer iymInventoryTypeId,
+                                                      @Param("showZero") Boolean showZero,
+                                                      @Param("sysClinicName") String sysClinicName,
+                                                      @Param("gsmGoodsOid") String gsmGoodsOid,
+                                                      @Param("gsmGoodsName") String gsmGoodsName,
+                                                      @Param("ph") String ph);
+
 
 }

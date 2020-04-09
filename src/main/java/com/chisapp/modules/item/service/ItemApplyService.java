@@ -21,6 +21,13 @@ public interface ItemApplyService {
     void save(ItemApply itemApply);
 
     /**
+     * 编辑操作
+     * @param itemApply
+     */
+    @Transactional
+    void update(ItemApply itemApply);
+
+    /**
      * 定价操作
      * @param itemApply
      * @return
@@ -29,7 +36,7 @@ public interface ItemApplyService {
     void pricing(ItemApply itemApply);
 
     /**
-     * 定价驳回操作
+     * 审核定价驳回操作
      * @param itemApply
      * @return
      */
@@ -37,7 +44,7 @@ public interface ItemApplyService {
     void cancelPricing(ItemApply itemApply);
 
     /**
-     * 项目驳回操作
+     * 审核项目驳回操作
      * @param itemApply
      * @return
      */
@@ -45,12 +52,36 @@ public interface ItemApplyService {
     void unapproved(ItemApply itemApply);
 
     /**
-     * 通过操作
+     * 审核通过操作
      * @param itemApply
      * @return
      */
     @Transactional
     void approved(ItemApply itemApply);
+
+    /**
+     * 最终定价驳回操作
+     * @param itemApply
+     * @return
+     */
+    @Transactional
+    void lastCancelPricing(ItemApply itemApply);
+
+    /**
+     * 最终项目驳回操作
+     * @param itemApply
+     * @return
+     */
+    @Transactional
+    void lastUnapproved(ItemApply itemApply);
+
+    /**
+     * 最终通过操作
+     * @param itemApply
+     * @return
+     */
+    @Transactional
+    void lastApproved(ItemApply itemApply);
 
     /**
      * 根据主键获取对象

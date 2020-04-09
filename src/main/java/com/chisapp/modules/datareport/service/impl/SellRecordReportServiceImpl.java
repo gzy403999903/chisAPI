@@ -42,11 +42,12 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                    String entityName,
                                                    String mrmMemberName,
                                                    String phone,
+                                                   Integer sellerId,
                                                    String sellerName) {
 
         return sellRecordReportMapper.selectByCriteria(
                 creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
-                entityOid, entityName, mrmMemberName, phone, sellerName);
+                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
     }
 
     @Override
@@ -61,11 +62,12 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                          String entityName,
                                                          String mrmMemberName,
                                                          String phone,
+                                                         Integer sellerId,
                                                          String sellerName) {
 
         return sellRecordReportMapper.countSellRecordByCriteria(
                 creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
-                entityOid, entityName, mrmMemberName, phone, sellerName);
+                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
     }
 
     @Override

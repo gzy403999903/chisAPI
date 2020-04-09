@@ -63,10 +63,15 @@ public class ItemApply implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date pricingDate; // 定价日期
 
-    private Integer approverId; // 审批人ID
+    private Integer approverId; // 审核人ID
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date approveDate; // 审批日期
+    private Date approveDate; // 审核日期
+
+    private Integer lastApproverId; // 审批人ID
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date lastApproveDate; // 审批日期
 
     private Byte approveState;
 
@@ -228,6 +233,22 @@ public class ItemApply implements Serializable {
 
     public void setApproveDate(Date approveDate) {
         this.approveDate = approveDate;
+    }
+
+    public Integer getLastApproverId() {
+        return lastApproverId;
+    }
+
+    public void setLastApproverId(Integer lastApproverId) {
+        this.lastApproverId = lastApproverId;
+    }
+
+    public Date getLastApproveDate() {
+        return lastApproveDate;
+    }
+
+    public void setLastApproveDate(Date lastApproveDate) {
+        this.lastApproveDate = lastApproveDate;
     }
 
     public Byte getApproveState() {

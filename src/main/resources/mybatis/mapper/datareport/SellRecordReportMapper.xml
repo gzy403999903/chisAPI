@@ -22,6 +22,9 @@
       <if test="entityTypeId != null">
         (entityTypeId = #{entityTypeId}) and
       </if>
+      <if test="sellerId != null">
+        (sellerId = #{sellerId}) and
+      </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
         (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
       </if>
@@ -76,6 +79,9 @@
       </if>
       <if test="entityTypeId != null">
         (entityTypeId = #{entityTypeId}) and
+      </if>
+      <if test="sellerId != null">
+        (sellerId = #{sellerId}) and
       </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
         (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and

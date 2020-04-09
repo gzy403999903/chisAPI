@@ -23,6 +23,7 @@ public interface SellRecordReportMapper {
                                                @Param("entityName") String entityName,
                                                @Param("mrmMemberName") String mrmMemberName,
                                                @Param("phone") String phone,
+                                               @Param("sellerId") Integer sellerId,
                                                @Param("sellerName") String sellerName);
 
     Map<String, Object> countSellRecordByCriteria(@Param("creationDate") String[] creationDate,
@@ -36,6 +37,7 @@ public interface SellRecordReportMapper {
                                                   @Param("entityName") String entityName,
                                                   @Param("mrmMemberName") String mrmMemberName,
                                                   @Param("phone") String phone,
+                                                  @Param("sellerId") Integer sellerId,
                                                   @Param("sellerName") String sellerName);
 
     List<Map<String, Object>> selectBillingTypeGroupListByCriteria(@Param("creationDate") String[] creationDate,

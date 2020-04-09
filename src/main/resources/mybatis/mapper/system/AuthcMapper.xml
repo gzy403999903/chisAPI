@@ -49,12 +49,12 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <!-- 这里进行了排序操作, 否则前台显示不正确。 [重新生成该文件时 要添加 order by module_order, menu_order] -->
+  <!-- 这里进行了排序操作, 否则前台显示不正确。 [重新生成该文件时 要添加 order by module_order, menu_order, id] -->
   <select id="selectAll" resultMap="BaseResultMap">
     select id, module_order, module_name, module_index, menu_order, menu_name, menu_index,
     path_order, path_name, path_index, role_names
     from sys_authc
-    order by module_order, menu_order
+    order by module_order, menu_order, id
   </select>
 
 

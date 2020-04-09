@@ -255,35 +255,26 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Map<String, Object>> getClinicPhGroupListByCriteria(Integer sysClinicId,
-                                                                    Integer iymInventoryTypeId,
-                                                                    Boolean showZero,
-                                                                    String gsmGoodsOid,
-                                                                    String gsmGoodsName,
-                                                                    String ph) {
-
-        return inventoryMapper.selectPhGroupListByCriteria(
-                sysClinicId, iymInventoryTypeId, showZero, null, gsmGoodsOid, gsmGoodsName, ph);
+    public List<Map<String, Object>> getPhListByCriteria(Integer sysClinicId,
+                                                         Integer iymInventoryTypeId,
+                                                         Boolean showZero,
+                                                         String sysClinicName,
+                                                         String gsmGoodsOid,
+                                                         String gsmGoodsName,
+                                                         String ph) {
+        return inventoryMapper.selectPhListByCriteria(sysClinicId, iymInventoryTypeId, showZero, sysClinicName, gsmGoodsOid, gsmGoodsName, ph);
     }
 
     @Override
-    public List<Map<String, Object>> getPhGroupListByCriteria(Boolean showZero,
-                                                              String sysClinicName,
-                                                              String gsmGoodsOid,
-                                                              String gsmGoodsName,
-                                                              String ph) {
-        return inventoryMapper.selectPhGroupListByCriteria(
-                null, null, showZero, sysClinicName, gsmGoodsOid, gsmGoodsName, ph);
+    public List<Map<String, Object>> getPchListByCriteria(Integer sysClinicId,
+                                                          Integer iymInventoryTypeId,
+                                                          Boolean showZero,
+                                                          String sysClinicName,
+                                                          String gsmGoodsOid,
+                                                          String gsmGoodsName,
+                                                          String ph) {
+        return inventoryMapper.selectPchListByCriteria(sysClinicId, iymInventoryTypeId, showZero, sysClinicName, gsmGoodsOid, gsmGoodsName, ph);
     }
 
-    @Override
-    public List<Map<String, Object>> getClinicPchListByCriteria(Integer sysClinicId,
-                                                                Integer iymInventoryTypeId,
-                                                                Boolean showZero,
-                                                                String gsmGoodsOid,
-                                                                String gsmGoodsName,
-                                                                String ph) {
-        return inventoryMapper.selectClinicPchListByCriteria(sysClinicId, iymInventoryTypeId, showZero, gsmGoodsOid, gsmGoodsName, ph);
-    }
 
 }
