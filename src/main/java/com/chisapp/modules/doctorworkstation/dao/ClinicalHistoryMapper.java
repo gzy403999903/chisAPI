@@ -24,7 +24,10 @@ public interface ClinicalHistoryMapper {
 
     List<Map<String, Object>> selectByCriteria(@Param("creationDate") String[] creationDate,
                                                @Param("mrmMemberId") Integer mrmMemberId,
+                                               @Param("mrmMemberName") String mrmMemberName,
+                                               @Param("phone") String phone,
                                                @Param("dwtDiagnoseTypeId") Integer dwtDiagnoseTypeId,
+                                               @Param("sysDoctorId") Integer sysDoctorId,
                                                @Param("sysDoctorName") String sysDoctorName,
                                                @Param("sysClinicName") String sysClinicName);
 

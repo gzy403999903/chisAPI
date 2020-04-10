@@ -91,14 +91,23 @@
       <if test="dwtDiagnoseTypeId != null">
         (dwtDiagnoseTypeId = #{dwtDiagnoseTypeId}) and
       </if>
+      <if test="sysDoctorId != null">
+        (sysDoctorId = #{sysDoctorId}) and
+      </if>
       <if test="true">
         (finished is true) and
       </if>
+      <if test="mrmMemberName != null &amp;&amp; mrmMemberName.trim() != ''">
+        (mrmMemberName like '${mrmMemberName}%' or mrmMemberCode like '${mrmMemberName}%') and
+      </if>
+      <if test="phone != null &amp;&amp; phone.trim() != ''">
+        (phone like '${phone}%') and
+      </if>
       <if test="sysDoctorName != null &amp;&amp; sysDoctorName.trim() != ''">
-        (sysDoctorName like '${sysDoctorName}%' or sysDoctorCode like '{sysDoctorName}%') and
+        (sysDoctorName like '${sysDoctorName}%' or sysDoctorCode like '${sysDoctorName}%') and
       </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
-        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '{sysClinicName}%') and
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
       </if>
     </trim>
     order by creationDate desc

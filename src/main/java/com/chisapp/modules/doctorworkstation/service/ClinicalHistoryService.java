@@ -51,14 +51,20 @@ public interface ClinicalHistoryService {
      * 根据查询条件获取病例集合
      * @param creationDate
      * @param mrmMemberId
+     * @param mrmMemberName
+     * @param phone
      * @param dwtDiagnoseTypeId
+     * @param sysDoctorId
      * @param sysDoctorName
      * @param sysClinicName
      * @return
      */
     List<Map<String, Object>> getByCriteria(String[] creationDate,
                                             Integer mrmMemberId,
+                                            String mrmMemberName,
+                                            String phone,
                                             Integer dwtDiagnoseTypeId,
+                                            Integer sysDoctorId,
                                             String sysDoctorName,
                                             String sysClinicName);
 

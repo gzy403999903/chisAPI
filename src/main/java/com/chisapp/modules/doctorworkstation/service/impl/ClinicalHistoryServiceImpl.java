@@ -127,11 +127,15 @@ public class ClinicalHistoryServiceImpl implements ClinicalHistoryService {
     @Override
     public List<Map<String, Object>> getByCriteria(String[] creationDate,
                                                    Integer mrmMemberId,
+                                                   String mrmMemberName,
+                                                   String phone,
                                                    Integer dwtDiagnoseTypeId,
+                                                   Integer sysDoctorId,
                                                    String sysDoctorName,
                                                    String sysClinicName) {
 
-        return clinicalHistoryMapper.selectByCriteria(creationDate, mrmMemberId, dwtDiagnoseTypeId, sysDoctorName, sysClinicName);
+        return clinicalHistoryMapper.selectByCriteria(
+                creationDate, mrmMemberId, mrmMemberName, phone, dwtDiagnoseTypeId, sysDoctorId, sysDoctorName, sysClinicName);
     }
 
     @Override

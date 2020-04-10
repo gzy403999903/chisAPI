@@ -106,7 +106,7 @@ public class ClinicalHistoryHandler {
         // 获取病例信息
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
-                null, mrmMemberId, null, null, null);
+                null, mrmMemberId, null, null, null, null, null, null);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         // 获取病例对应的处方信息
@@ -137,7 +137,7 @@ public class ClinicalHistoryHandler {
         // 获取病例信息
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
-                creationDate, mrmMemberId, dwtDiagnoseTypeId, null, null);
+                creationDate, mrmMemberId, null, null, dwtDiagnoseTypeId, null, null, null);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -160,7 +160,31 @@ public class ClinicalHistoryHandler {
         // 获取病例信息
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
-                creationDate, null, dwtDiagnoseTypeId, sysDoctorName, sysClinicName);
+                creationDate, null, null, null, dwtDiagnoseTypeId, null, sysDoctorName, sysClinicName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 获取医生对应患者的病例信息 用于医生病例检查
+     * [就诊记录]
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @return
+     */
+    @GetMapping("/getByCriteriaForDoctorCheck")
+    public PageResult getByCriteriaForDoctorCheck (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String mrmMemberName,
+            @RequestParam(required = false) String phone){
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = clinicalHistoryService.getByCriteria(
+                creationDate, null, mrmMemberName, phone,null, user.getId(), null, null);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
