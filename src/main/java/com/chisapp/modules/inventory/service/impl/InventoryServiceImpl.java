@@ -7,7 +7,6 @@ import com.chisapp.modules.inventory.bean.Inventory;
 import com.chisapp.modules.inventory.dao.InventoryMapper;
 import com.chisapp.modules.inventory.service.InventoryService;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -108,29 +108,45 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void updateQuantityByList(List<Inventory> inventoryList) {
+        // 获取要更新的库存ID 并将其封装成Map key=id, value=quantity
+        List<Integer> inventoryIdList = new ArrayList<>();
+        Map<Integer, Integer> inventoryMap = new HashMap<>();
+        for (Inventory inventory : inventoryList) {
+            if (inventory.getId() == null) {
+                throw new RuntimeException("要更新的库存ID不能为空");
+            }
+            if (inventory.getQuantity() == null || inventory.getQuantity() == 0) {
+                throw new RuntimeException("要更新的库存数量必须大于 0");
+            }
+            inventoryIdList.add(inventory.getId());
+            inventoryMap.put(inventory.getId(), inventory.getQuantity());
+        }
+
+        // 获取对应的库存集合
+        List<Inventory> inventoryRecordList = this.getByIdList(inventoryIdList);
+
+        // 判断库存是否足够
+        for (Inventory recordInventory : inventoryRecordList) {
+            int recordQuantity = recordInventory.getQuantity();
+            int quantity = inventoryMap.get(recordInventory.getId());
+            if (recordQuantity < quantity) {
+                throw new RuntimeException("商品编码:【" + recordInventory.getGsmGoodsOid() + "】" +
+                        " 商品名称:【" + recordInventory.getGsmGoodsName() + "】" +
+                        " 批号:【" + recordInventory.getPh() + "】" +
+                        " 批次号:【" + recordInventory.getPch() + "】" +
+                        " 库存数量不足");
+            }
+        }
+
         // 获取批量执行的 sqlSessionFactory
         SqlSession batchSqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         // 获取操作的 Mapper 对象
         InventoryMapper mapper = batchSqlSession.getMapper(InventoryMapper.class);
-        // 当前 Inventory (用于异常信息返回)
-        Inventory currentInventory = null;
         try {
             for (Inventory inventory : inventoryList) {
-                currentInventory = inventory;
                 mapper.updateQuantityById(inventory.getId(), inventory.getQuantity());
             }
             batchSqlSession.commit();
-        } catch (PersistenceException e) {
-            if (currentInventory == null) {
-                throw new RuntimeException(e.getCause());
-            } else {
-                throw new RuntimeException(
-                        "商品编码:【" + currentInventory.getGsmGoodsOid() + "】 " +
-                        "商品名称:【" + currentInventory.getGsmGoodsName() + "】 " +
-                        "批号:【" + currentInventory.getPh() + "】 " +
-                        "批次号:【" + currentInventory.getPch() + "】 " +
-                        "库存数量不足");
-            }
         } finally {
             batchSqlSession.close();
         }

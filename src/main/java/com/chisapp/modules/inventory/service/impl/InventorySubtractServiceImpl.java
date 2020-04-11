@@ -107,33 +107,17 @@ public class InventorySubtractServiceImpl implements InventorySubtractService {
         if (!this.examineApproveState(inventorySubtractList, ApproveStateEnum.PENDING.getIndex())) {
             throw new RuntimeException("操作未被允许, 单据明细需为待审批状态");
         }
-        // 获取创建人信息
+        // 更新单据状态
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         inventorySubtractMapper.updateApproveStateByLsh(user.getId(), new Date(), ApproveStateEnum.APPROVED.getIndex(), lsh);
 
-        // 更新库存
-        // 获取要操作库存数据
-        List<Integer> inventoryIdList = new ArrayList<>();
-        Map<Integer, InventorySubtract> subtractMap = new HashMap<>();
-        for (InventorySubtract subtract : inventorySubtractList) {
-            inventoryIdList.add(subtract.getIymInventoryId());
-            subtractMap.put(subtract.getIymInventoryId(), subtract);
-        }
-        List<Inventory> inventoryList = inventoryService.getByIdList(inventoryIdList);
-
-        // 准备提交的数据
-        for (Inventory inventory : inventoryList) {
-            InventorySubtract subtract = subtractMap.get(inventory.getId());
-            // 判断库存数量是否足够
-            if ((inventory.getQuantity() - subtract.getQuantity()) < 0) {
-                throw new RuntimeException(
-                        "商品编码:【" + inventory.getGsmGoodsOid() + "】 " +
-                        "商品名称:【" + inventory.getGsmGoodsName() + "】 " +
-                        "批号:【" + inventory.getPh() + "】 " +
-                        "批次号:【" + inventory.getPch() + "】 " +
-                        "库存数量不足");
-            }
-            inventory.setQuantity(subtract.getQuantity());
+        // 创建要更新的库存集合[inventory.id inventory.quantity 必填]
+        List<Inventory> inventoryList = new ArrayList<>();
+        Inventory inventory;
+        for (InventorySubtract inventorySubtract : inventorySubtractList) {
+            inventory = new Inventory();
+            inventory.setId(inventorySubtract.getIymInventoryId());
+            inventory.setQuantity(inventorySubtract.getQuantity());
         }
         // 更新库存数量
         inventoryService.updateQuantityByList(inventoryList);

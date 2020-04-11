@@ -33,6 +33,7 @@ public interface InventoryAllotService {
      * 通过操作
      * @param lsh
      */
+    @Deprecated
     @Transactional
     void approved(String lsh);
 

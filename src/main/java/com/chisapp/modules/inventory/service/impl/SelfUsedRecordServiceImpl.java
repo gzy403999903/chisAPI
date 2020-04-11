@@ -91,47 +91,23 @@ public class SelfUsedRecordServiceImpl implements SelfUsedRecordService {
 
     @Override
     public void approved(String lsh) {
-        // 获取对应的明细
         List<SelfUsedRecord> selfUsedRecordList = this.parseToObjectList(this.getByLsh(lsh));
-        // 检查明细是否全部在给定状态
-        Boolean b = this.examineApproveState(selfUsedRecordList, ApproveStateEnum.PENDING.getIndex());
-        if (!b) {
+        if (!this.examineApproveState(selfUsedRecordList, ApproveStateEnum.PENDING.getIndex())) {
             throw new RuntimeException("操作未被允许, 单据需为待审核状态");
         }
-        // 执行更新
+        // 更新单据状态
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
         this.updateApproveState(user.getId(), new Date(), ApproveStateEnum.APPROVED.getIndex(), lsh);
 
-        // 扣减对应库存
-        List<Integer> inventoryIdList = new ArrayList<>();
-        Map<Integer, SelfUsedRecord> selfUsedRecordMap = new HashMap<>();
+        // 创建要更新的库存集合[inventory.id inventory.quantity 必填]
+        List<Inventory> inventoryList = new ArrayList<>();
+        Inventory inventory;
         for (SelfUsedRecord selfUsedRecord : selfUsedRecordList) {
-            int iymInventoryId = selfUsedRecord.getIymInventoryId();
-            // 获取要查询的库存ID
-            inventoryIdList.add(iymInventoryId);
-            // 封装 key=库存ID  value=SelfUsedRecord
-            selfUsedRecordMap.put(iymInventoryId, selfUsedRecord);
+            inventory = new Inventory();
+            inventory.setId(selfUsedRecord.getIymInventoryId());
+            inventory.setQuantity(selfUsedRecord.getQuantity());
         }
-
-        // 获取对应的库存
-        List<Inventory> inventoryList = this.inventoryService.getByIdList(inventoryIdList);
-
-        // 将库存数量改为领用出库的数量并进行更新
-        for (Inventory inventory : inventoryList) {
-            // 获取对应库存ID的领用出库数量
-            int quantity = selfUsedRecordMap.get(inventory.getId()).getQuantity();
-            // 判断数量是否足够
-            if (inventory.getQuantity() < quantity) {
-                throw new RuntimeException("商品编码:【" + inventory.getGsmGoodsOid() + "】" +
-                        " 商品名称:【" + inventory.getGsmGoodsName() + "】" +
-                        " 批号:【" + inventory.getPh() + "】" +
-                        " 批次号:【" + inventory.getPch() + "】" +
-                        " 库存数量不足");
-            }
-            // 更新库存数量 (更新时原数量会减去出库数量)
-            inventory.setQuantity(quantity);
-        }
-        // 执行库存数量更新
+        // 更新库存数量
         inventoryService.updateQuantityByList(inventoryList);
     }
 
