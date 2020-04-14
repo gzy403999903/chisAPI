@@ -97,14 +97,14 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     @Override
-    public List<Map<String, Object>> getDaySellRecordByCreationDate(String[] creationDate) {
-        return sellRecordReportMapper.selectDaySellRecordByCreationDate(creationDate);
+    public List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate) {
+        return sellRecordReportMapper.selectSellRecordDailyByCreationDate(creationDate);
     }
 
     @Override
     public XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate) {
         // 获取数据
-        List<Map<String, Object>> bodyList = this.getDaySellRecordByCreationDate(creationDate);
+        List<Map<String, Object>> bodyList = this.getSellRecordDailyByCreationDate(creationDate);
         // 生成一列合计行
         Map<String, Object> countMap = new HashMap<>();
         countMap.put("sysClinicName", "--- 合计 ---");
@@ -137,7 +137,7 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     @Override
-    public List<Map<String, Object>> getSortSellRecordByCriteria(String[] creationDate,
+    public List<Map<String, Object>> getSellRecordSortByCriteria(String[] creationDate,
                                                                  Integer sysClinicId,
                                                                  String sysClinicName,
                                                                  Integer sysSellTypeId,
@@ -145,8 +145,13 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                                  String entityOid,
                                                                  String entityName) {
 
-        return sellRecordReportMapper.selectSortSellRecordByCriteria(
+        return sellRecordReportMapper.selectSellRecordSortByCriteria(
                 creationDate, sysClinicId, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
+    }
+
+    @Override
+    public List<Map<String, Object>> getSellRecordStatisticsByCriteria(String[] creationDate, Integer sysClinicId) {
+        return sellRecordReportMapper.selectSellRecordStatisticsByCriteria(creationDate, sysClinicId);
     }
 
 

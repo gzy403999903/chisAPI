@@ -219,7 +219,7 @@
   </select>
 
   <!--日销售报表-->
-  <select id="selectDaySellRecordByCreationDate" resultType="map">
+  <select id="selectSellRecordDailyByCreationDate" resultType="map">
     SELECT
       ROUND(IFNULL(b.xyf, 0), 2) AS xyf,
       ROUND(IFNULL(b.zyf, 0), 2) AS zyf,
@@ -267,7 +267,7 @@
   </select>
 
   <!--销售排行-->
-  <select id="selectSortSellRecordByCriteria" resultType="map">
+  <select id="selectSellRecordSortByCriteria" resultType="map">
     SELECT
       sysSellTypeId, sysSellTypeName, entityTypeId, entityTypeName,entityId, entityOid, entityName, entityCode,
       specs, unitsId, unitsName, SUM(quantity) AS quantity,originName, manufacturerName, billingTypeId,
@@ -300,5 +300,78 @@
     ORDER BY quantity DESC
   </select>
 
+  <!-- 销售统计财报 -->
+  <select id="selectSellRecordStatisticsByCriteria" resultType="map">
+    SELECT
+      a.sys_clinic_id as sysClinicId,
+      b.name AS sysClinicName,
+      ROUND(IFNULL(a.xy_kp_hsxs,0), 2) AS xyKpHsxs,
+      ROUND(IFNULL(a.xy_kp_wsxs,0), 2) AS xyKpWsxs,
+      ROUND(IFNULL(a.xy_kp_xxs,0), 2) AS xyKpXxs,
+      ROUND(IFNULL(a.zy_kp_hsxs,0), 2) AS zyKpHsxs,
+      ROUND(IFNULL(a.zy_kp_wsxs,0), 2) AS zyKpWsxs,
+      ROUND(IFNULL(a.zy_kp_xxs,0), 2) AS zyKpXxs,
+      ROUND(IFNULL(a.wc_kp_hsxs,0), 2) AS wcKpHsxs,
+      ROUND(IFNULL(a.wc_kp_wsxs,0), 2) AS wcKpWsxs,
+      ROUND(IFNULL(a.wc_kp_xxs,0), 2) AS wcKpXxs,
+      ROUND(IFNULL(a.goods_wkp_hsxs,0), 2) AS goodsWkpHsxs,
+      ROUND(IFNULL(a.item_xs,0), 2) AS itemXs,
+      ROUND(IFNULL(a.goods_wkp_hsxs,0) + IFNULL(a.item_xs,0), 2) AS goodsItemXs,
+      ROUND(IFNULL(a.xy_kp_hsxs,0) +  IFNULL(a.zy_kp_hsxs,0) + IFNULL(a.wc_kp_hsxs,0) + IFNULL(a.goods_wkp_hsxs,0) + IFNULL(a.item_xs,0), 2) AS hsxsHj,
+      ROUND(IFNULL(a.xy_kp_wsxs,0) + IFNULL(a.zy_kp_wsxs,0) + IFNULL(a.wc_kp_wsxs,0) + IFNULL(a.goods_wkp_hsxs,0) + IFNULL(a.item_xs,0), 2) AS wsxsHj,
+      ROUND(IFNULL(a.xy_kp_xxs,0) + IFNULL(a.zy_kp_xxs,0) + IFNULL(a.wc_kp_xxs,0), 2) AS xxsHj,
+      ROUND(IFNULL(a.goods_kp_wscb,0), 2) AS goodsKpWscb,
+      ROUND(IFNULL(a.goods_wkp_hscb,0), 2) AS goodsWkpHscb,
+      ROUND(IFNULL(a.goods_wkp_wscb,0), 2) AS goodsWkpWscb,
+      ROUND(IFNULL(a.goods_wkp_xxs,0), 2) AS goodsWkpXxs,
+      ROUND(IFNULL(a.goods_kp_wscb,0) + IFNULL(a.goods_wkp_hscb,0), 2) AS goodsCbHj
+    FROM (
+      SELECT
+        sys_clinic_id,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 101 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * actual_retail_price) END) AS xy_kp_hsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 101 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * 100)) END) AS xy_kp_wsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 101 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * sell_tax_rate)) END) AS xy_kp_xxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 102 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * actual_retail_price) END) AS zy_kp_hsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 102 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * 100)) END) AS zy_kp_wsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 102 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * sell_tax_rate)) END) AS zy_kp_xxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 103 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * actual_retail_price) END) AS wc_kp_hsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 103 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * 100)) END) AS wc_kp_wsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND entity_type_id = 103 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * sell_tax_rate)) END) AS wc_kp_xxs,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
+          THEN (quantity * actual_retail_price) END) AS goods_wkp_hsxs,
+        SUM(CASE WHEN (sys_sell_type_id = 2)
+          THEN (quantity * actual_retail_price) END) AS item_xs,
+
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NOT NULL)
+          THEN (quantity * (cost_price / (100 + purchase_tax_rate) * 100))END) AS goods_kp_wscb,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
+          THEN (quantity * cost_price) END) AS goods_wkp_hscb,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
+          THEN (quantity * (cost_price / (100 + purchase_tax_rate) * 100)) END) AS goods_wkp_wscb,
+        SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
+          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * sell_tax_rate)) END) AS goods_wkp_xxs
+      FROM dr_sell_record
+      <trim prefix="where" suffixOverrides="and">
+        <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+        </if>
+        <if test="sysClinicId != null">
+          (sys_clinic_id = #{sysClinicId}) and
+        </if>
+      </trim>
+      GROUP BY sys_clinic_id
+      ORDER BY sys_clinic_id
+    ) a
+    LEFT JOIN sys_clinic b ON a.sys_clinic_id = b.`id`
+  </select>
 
 </mapper>

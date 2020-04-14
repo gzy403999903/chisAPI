@@ -86,7 +86,7 @@ public interface SellRecordReportService {
                                                                 String sysClinicName);
 
     /**
-     * 销售流水
+     * 销售流水分析
      * @param creationDate
      * @param sysClinicId
      * @param lsh
@@ -115,7 +115,7 @@ public interface SellRecordReportService {
      * @param creationDate
      * @return
      */
-    List<Map<String, Object>> getDaySellRecordByCreationDate(String[] creationDate);
+    List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate);
 
     /**
      * 导出日销售报表
@@ -135,12 +135,20 @@ public interface SellRecordReportService {
      * @param entityName
      * @return
      */
-    List<Map<String, Object>> getSortSellRecordByCriteria(String[] creationDate,
+    List<Map<String, Object>> getSellRecordSortByCriteria(String[] creationDate,
                                                           Integer sysClinicId,
                                                           String sysClinicName,
                                                           Integer sysSellTypeId,
                                                           Integer entityTypeId,
                                                           String entityOid,
                                                           String entityName);
+
+    /**
+     * 销售统计--财报
+     * @param creationDate
+     * @param sysClinicId
+     * @return
+     */
+    List<Map<String, Object>> getSellRecordStatisticsByCriteria(String[] creationDate, Integer sysClinicId);
 
 }

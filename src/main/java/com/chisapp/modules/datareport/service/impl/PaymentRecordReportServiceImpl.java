@@ -28,16 +28,18 @@ public class PaymentRecordReportServiceImpl implements PaymentRecordReportServic
     public List<Map<String, Object>> getPaymentRecordListByCriteria(String[] creationDate,
                                                                     Integer sysClinicId,
                                                                     String sysClinicName,
-                                                                    String creatorName) {
-        return paymentRecordReportMapper.selectPaymentRecordListByCriteria(creationDate, sysClinicId, sysClinicName, creatorName);
+                                                                    String creatorName,
+                                                                    String groupBy) {
+        return paymentRecordReportMapper.selectPaymentRecordListByCriteria(creationDate, sysClinicId, sysClinicName, creatorName, groupBy);
     }
 
     @Override
     public List<Map<String, Object>> getDepositPaymentRecordListByCriteria(String[] creationDate,
                                                                            Integer sysClinicId,
                                                                            String sysClinicName,
-                                                                           String creatorName) {
-        return paymentRecordReportMapper.selectDepositPaymentRecordListByCriteria(creationDate, sysClinicId, sysClinicName, creatorName);
+                                                                           String creatorName,
+                                                                           String groupBy) {
+        return paymentRecordReportMapper.selectDepositPaymentRecordListByCriteria(creationDate, sysClinicId, sysClinicName, creatorName, groupBy);
     }
 
 

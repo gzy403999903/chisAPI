@@ -11,30 +11,34 @@ import java.util.Map;
 public interface PaymentRecordReportService {
 
     /**
-     * 收费记录汇总表
+     * 收费方式汇总
      * @param creationDate
      * @param sysClinicId
      * @param sysClinicName
      * @param creatorName
+     * @param groupBy
      * @return
      */
     List<Map<String, Object>> getPaymentRecordListByCriteria(String[] creationDate,
-                                                            Integer sysClinicId,
-                                                            String sysClinicName,
-                                                            String creatorName);
+                                                             Integer sysClinicId,
+                                                             String sysClinicName,
+                                                             String creatorName,
+                                                             String groupBy);
 
     /**
-     * 获取储值收费记录汇总
+     * 储值方式汇总
      * @param creationDate
      * @param sysClinicId
      * @param sysClinicName
      * @param creatorName
+     * @param groupBy
      * @return
      */
     List<Map<String, Object>> getDepositPaymentRecordListByCriteria(String[] creationDate,
                                                                     Integer sysClinicId,
                                                                     String sysClinicName,
-                                                                    String creatorName);
+                                                                    String creatorName,
+                                                                    String groupBy);
 
 
 }

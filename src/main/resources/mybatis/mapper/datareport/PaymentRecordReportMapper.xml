@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chisapp.modules.datareport.dao.PaymentRecordReportMapper">
 
-  <!-- 收款汇总 -->
+  <!-- 收费方式汇总 -->
   <select id="selectPaymentRecordListByCriteria" resultType="map">
     SELECT
       ROUND(SUM(cash), 2) AS cash,
@@ -38,11 +38,16 @@
         (creatorName like '${creatorName}%' or creatorCode like '${creatorName}%') and
       </if>
     </trim>
-    GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+    <if test="groupBy == 'sysClinicId'">
+      GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+    </if>
+    <if test="groupBy == 'creatorId'">
+      GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId, creatorId
+    </if>
     ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d') desc, sysClinicId, creatorId
   </select>
 
-  <!-- 储值汇总 -->
+  <!-- 储值方式汇总 -->
   <select id="selectDepositPaymentRecordListByCriteria" resultType="map">
     SELECT
       ROUND(SUM(b.cash), 2) AS cash,
@@ -86,7 +91,12 @@
         (b.creatorName like '${creatorName}%' or creatorCode like '${creatorName}%') and
       </if>
     </trim>
-    GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
+    <if test="groupBy == 'sysClinicId'">
+      GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId
+    </if>
+    <if test="groupBy == 'creatorId'">
+      GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
+    </if>
     ORDER BY DATE_FORMAT(b.creationDate, '%Y-%m-%d') desc, b.sysClinicId, b.creatorId
   </select>
 

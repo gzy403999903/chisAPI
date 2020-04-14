@@ -15,12 +15,14 @@ public interface PaymentRecordReportMapper {
     List<Map<String, Object>> selectPaymentRecordListByCriteria(@Param("creationDate") String[] creationDate,
                                                                 @Param("sysClinicId") Integer sysClinicId,
                                                                 @Param("sysClinicName") String sysClinicName,
-                                                                @Param("creatorName") String creatorName);
+                                                                @Param("creatorName") String creatorName,
+                                                                @Param("groupBy") String groupBy);
 
     List<Map<String, Object>> selectDepositPaymentRecordListByCriteria(@Param("creationDate") String[] creationDate,
                                                                        @Param("sysClinicId") Integer sysClinicId,
                                                                        @Param("sysClinicName") String sysClinicName,
-                                                                       @Param("creatorName") String creatorName);
+                                                                       @Param("creatorName") String creatorName,
+                                                                       @Param("groupBy") String groupBy);
 
 
 }

@@ -108,7 +108,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void updateQuantityByList(List<Inventory> inventoryList) {
-        // 获取要更新的库存ID 并将其封装成Map key=id, value=quantity
+        // 获取要更新的库存ID 并将其封装成Map key=id, value=quantity(相同ID 数量要累加)
         List<Integer> inventoryIdList = new ArrayList<>();
         Map<Integer, Integer> inventoryMap = new HashMap<>();
         for (Inventory inventory : inventoryList) {
@@ -118,8 +118,17 @@ public class InventoryServiceImpl implements InventoryService {
             if (inventory.getQuantity() == null || inventory.getQuantity() == 0) {
                 throw new RuntimeException("要更新的库存数量必须大于 0");
             }
-            inventoryIdList.add(inventory.getId());
-            inventoryMap.put(inventory.getId(), inventory.getQuantity());
+            // 试图获取当前库存ID的Map记录
+            Integer quantity = inventoryMap.get(inventory.getId());
+            if (quantity != null) {
+                // 如果可以获取的到, 则将记录的 quantity 进行累加
+                quantity += inventory.getQuantity();
+            } else {
+                // 如果获取不到, 则使用当前库存 quantity, 并将ID加入到 inventoryIdList
+                quantity = inventory.getQuantity();
+                inventoryIdList.add(inventory.getId());
+            }
+            inventoryMap.put(inventory.getId(), quantity);
         }
 
         // 获取对应的库存集合

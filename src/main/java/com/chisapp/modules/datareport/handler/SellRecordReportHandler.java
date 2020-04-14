@@ -238,14 +238,14 @@ public class SellRecordReportHandler {
      * @param creationDate
      * @return
      */
-    @GetMapping("/getDaySellRecordByCreationDate")
-    public PageResult getDaySellRecordByCreationDate(
+    @GetMapping("/getSellRecordDailyByCreationDate")
+    public PageResult getSellRecordDailyByCreationDate(
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]") String[] creationDate) {
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getDaySellRecordByCreationDate(creationDate);
+        List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordDailyByCreationDate(creationDate);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -255,9 +255,9 @@ public class SellRecordReportHandler {
      * 导出日销售报表
      * @param response
      */
-    @GetMapping("/downloadDaySellRecordExcel")
-    public void downloadDaySellRecordExcel(HttpServletResponse response,
-                                           @RequestParam(value = "creationDate[]") String[] creationDate) {
+    @GetMapping("/downloadSellRecordDailyExcel")
+    public void downloadSellRecordDailyExcel(HttpServletResponse response,
+                                             @RequestParam(value = "creationDate[]") String[] creationDate) {
 
         XSSFWorkbook workbook = sellRecordReportService.downloadDaySellRecordExcel(creationDate);
         // 如果为 null 则不继续执行
@@ -289,8 +289,8 @@ public class SellRecordReportHandler {
      * @param entityName
      * @return
      */
-    @GetMapping("/getSortSellRecordByCriteria")
-    public PageResult getSortSellRecordByCriteria (
+    @GetMapping("/getSellRecordSortByCriteria")
+    public PageResult getSellRecordSortByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
@@ -301,7 +301,7 @@ public class SellRecordReportHandler {
             @RequestParam(required = false) String entityName){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getSortSellRecordByCriteria(
+        List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordSortByCriteria(
                 creationDate, null, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
@@ -319,8 +319,8 @@ public class SellRecordReportHandler {
      * @param entityName
      * @return
      */
-    @GetMapping("/getClinicSortSellRecordByCriteria")
-    public PageResult getClinicSortSellRecordByCriteria (
+    @GetMapping("/getClinicSellRecordSortByCriteria")
+    public PageResult getClinicSellRecordSortByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
@@ -331,16 +331,39 @@ public class SellRecordReportHandler {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getSortSellRecordByCriteria(
+        List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordSortByCriteria(
                 creationDate, user.getSysClinicId(), null, sysSellTypeId, entityTypeId, entityOid, entityName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
     }
 
+    /**
+     * 获取全机构 销售统计财报
+     * @param creationDate
+     * @return
+     */
+    @GetMapping("/getSellRecordStatisticsByCriteria")
+    public PageResult getSellRecordStatisticsByCriteria (
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate){
 
+        List<Map<String, Object>> list = sellRecordReportService.getSellRecordStatisticsByCriteria(creationDate, null);
+        return PageResult.success().resultSet("list", list);
+    }
 
+    /**
+     * 获取本机构 销售统计财报
+     * @param creationDate
+     * @return
+     */
+    @GetMapping("/getClinicSellRecordStatisticsByCriteria")
+    public PageResult getClinicSellRecordStatisticsByCriteria (
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate){
 
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        List<Map<String, Object>> list = sellRecordReportService.getSellRecordStatisticsByCriteria(creationDate, user.getSysClinicId());
+        return PageResult.success().resultSet("list", list);
+    }
 
 
 
