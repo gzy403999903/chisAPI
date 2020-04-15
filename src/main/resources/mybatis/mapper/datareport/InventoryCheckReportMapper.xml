@@ -58,7 +58,7 @@
       b.id as gsmGoodsId, b.oid as gsmGoodsOid, b.name as gsmGoodsName, b.goodsUnitsName, b.splitUnitsName,
       b.specs as gsmGoodsSpecs, b.retailPrice, b.originName, b.manufacturerName, b.goodsClassifyName, b.sysSecondClassifyName,
       d.name as iymShelfPositionName, a.ph, a.expiryDate,
-      round(sum(a.totalCostAmount), 2) as totalCostAmount,
+      if(#{checkWay} = 'ph', a.totalPhCostAmount, a.totalGoodsCostAmount) as totalCostAmount,
       if(#{checkWay} = 'ph', a.phIntactQuantity, a.goodsIntactQuantity) as inventoryIntactQuantity,
       if(#{checkWay} = 'ph', a.phSplitQuantity, a.goodsSplitQuantity) as inventorySplitQuantity,
       sum(a.addQuantity) as addQuantity,
