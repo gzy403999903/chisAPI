@@ -106,6 +106,8 @@ public class SelfUsedRecordServiceImpl implements SelfUsedRecordService {
             inventory = new Inventory();
             inventory.setId(selfUsedRecord.getIymInventoryId());
             inventory.setQuantity(selfUsedRecord.getQuantity());
+
+            inventoryList.add(inventory);
         }
         // 更新库存数量
         inventoryService.updateQuantityByList(inventoryList);

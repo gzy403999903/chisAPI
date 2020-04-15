@@ -118,6 +118,8 @@ public class InventorySubtractServiceImpl implements InventorySubtractService {
             inventory = new Inventory();
             inventory.setId(inventorySubtract.getIymInventoryId());
             inventory.setQuantity(inventorySubtract.getQuantity());
+
+            inventoryList.add(inventory);
         }
         // 更新库存数量
         inventoryService.updateQuantityByList(inventoryList);

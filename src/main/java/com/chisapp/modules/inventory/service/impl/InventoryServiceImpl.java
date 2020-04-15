@@ -108,6 +108,10 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void updateQuantityByList(List<Inventory> inventoryList) {
+        if (inventoryList.isEmpty()) {
+            throw new RuntimeException("更新库存不能为空");
+        }
+
         // 获取要更新的库存ID 并将其封装成Map key=id, value=quantity(相同ID 数量要累加)
         List<Integer> inventoryIdList = new ArrayList<>();
         Map<Integer, Integer> inventoryMap = new HashMap<>();

@@ -106,6 +106,8 @@ public class LossRecordServiceImpl implements LossRecordService {
             inventory = new Inventory();
             inventory.setId(lossRecord.getIymInventoryId());
             inventory.setQuantity(lossRecord.getQuantity());
+
+            inventoryList.add(inventory);
         }
         // 更新库存数量
         inventoryService.updateQuantityByList(inventoryList);
