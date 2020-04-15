@@ -99,7 +99,31 @@ public class InventorySubtractHandler {
     }
 
     /**
-     * 查询机构对应的汇总记录
+     * 查询全机构 对应的汇总记录
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param approveState
+     * @return
+     */
+    @GetMapping("/getLshGroupListByCriteria")
+    public PageResult getLshGroupListByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
+            @RequestParam(required = false) Integer sysClinicId,
+            @RequestParam(required = false) Byte approveState,
+            @RequestParam(required = false) String pemSupplierName){
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                inventorySubtractService.getClinicLshGroupListByCriteria(creationDate, sysClinicId, approveState, pemSupplierName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 查询本机构 对应的汇总记录
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -114,9 +138,7 @@ public class InventorySubtractHandler {
             @RequestParam(required = false) Byte approveState,
             @RequestParam(required = false) String pemSupplierName){
 
-        // 获取用户信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-
+        User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
                 inventorySubtractService.getClinicLshGroupListByCriteria(creationDate, user.getSysClinicId(), approveState, pemSupplierName);
