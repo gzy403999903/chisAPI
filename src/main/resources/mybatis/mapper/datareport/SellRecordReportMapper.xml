@@ -229,6 +229,8 @@
       ROUND(IFNULL(b.qtxmf, 0), 2) AS qtxmf,
       ROUND(IFNULL(b.rxs, 0), 2) AS rxs,
       ROUND(IFNULL(a.yxs, 0), 2) AS yxs,
+      d.yzb,
+      ROUND((IFNULL(a.yxs, 0) / d.yzb * 100), 2) as wcl,
       a.sys_clinic_id AS sysClinicId,
       c.name AS sysClinicName
     FROM (
@@ -262,6 +264,17 @@
       GROUP BY sys_clinic_id
     ) b ON a.sys_clinic_id = b.sys_clinic_id
     LEFT JOIN sys_clinic c ON a.sys_clinic_id = c.`id`
+    LEFT JOIN (
+      select
+        id,
+        (case #{queryMonth}
+         when 1 then IFNULL(january, 0) when 2 then IFNULL(february, 0) when 3 then IFNULL(march, 0)
+         when 4 then IFNULL(april, 0) when 5 then IFNULL(may, 0) when 6 then IFNULL(june, 0)
+         when 7 then IFNULL(july, 0) when 8 then IFNULL(august, 0) when 9 then IFNULL(september, 0)
+         when 10 then IFNULL(october, 0) when 11 then IFNULL(november, 0) when 12 then IFNULL(december, 0)
+         end) as yzb
+      from sys_clinic_sell_target
+    ) d on a.sys_clinic_id = d.id
     GROUP BY a.sys_clinic_id
     ORDER BY a.sys_clinic_id
   </select>
@@ -323,7 +336,7 @@
       ROUND(IFNULL(a.goods_kp_wscb,0), 2) AS goodsKpWscb,
       ROUND(IFNULL(a.goods_wkp_hscb,0), 2) AS goodsWkpHscb,
       ROUND(IFNULL(a.goods_wkp_wscb,0), 2) AS goodsWkpWscb,
-      ROUND(IFNULL(a.goods_wkp_xxs,0), 2) AS goodsWkpXxs,
+      ROUND(IFNULL(a.goods_wkp_jxs,0), 2) AS goodsWkpJxs,
       ROUND(IFNULL(a.goods_kp_wscb,0) + IFNULL(a.goods_wkp_hscb,0), 2) AS goodsCbHj
     FROM (
       SELECT
@@ -358,7 +371,7 @@
         SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
           THEN (quantity * (cost_price / (100 + purchase_tax_rate) * 100)) END) AS goods_wkp_wscb,
         SUM(CASE WHEN (sys_sell_type_id = 1 AND invoice_type_id IS NULL)
-          THEN (quantity * (actual_retail_price / (100 + sell_tax_rate) * sell_tax_rate)) END) AS goods_wkp_xxs
+          THEN (quantity * (cost_price / (100 + purchase_tax_rate) * purchase_tax_rate)) END) AS goods_wkp_jxs
       FROM dr_sell_record
       <trim prefix="where" suffixOverrides="and">
         <if test="creationDate != null &amp;&amp; creationDate.length == 2">

@@ -115,14 +115,14 @@ public interface SellRecordReportService {
      * @param creationDate
      * @return
      */
-    List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate);
+    List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate, Integer queryMonth);
 
     /**
      * 导出日销售报表
      * @param creationDate
      * @return
      */
-    XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate);
+    XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate, Integer queryMonth);
 
     /**
      * 销售排行表

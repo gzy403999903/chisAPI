@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.system.dao.ClinicSellTargetMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.system.bean.ClinicSellTarget">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="january" jdbcType="INTEGER" property="january" />
+    <result column="february" jdbcType="INTEGER" property="february" />
+    <result column="march" jdbcType="INTEGER" property="march" />
+    <result column="april" jdbcType="INTEGER" property="april" />
+    <result column="may" jdbcType="INTEGER" property="may" />
+    <result column="june" jdbcType="INTEGER" property="june" />
+    <result column="july" jdbcType="INTEGER" property="july" />
+    <result column="august" jdbcType="INTEGER" property="august" />
+    <result column="september" jdbcType="INTEGER" property="september" />
+    <result column="october" jdbcType="INTEGER" property="october" />
+    <result column="november" jdbcType="INTEGER" property="november" />
+    <result column="december" jdbcType="INTEGER" property="december" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_clinic_sell_target
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.system.bean.ClinicSellTarget">
+    insert into sys_clinic_sell_target (id, january, february,
+      march, april, may,
+      june, july, august,
+      september, october, november,
+      december)
+    values (#{id,jdbcType=INTEGER}, #{january,jdbcType=INTEGER}, #{february,jdbcType=INTEGER},
+      #{march,jdbcType=INTEGER}, #{april,jdbcType=INTEGER}, #{may,jdbcType=INTEGER},
+      #{june,jdbcType=INTEGER}, #{july,jdbcType=INTEGER}, #{august,jdbcType=INTEGER},
+      #{september,jdbcType=INTEGER}, #{october,jdbcType=INTEGER}, #{november,jdbcType=INTEGER},
+      #{december,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.ClinicSellTarget">
+    update sys_clinic_sell_target
+    set january = #{january,jdbcType=INTEGER},
+      february = #{february,jdbcType=INTEGER},
+      march = #{march,jdbcType=INTEGER},
+      april = #{april,jdbcType=INTEGER},
+      may = #{may,jdbcType=INTEGER},
+      june = #{june,jdbcType=INTEGER},
+      july = #{july,jdbcType=INTEGER},
+      august = #{august,jdbcType=INTEGER},
+      september = #{september,jdbcType=INTEGER},
+      october = #{october,jdbcType=INTEGER},
+      november = #{november,jdbcType=INTEGER},
+      december = #{december,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, january, february, march, april, may, june, july, august, september, october,
+    november, december
+    from sys_clinic_sell_target
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, january, february, march, april, may, june, july, august, september, october,
+    november, december
+    from sys_clinic_sell_target
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultType="map">
+    select
+      a.id, b.name as sysClinicName,
+      a.january, a.february, a.march, a.april, a.may, a.june, a.july, a.august, a.september, a.october, a.november, a.december
+    from sys_clinic_sell_target a
+    left join sys_clinic b on a.id = b.id
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (b.name like '${sysClinicName}%' or b.code like '${sysClinicName}%') and
+      </if>
+    </trim>
+
+  </select>
+
+
+
+
+</mapper>

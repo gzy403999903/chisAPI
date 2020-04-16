@@ -97,20 +97,19 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     @Override
-    public List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate) {
-        return sellRecordReportMapper.selectSellRecordDailyByCreationDate(creationDate);
+    public List<Map<String, Object>> getSellRecordDailyByCreationDate(String[] creationDate, Integer queryMonth) {
+        List<Map<String, Object>> list = sellRecordReportMapper.selectSellRecordDailyByCreationDate(creationDate, queryMonth);
+        this.addTotalRow(list);
+        return list;
     }
 
-    @Override
-    public XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate) {
-        // 获取数据
-        List<Map<String, Object>> bodyList = this.getSellRecordDailyByCreationDate(creationDate);
+    private void addTotalRow (List<Map<String, Object>> list) {
         // 生成一列合计行
         Map<String, Object> countMap = new HashMap<>();
         countMap.put("sysClinicName", "--- 合计 ---");
-        for (Map<String, Object> map : bodyList) {
+        for (Map<String, Object> map : list) {
             for (String key : map.keySet()) {
-                if (key.equals("sysClinicName")) {
+                if (key.equals("sysClinicName") || key.equals("wcl")) {
                     continue;
                 } else if (countMap.get(key) == null) {
                     countMap.put(key, map.get(key));
@@ -119,7 +118,18 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                 }
             }
         }
-        bodyList.add(countMap);
+        // 计算总完成率
+        BigDecimal wcl =  new BigDecimal(countMap.get("yxs").toString())
+                .multiply(new BigDecimal("100"))
+                .divide(new BigDecimal(countMap.get("yzb").toString()), 2, BigDecimal.ROUND_HALF_UP);
+        countMap.put("wcl", wcl);
+        list.add(countMap);
+    }
+
+    @Override
+    public XSSFWorkbook downloadDaySellRecordExcel(String[] creationDate, Integer queryMonth) {
+        // 获取数据
+        List<Map<String, Object>> bodyList = this.getSellRecordDailyByCreationDate(creationDate, queryMonth);
 
         // 生成 excel 报表
         Map<String, String> titleMap = new LinkedHashMap<>();
@@ -132,6 +142,8 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         titleMap.put("qtxmf", "其他项目");
         titleMap.put("rxs", "日销售");
         titleMap.put("yxs", "月销售");
+        titleMap.put("yzb", "月指标");
+        titleMap.put("wcl", "完成率 %");
 
         return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
     }

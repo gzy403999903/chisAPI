@@ -55,7 +55,8 @@ public interface SellRecordReportMapper {
                                                              @Param("discountRate") Integer discountRate,
                                                              @Param("groupBy") String groupBy);
 
-    List<Map<String, Object>> selectSellRecordDailyByCreationDate(@Param("creationDate")String[] creationDate);
+    List<Map<String, Object>> selectSellRecordDailyByCreationDate(@Param("creationDate")String[] creationDate,
+                                                                  @Param("queryMonth") Integer queryMonth);
 
     List<Map<String, Object>> selectSellRecordSortByCriteria(@Param("creationDate") String[] creationDate,
                                                              @Param("sysClinicId") Integer sysClinicId,

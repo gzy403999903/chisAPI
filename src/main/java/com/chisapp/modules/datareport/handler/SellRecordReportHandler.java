@@ -242,10 +242,11 @@ public class SellRecordReportHandler {
     public PageResult getSellRecordDailyByCreationDate(
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]") String[] creationDate) {
+            @RequestParam(value = "creationDate[]") String[] creationDate,
+            Integer queryMonth) {
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordDailyByCreationDate(creationDate);
+        List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordDailyByCreationDate(creationDate, queryMonth);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -257,9 +258,10 @@ public class SellRecordReportHandler {
      */
     @GetMapping("/downloadSellRecordDailyExcel")
     public void downloadSellRecordDailyExcel(HttpServletResponse response,
-                                             @RequestParam(value = "creationDate[]") String[] creationDate) {
+                                             @RequestParam(value = "creationDate[]") String[] creationDate,
+                                             Integer queryMonth) {
 
-        XSSFWorkbook workbook = sellRecordReportService.downloadDaySellRecordExcel(creationDate);
+        XSSFWorkbook workbook = sellRecordReportService.downloadDaySellRecordExcel(creationDate, queryMonth);
         // 如果为 null 则不继续执行
         if (workbook == null) {
             return;

@@ -6,35 +6,64 @@
   <select id="selectPurchaseCostAmountByCriteria" resultType="map">
     SELECT
       a.sys_clinic_id AS sysClinicId,
-      b.`name` AS  sysClinicName,
-      b.`code` AS sysClinicCode,
+      c.name AS sysClinicName,
+      c.code AS sysClinicCode,
       a.pem_supplier_id AS pemSupplierId,
-      c.oid AS pemSupplierOid,
-      c.name AS pemSupplierName,
-      c.code AS pemSupplierCode,
-      ROUND(SUM(a.quantity * a.cost_price), 2) AS hsje,
-      ROUND(SUM(a.quantity * (a.cost_price / (100 + a.purchase_tax_rate) * 100)), 2) AS wsje
-    FROM iym_inventory_add a
-    LEFT JOIN sys_clinic b ON a.`sys_clinic_id` = b.`id`
-    LEFT JOIN pem_supplier c ON a.`pem_supplier_id` = c.`id`
+      d.oid AS pemSupplierOid,
+      d.name AS pemSupplierName,
+      d.code AS pemSupplierCode,
+      ROUND(IFNULL(a.addHsje,0) - IFNULL(b.subtractHsje,0), 2) AS hsje,
+      ROUND(IFNULL(a.addWsje,0) - IFNULL(b.subtractWsje,0), 2) AS wsje
+    FROM (
+      SELECT
+      sys_clinic_id,
+      pem_supplier_id,
+      ROUND(SUM(quantity * cost_price), 2) AS addHsje,
+      ROUND(SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)), 2) AS addWsje
+      FROM iym_inventory_add
+      <trim prefix="where" suffixOverrides="and">
+        <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+        </if>
+        <if test="sysClinicId != null">
+          (sys_clinic_id = #{sysClinicId}) and
+        </if>
+        <if test="true">
+          approve_state=1
+        </if>
+      </trim>
+      GROUP BY sys_clinic_id, pem_supplier_id
+    ) a
+    LEFT JOIN (
+      SELECT
+      sys_clinic_id,
+      pem_supplier_id,
+      ROUND(SUM(quantity * cost_price), 2) AS subtractHsje,
+      ROUND(SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)), 2) AS subtractWsje
+      FROM iym_inventory_subtract
+      <trim prefix="where" suffixOverrides="and">
+        <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+        </if>
+        <if test="sysClinicId != null">
+          (sys_clinic_id = #{sysClinicId}) and
+        </if>
+        <if test="true">
+          approve_state=1
+        </if>
+      </trim>
+      GROUP BY sys_clinic_id, pem_supplier_id
+    ) b ON a.sys_clinic_id = b.sys_clinic_id AND a.pem_supplier_id = b.pem_supplier_id
+    LEFT JOIN sys_clinic c ON a.`sys_clinic_id` = c.`id`
+    LEFT JOIN pem_supplier d ON a.`pem_supplier_id` = d.`id`
     <trim prefix="where" suffixOverrides="and">
-      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
-        (DATE_FORMAT(a.creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
-      </if>
-      <if test="sysClinicId != null">
-        (sysClinicId = #{sysClinicId}) and
-      </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
         (b.name like '${sysClinicName}%' or b.code like '${sysClinicName}%') and
       </if>
       <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
         (c.name like '${pemSupplierName}%' or c.code like '${pemSupplierName}%') and
       </if>
-      <if test="true">
-        a.approve_state=1
-      </if>
     </trim>
-    GROUP BY a.sys_clinic_id, a.pem_supplier_id
     ORDER BY a.sys_clinic_id, a.pem_supplier_id
   </select>
 
