@@ -27,7 +27,7 @@ public class Supplier implements Serializable {
     private String code;
 
     @Length(max = 30)
-    @NotBlank
+    // @NotBlank
     private String accountLicence;
 
     @Length(max = 30)

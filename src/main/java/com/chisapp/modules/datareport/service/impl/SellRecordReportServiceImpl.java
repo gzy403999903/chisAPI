@@ -106,10 +106,9 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     private void addTotalRow (List<Map<String, Object>> list) {
         // 生成一列合计行
         Map<String, Object> countMap = new HashMap<>();
-        countMap.put("sysClinicName", "--- 合计 ---");
         for (Map<String, Object> map : list) {
             for (String key : map.keySet()) {
-                if (key.equals("sysClinicName") || key.equals("wcl")) {
+                if (key.equals("sysClinicId") || key.equals("sysClinicName") || key.equals("wcl")) {
                     continue;
                 } else if (countMap.get(key) == null) {
                     countMap.put(key, map.get(key));
@@ -122,7 +121,10 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         BigDecimal wcl =  new BigDecimal(countMap.get("yxs").toString())
                 .multiply(new BigDecimal("100"))
                 .divide(new BigDecimal(countMap.get("yzb").toString()), 2, BigDecimal.ROUND_HALF_UP);
+
         countMap.put("wcl", wcl);
+        countMap.put("sysClinicName", "--- 合计 ---");
+        countMap.put("sysClinicId", 0); // 设置合计行的机构ID为0 方便根据机构ID进行取值
         list.add(countMap);
     }
 
