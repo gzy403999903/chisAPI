@@ -137,7 +137,12 @@
         (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
       </if>
     </trim>
-    GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+    <if test="groupBy == 'sysClinicId'">
+      GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d'), sysClinicId
+    </if>
+    <if test="groupBy == 'billingTypeId'">
+      GROUP BY DATE_FORMAT(creationDate, '%Y-%m-%d')
+    </if>
     ORDER BY DATE_FORMAT(creationDate, '%Y-%m-%d') desc, sysClinicId
   </select>
 
@@ -283,8 +288,13 @@
   <select id="selectSellRecordSortByCriteria" resultType="map">
     SELECT
       sysSellTypeId, sysSellTypeName, entityTypeId, entityTypeName,entityId, entityOid, entityName, entityCode,
-      specs, unitsId, unitsName, SUM(quantity) AS quantity,originName, manufacturerName, billingTypeId,
-      billingTypeName, goodsClassifyId, goodsClassifyName, sysClinicId, sysClinicName
+      specs, unitsId, unitsName, originName, manufacturerName, billingTypeId, billingTypeName, goodsClassifyId,
+      goodsClassifyName, sysClinicId, sysClinicName,
+      SUM(quantity) AS quantity,
+      ROUND(SUM(quantity * costPrice),2) as hscb,
+      ROUND(SUM(quantity * actualRetailPrice),2) as hsxs,
+      ROUND(SUM(quantity * (costPrice / ((100 + IFNULL(purchaseTaxRate, 0)) / 100))),2) AS wscb,
+      ROUND(SUM(quantity * (actualRetailPrice / ((100 + IFNULL(sellTaxRate, 0)) / 100))), 2) AS wsxs
     FROM view_dr_sell_record
     <trim prefix="where" suffixOverrides="and">
       <if test="creationDate != null &amp;&amp; creationDate.length == 2">
@@ -309,7 +319,12 @@
         (entityName like '${entityName}%' or entityCode like '${entityName}%') and
       </if>
     </trim>
-    GROUP BY sysClinicId, sysSellTypeId, entityId
+    <if test="groupBy == 'sysClinicId'">
+      GROUP BY sysClinicId, sysSellTypeId, entityId
+    </if>
+    <if test="groupBy == 'entityId'">
+      GROUP BY sysSellTypeId, entityId
+    </if>
     ORDER BY quantity DESC
   </select>
 

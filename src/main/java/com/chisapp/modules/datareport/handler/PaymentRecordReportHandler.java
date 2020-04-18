@@ -33,7 +33,7 @@ public class PaymentRecordReportHandler {
     /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * 获取全机构 收费方式汇总(按人员)
+     * 获取全机构 收费方式汇总
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -44,20 +44,21 @@ public class PaymentRecordReportHandler {
     @GetMapping("/getPaymentRecordListByCriteria")
     public PageResult getPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                      @RequestParam(defaultValue="1") Integer pageSize,
+                                                     @RequestParam(defaultValue = "creatorId") String groupBy,
                                                      @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                      @RequestParam(required = false) String sysClinicName,
                                                      @RequestParam(required = false) String creatorName) {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName, "creatorId");
+                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
     }
 
     /**
-     * 获取当前机构 收费方式汇总(按人员)
+     * 获取当前机构 收费方式汇总
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -66,63 +67,21 @@ public class PaymentRecordReportHandler {
     @GetMapping("/getClinicPaymentRecordListByCriteria")
     public PageResult getClinicPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                            @RequestParam(defaultValue="1") Integer pageSize,
+                                                           @RequestParam(defaultValue = "creatorId") String groupBy,
                                                            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                            @RequestParam(required = false) String creatorName) {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName, "creatorId");
+                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
     }
 
     /**
-     * 获取全机构 收费方式汇总(按门店)
-     * @param pageNum
-     * @param pageSize
-     * @param creationDate
-     * @param sysClinicName
-     * @return
-     */
-    @GetMapping("/getPaymentRecordListByCriteria2")
-    public PageResult getPaymentRecordListByCriteria2(@RequestParam(defaultValue="1") Integer pageNum,
-                                                      @RequestParam(defaultValue="1") Integer pageSize,
-                                                      @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
-                                                      @RequestParam(required = false) String sysClinicName) {
-
-        PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, null, sysClinicName, null, "sysClinicId");
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-
-        return PageResult.success().resultSet("page", pageInfo);
-    }
-
-    /**
-     * 获取当前机构 收费方式汇总(按门店)
-     * @param pageNum
-     * @param pageSize
-     * @param creationDate
-     * @return
-     */
-    @GetMapping("/getClinicPaymentRecordListByCriteria2")
-    public PageResult getClinicPaymentRecordListByCriteria2(@RequestParam(defaultValue="1") Integer pageNum,
-                                                            @RequestParam(defaultValue="1") Integer pageSize,
-                                                            @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
-
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                paymentRecordReportService.getPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, null, "sysClinicId");
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-
-        return PageResult.success().resultSet("page", pageInfo);
-    }
-
-    /**
-     * 获取全机构 储值方式汇总(按人员)
+     * 获取全机构 储值方式汇总
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -133,13 +92,14 @@ public class PaymentRecordReportHandler {
     @GetMapping("/getDepositPaymentRecordListByCriteria")
     public PageResult getDepositPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                             @RequestParam(defaultValue="1") Integer pageSize,
+                                                            @RequestParam(defaultValue = "creatorId") String groupBy,
                                                             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                             @RequestParam(required = false) String sysClinicName,
                                                             @RequestParam(required = false) String creatorName) {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName, "creatorId");
+                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, null, sysClinicName, creatorName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -147,7 +107,7 @@ public class PaymentRecordReportHandler {
 
 
     /**
-     * 获取当前机构 储值方式汇总(按人员)
+     * 获取当前机构 储值方式汇总
      * @param pageNum
      * @param pageSize
      * @param creationDate
@@ -156,62 +116,17 @@ public class PaymentRecordReportHandler {
     @GetMapping("/getClinicDepositPaymentRecordListByCriteria")
     public PageResult getClinicDepositPaymentRecordListByCriteria(@RequestParam(defaultValue="1") Integer pageNum,
                                                                   @RequestParam(defaultValue="1") Integer pageSize,
+                                                                  @RequestParam(defaultValue = "creatorId") String groupBy,
                                                                   @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
                                                                   @RequestParam(required = false) String creatorName) {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName, "creatorId");
+                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, creatorName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
     }
-
-    /**
-     * 获取全机构 储值方式汇总(按门店)
-     * @param pageNum
-     * @param pageSize
-     * @param creationDate
-     * @param sysClinicName
-     * @param creatorName
-     * @return
-     */
-    @GetMapping("/getDepositPaymentRecordListByCriteria2")
-    public PageResult getDepositPaymentRecordListByCriteria2(@RequestParam(defaultValue="1") Integer pageNum,
-                                                             @RequestParam(defaultValue="1") Integer pageSize,
-                                                             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
-                                                             @RequestParam(required = false) String sysClinicName) {
-
-        PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, null, sysClinicName, null, "sysClinicId");
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-
-        return PageResult.success().resultSet("page", pageInfo);
-    }
-
-
-    /**
-     * 获取当前机构 储值方式汇总(按门店)
-     * @param pageNum
-     * @param pageSize
-     * @param creationDate
-     * @return
-     */
-    @GetMapping("/getClinicDepositPaymentRecordListByCriteria2")
-    public PageResult getClinicDepositPaymentRecordListByCriteria2(@RequestParam(defaultValue="1") Integer pageNum,
-                                                                   @RequestParam(defaultValue="1") Integer pageSize,
-                                                                   @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
-
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                paymentRecordReportService.getDepositPaymentRecordListByCriteria(creationDate, user.getSysClinicId(), null, null, "sysClinicId");
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
-
-        return PageResult.success().resultSet("page", pageInfo);
-    }
-
 
 }

@@ -71,8 +71,11 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     @Override
-    public List<Map<String, Object>> getBillingTypeGroupListByCriteria(String[] creationDate, Integer sysClinicId, String sysClinicName) {
-        return sellRecordReportMapper.selectBillingTypeGroupListByCriteria(creationDate, sysClinicId, sysClinicName);
+    public List<Map<String, Object>> getBillingTypeGroupListByCriteria(String[] creationDate,
+                                                                       Integer sysClinicId,
+                                                                       String sysClinicName,
+                                                                       String groupBy) {
+        return sellRecordReportMapper.selectBillingTypeGroupListByCriteria(creationDate, sysClinicId, sysClinicName, groupBy);
     }
 
     @Override
@@ -104,6 +107,11 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     private void addTotalRow (List<Map<String, Object>> list) {
+        // 如果 list 为空则不执行
+        if (list.isEmpty()) {
+            return;
+        }
+
         // 生成一列合计行
         Map<String, Object> countMap = new HashMap<>();
         for (Map<String, Object> map : list) {
@@ -157,10 +165,11 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                                  Integer sysSellTypeId,
                                                                  Integer entityTypeId,
                                                                  String entityOid,
-                                                                 String entityName) {
+                                                                 String entityName,
+                                                                 String groupBy) {
 
         return sellRecordReportMapper.selectSellRecordSortByCriteria(
-                creationDate, sysClinicId, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
+                creationDate, sysClinicId, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName, groupBy);
     }
 
     @Override

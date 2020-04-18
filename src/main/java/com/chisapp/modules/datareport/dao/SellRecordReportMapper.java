@@ -42,7 +42,8 @@ public interface SellRecordReportMapper {
 
     List<Map<String, Object>> selectBillingTypeGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                                    @Param("sysClinicId") Integer sysClinicId,
-                                                                   @Param("sysClinicName") String sysClinicName);
+                                                                   @Param("sysClinicName") String sysClinicName,
+                                                                   @Param("groupBy") String groupBy);
 
     List<Map<String, Object>> selectMarginRateListByCriteria(@Param("creationDate") String[] creationDate,
                                                              @Param("sysClinicId") Integer sysClinicId,
@@ -64,7 +65,8 @@ public interface SellRecordReportMapper {
                                                              @Param("sysSellTypeId") Integer sysSellTypeId,
                                                              @Param("entityTypeId") Integer entityTypeId,
                                                              @Param("entityOid") String entityOid,
-                                                             @Param("entityName") String entityName);
+                                                             @Param("entityName") String entityName,
+                                                             @Param("groupBy") String groupBy);
 
 
     List<Map<String, Object>> selectSellRecordStatisticsByCriteria(@Param("creationDate") String[] creationDate,

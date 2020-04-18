@@ -128,13 +128,16 @@ public class SellRecordReportHandler {
      * @return
      */
     @GetMapping("/getBillingTypeGroupListByCriteria")
-    public PageResult getBillingTypeGroupListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
-                                                         @RequestParam(defaultValue="1") Integer pageSize,
-                                                         @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
-                                                         @RequestParam(required = false) String sysClinicName) {
+    public PageResult getBillingTypeGroupListByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(defaultValue = "sysClinicId") String groupBy,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sysClinicName) {
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getBillingTypeGroupListByCriteria(creationDate, null, sysClinicName);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getBillingTypeGroupListByCriteria(creationDate, null, sysClinicName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -148,13 +151,16 @@ public class SellRecordReportHandler {
      * @return
      */
     @GetMapping("/getClinicBillingTypeGroupListByCriteria")
-    public PageResult getClinicBillingTypeGroupListByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
-                                                               @RequestParam(defaultValue="1") Integer pageSize,
-                                                               @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
+    public PageResult getClinicBillingTypeGroupListByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(defaultValue = "sysClinicId") String groupBy,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate) {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = sellRecordReportService.getBillingTypeGroupListByCriteria(creationDate, user.getSysClinicId(), null);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getBillingTypeGroupListByCriteria(creationDate, user.getSysClinicId(), null, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -283,6 +289,7 @@ public class SellRecordReportHandler {
      * 获取全机构 销售排行
      * @param pageNum
      * @param pageSize
+     * @param groupBy
      * @param creationDate
      * @param sysClinicName
      * @param sysSellTypeId
@@ -295,6 +302,7 @@ public class SellRecordReportHandler {
     public PageResult getSellRecordSortByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(defaultValue = "sysClinicId") String groupBy,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
             @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) Integer sysSellTypeId,
@@ -304,7 +312,7 @@ public class SellRecordReportHandler {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordSortByCriteria(
-                creationDate, null, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName);
+                creationDate, null, sysClinicName, sysSellTypeId, entityTypeId, entityOid, entityName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);
@@ -325,6 +333,7 @@ public class SellRecordReportHandler {
     public PageResult getClinicSellRecordSortByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(defaultValue = "sysClinicId") String groupBy,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
             @RequestParam(required = false) Integer sysSellTypeId,
             @RequestParam(required = false) Integer entityTypeId,
@@ -334,7 +343,7 @@ public class SellRecordReportHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = sellRecordReportService.getSellRecordSortByCriteria(
-                creationDate, user.getSysClinicId(), null, sysSellTypeId, entityTypeId, entityOid, entityName);
+                creationDate, user.getSysClinicId(), null, sysSellTypeId, entityTypeId, entityOid, entityName, groupBy);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
         return PageResult.success().resultSet("page", pageInfo);

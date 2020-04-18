@@ -18,7 +18,14 @@ public interface ClinicSellTargetService {
      * @param clinicSellTarget
      */
     @Transactional
-    void saveOrUpdate(ClinicSellTarget clinicSellTarget);
+    void save(ClinicSellTarget clinicSellTarget);
+
+    /**
+     * 编辑操作
+     * @param clinicSellTarget
+     */
+    @Transactional
+    void update(ClinicSellTarget clinicSellTarget);
 
     /**
      * 删除操作

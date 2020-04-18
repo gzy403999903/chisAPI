@@ -79,11 +79,13 @@ public interface SellRecordReportService {
      * @param creationDate
      * @param sysClinicId
      * @param sysClinicName
+     * @param groupBy
      * @return
      */
     List<Map<String, Object>> getBillingTypeGroupListByCriteria(String[] creationDate,
                                                                 Integer sysClinicId,
-                                                                String sysClinicName);
+                                                                String sysClinicName,
+                                                                String groupBy);
 
     /**
      * 销售流水分析
@@ -133,6 +135,7 @@ public interface SellRecordReportService {
      * @param entityTypeId
      * @param entityOid
      * @param entityName
+     * @param groupBy
      * @return
      */
     List<Map<String, Object>> getSellRecordSortByCriteria(String[] creationDate,
@@ -141,7 +144,8 @@ public interface SellRecordReportService {
                                                           Integer sysSellTypeId,
                                                           Integer entityTypeId,
                                                           String entityOid,
-                                                          String entityName);
+                                                          String entityName,
+                                                          String groupBy);
 
     /**
      * 销售统计--财报

@@ -36,14 +36,12 @@ public class ClinicSellTargetHandler {
      * @param id
      * @param map
      */
-    /*
     @ModelAttribute
     public void getById (@RequestParam(value = "id", required = false) Integer id, Map<String, Object> map) {
         if (id != null) {
             map.put("clinicSellTarget", clinicSellTargetService.getById(id));
         }
     }
-    */
 
     /**
      * 保存操作
@@ -56,7 +54,7 @@ public class ClinicSellTargetHandler {
         if (result.hasErrors()) {
             return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
         }
-        clinicSellTargetService.saveOrUpdate(clinicSellTarget);
+        clinicSellTargetService.save(clinicSellTarget);
         return PageResult.success();
     }
 
@@ -71,7 +69,7 @@ public class ClinicSellTargetHandler {
         if (result.hasErrors()) {
             return PageResult.fail().msg(JSRMessageUtils.getFirstMsg(result));
         }
-        clinicSellTargetService.saveOrUpdate(clinicSellTarget);
+        clinicSellTargetService.update(clinicSellTarget);
         return PageResult.success();
     }
 

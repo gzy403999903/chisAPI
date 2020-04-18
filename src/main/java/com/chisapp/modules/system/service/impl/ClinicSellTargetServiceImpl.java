@@ -25,14 +25,13 @@ public class ClinicSellTargetServiceImpl implements ClinicSellTargetService {
     /* -------------------------------------------------------------------------------------------------------------- */
 
     @Override
-    public void saveOrUpdate(ClinicSellTarget clinicSellTarget) {
-        ClinicSellTarget record = this.getById(clinicSellTarget.getId());
-        if (record == null) {
-            clinicSellTargetMapper.insert(clinicSellTarget);
-        } else {
-            clinicSellTargetMapper.updateByPrimaryKey(clinicSellTarget);
-        }
+    public void save(ClinicSellTarget clinicSellTarget) {
+        clinicSellTargetMapper.insert(clinicSellTarget);
+    }
 
+    @Override
+    public void update(ClinicSellTarget clinicSellTarget) {
+        clinicSellTargetMapper.updateByPrimaryKey(clinicSellTarget);
     }
 
     @Override

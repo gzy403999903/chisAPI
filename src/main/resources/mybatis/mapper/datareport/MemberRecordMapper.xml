@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.datareport.dao.MemberReportMapper">
+
+  <!-- 会员分析 -->
+  <select id="selectMemberAnalysisByCriteria" resultType="map">
+    SELECT
+      a.id, a.oid, a.name, a.code, a.`genderName`, a.`idCardNo`, a.`age`, a.`phone`, a.`birth`, b.birthSurplusDays, a.`balance`,
+      a.sysClinicId, a.`sysClinicName`, a.sysClinicCode,
+      IFNULL(c.czpc, 0) AS czpc,
+      ROUND(IFNULL(c.czhj,0),2) AS czhj,
+      IFNULL(c.max_cz,0) AS maxCz,
+      IFNULL(c.min_cz,0) AS minCz,
+      c.last_date AS czLastDate,
+      COUNT(IFNULL(d.lsh, 0)) AS xfpc,
+      ROUND(SUM(IFNULL(d.xfje,0)), 2) AS xfhj,
+      MAX(IFNULL(d.xfje,0)) AS maxXfje,
+      MIN(IFNULL(d.xfje,0)) AS minXfje,
+      MAX(d.creation_date) AS xfLastDate
+    FROM view_mrm_member a
+    LEFT JOIN (
+      SELECT
+        z.id,
+        (CASE WHEN z.birthSurplusDays2 > 0 THEN  z.birthSurplusDays2 ELSE  z.birthSurplusDays1 END) AS birthSurplusDays
+      FROM (
+        SELECT
+          id,
+          DATEDIFF(CONCAT(DATE_FORMAT(NOW(),'%Y')+1,DATE_FORMAT(birth,'-%m-%d')),NOW()) birthSurplusDays1,
+          DATEDIFF(CONCAT(DATE_FORMAT(NOW(),'%Y'),DATE_FORMAT(birth,'-%m-%d')),NOW()) birthSurplusDays2
+        FROM  mrm_member
+      )z
+    ) b ON a.id = b.id
+    LEFT JOIN (
+      SELECT
+        mrm_member_id,
+        COUNT(lsh) AS czpc,
+        MAX(creation_date) AS last_date,
+        SUM(deposit_amount) AS czhj,
+        MAX(deposit_amount) AS max_cz,
+        MIN(deposit_amount) AS min_cz
+      FROM mrm_deposit_record
+      WHERE (creation_date BETWEEN DATE_SUB(NOW(),INTERVAL #{sellDays} DAY) AND NOW()) AND (returned = 0)
+      GROUP BY mrm_member_id
+    )c ON a.id = c.mrm_member_id
+    LEFT JOIN (
+      SELECT
+        mrm_member_id,
+        lsh,
+        creation_date,
+        SUM(quantity * actual_retail_price) AS xfje
+      FROM dr_sell_record
+      WHERE (creation_date BETWEEN DATE_SUB(NOW(),INTERVAL #{sellDays} DAY) AND NOW()) AND (mrm_member_id IS NOT NULL) AND (returned = 0)
+      GROUP BY lsh, mrm_member_id
+      HAVING xfje > 0
+    ) d ON a.id = d.mrm_member_id
+    <trim prefix="where" suffixOverrides="and">
+      <if test="oid != null &amp;&amp; oid.trim() != ''">
+        (a.oid like '${oid}%') and
+      </if>
+      <if test="name != null &amp;&amp; name.trim() != ''">
+        (a.name like '${name}%' or code like '${name}%') and
+      </if>
+      <if test="phone != null &amp;&amp; phone.trim() != ''">
+        (a.phone like '${phone}%') and
+      </if>
+      <if test="age != null &amp;&amp; age.trim() != ''">
+        /* 注入条件运算符 */
+        (IFNULL(a.age,0) ${age}) and
+      </if>
+      <if test="birthSurplusDays != null &amp;&amp; birthSurplusDays.trim() != ''">
+        /* 注入条件运算符 */
+        (b.birthSurplusDays ${birthSurplusDays}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (a.sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="balance != null &amp;&amp; balance.trim() != ''">
+        /* 注入条件运算符 */
+        (a.balance ${balance}) and
+      </if>
+      <if test="czpc != null &amp;&amp; czpc.trim() != ''">
+        /* 注入条件运算符 */
+        (IFNULL(czpc,0) ${czpc}) and
+      </if>
+      <if test="czhj != null &amp;&amp; czhj.trim() != ''">
+        /* 注入条件运算符 */
+        (IFNULL(czhj,0) ${czhj}) and
+      </if>
+    </trim>
+    GROUP BY a.`id`
+    <trim prefix="HAVING" suffixOverrides="and">
+      <if test="xfpc != null &amp;&amp; xfpc.trim() != ''">
+        /* 注入条件运算符 */
+        (IFNULL(xfpc,0) ${xfpc}) and
+      </if>
+      <if test="xfhj != null &amp;&amp; xfhj.trim() != ''">
+        /* 注入条件运算符 */
+        (IFNULL(xfhj,0) ${xfhj}) and
+      </if>
+    </trim>
+    ORDER BY xfhj DESC
+  </select>
+
+
+
+</mapper>
