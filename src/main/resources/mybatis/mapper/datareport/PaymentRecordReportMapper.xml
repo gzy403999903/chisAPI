@@ -50,54 +50,50 @@
   <!-- 储值方式汇总 -->
   <select id="selectDepositPaymentRecordListByCriteria" resultType="map">
     SELECT
-      ROUND(SUM(b.cash), 2) AS cash,
-      ROUND(SUM(b.memberBalance), 2) AS memberBalance,
-      ROUND(SUM(b.unionpay), 2) AS unionpay,
-      ROUND(SUM(b.alipay), 2) AS alipay,
-      ROUND(SUM(b.wechatpay), 2) AS wechatpay,
+      ROUND(SUM(a.cash), 2) AS cash,
+      ROUND(SUM(a.memberBalance), 2) AS memberBalance,
+      ROUND(SUM(a.unionpay), 2) AS unionpay,
+      ROUND(SUM(a.alipay), 2) AS alipay,
+      ROUND(SUM(a.wechatpay), 2) AS wechatpay,
       ROUND(SUM(creditpay), 2) AS creditpay,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 1 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS shengyb,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 2 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS shiyb,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 3 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS dkq,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 4 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS ybk,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 5 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS bgflk,
-      ROUND(SUM(CASE WHEN b.sysPaymentWayId = 6 THEN b.sysPaymentWayAmount ELSE 0 END), 2) AS yky,
-      ROUND(SUM(b.actualAmount), 2) AS actualAmount,
-      ROUND(SUM(b.disparityAmount), 2) AS disparityAmount,
-      DATE_FORMAT(b.creationDate, '%Y-%m-%d') AS creationDate,
-      b.creatorId,
-      b.creatorName,
-      b.sysClinicName
-    FROM
-       (
-         SELECT *
-         FROM mrm_deposit_record
-         <trim prefix="where" suffixOverrides="and">
-           <if test="creationDate != null &amp;&amp; creationDate.length == 2">
-             (DATE_FORMAT(creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
-           </if>
-           <if test="sysClinicId != null">
-             (sys_clinic_id = #{sysClinicId}) and
-           </if>
-         </trim>
-         GROUP BY lsh
-       ) a
-    LEFT JOIN view_nwt_payment_record b ON a.lsh = b.lsh
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 1 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS shengyb,
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 2 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS shiyb,
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 3 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS dkq,
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 4 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS ybk,
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 5 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS bgflk,
+      ROUND(SUM(CASE WHEN a.sysPaymentWayId = 6 THEN a.sysPaymentWayAmount ELSE 0 END), 2) AS yky,
+      ROUND(SUM(a.actualAmount), 2) AS actualAmount,
+      ROUND(SUM(a.disparityAmount), 2) AS disparityAmount,
+      DATE_FORMAT(a.creationDate, '%Y-%m-%d') AS creationDate,
+      a.creatorId, a.creatorName, a.sysClinicName
+    FROM view_nwt_payment_record a
+    LEFT JOIN (
+      SELECT lsh FROM mrm_deposit_record GROUP BY lsh
+    ) b ON a.lsh = b.lsh
     <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(a.creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (a.sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="true">
+        (b.lsh IS NOT NULL) and
+      </if>
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
-        (b.sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+        (a.sysClinicName like '${sysClinicName}%' or a.sysClinicCode like '${sysClinicName}%') and
       </if>
       <if test="creatorName != null &amp;&amp; creatorName.trim() != ''">
-        (b.creatorName like '${creatorName}%' or creatorCode like '${creatorName}%') and
+        (a.creatorName like '${creatorName}%' or a.creatorCode like '${creatorName}%') and
       </if>
     </trim>
     <if test="groupBy == 'sysClinicId'">
-      GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId
+      GROUP BY DATE_FORMAT(a.creationDate, '%Y-%m-%d'), a.sysClinicId
     </if>
     <if test="groupBy == 'creatorId'">
-      GROUP BY DATE_FORMAT(b.creationDate, '%Y-%m-%d'), b.sysClinicId, b.creatorId
+      GROUP BY DATE_FORMAT(a.creationDate, '%Y-%m-%d'), a.sysClinicId, a.creatorId
     </if>
-    ORDER BY DATE_FORMAT(b.creationDate, '%Y-%m-%d') desc, b.sysClinicId, b.creatorId
+    ORDER BY DATE_FORMAT(a.creationDate, '%Y-%m-%d') desc, a.sysClinicId, a.creatorId
   </select>
 
 
