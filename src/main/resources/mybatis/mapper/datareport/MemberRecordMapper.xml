@@ -39,7 +39,7 @@
         MAX(deposit_amount) AS max_cz,
         MIN(deposit_amount) AS min_cz
       FROM mrm_deposit_record
-      WHERE (creation_date BETWEEN DATE_SUB(NOW(),INTERVAL #{sellDays} DAY) AND NOW()) AND (returned = 0)
+      WHERE (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_SUB(NOW(),INTERVAL #{sellDays} DAY) AND NOW()) AND (returned = 0)
       GROUP BY mrm_member_id
     )c ON a.id = c.mrm_member_id
     LEFT JOIN (
