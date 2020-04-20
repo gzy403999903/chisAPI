@@ -155,4 +155,30 @@ public interface SellRecordReportService {
      */
     List<Map<String, Object>> getSellRecordStatisticsByCriteria(String[] creationDate, Integer sysClinicId);
 
+    /**
+     * 销售提成汇总
+     * @param creationDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param sellerName
+     * @return
+     */
+    List<Map<String, Object>> getSellRecordCommissionByCriteria(String[] creationDate,
+                                                                Integer sysClinicId,
+                                                                String sysClinicName,
+                                                                String sellerName);
+
+    /**
+     * 导出提成汇总
+     * @param creationDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param sellerName
+     * @return
+     */
+    XSSFWorkbook downloadSellRecordCommissionExcel(String[] creationDate,
+                                                   Integer sysClinicId,
+                                                   String sysClinicName,
+                                                   String sellerName);
+
 }

@@ -402,4 +402,81 @@
     LEFT JOIN sys_clinic b ON a.sys_clinic_id = b.`id`
   </select>
 
+  <!-- 销售提成汇总 -->
+  <select id="selectSellRecordCommissionByCriteria" resultType="map">
+    SELECT
+      a.sys_clinic_id AS sysClinicId,
+      b.name AS sysClinicName,
+      b.`code` AS sysClinicCode,
+      a.seller_id sellerId,
+      c.name AS sellerName,
+      c.`code` AS sellerCode,
+      ROUND(SUM(a.xyxs), 2) AS xyxs,
+      ROUND(SUM(a.zyxs), 2) AS zyxs,
+      ROUND(SUM(a.wcxs), 2) AS wcxs,
+      ROUND(SUM(a.xyxs), 2) AS xytc,
+      ROUND(SUM(a.zyxs), 2) AS zytc,
+      ROUND(SUM(a.wcxs), 2) AS wctc,
+      ROUND(SUM(a.yjxmxs), 2) AS yjxmxs,
+      ROUND(SUM(a.fzzlxs), 2) AS fzzlxs,
+      ROUND(SUM(a.qtxmsx), 2) AS qtxmsx,
+      ROUND(SUM(a.xytc + a.zytc + a.wctc + a.yjxmxs + a.fzzlxs + a.qtxmsx), 2) AS tcxshj,
+      ROUND(SUM(a.xyxs + a.zyxs + a.wcxs + a.yjxmxs + a.fzzlxs + a.qtxmsx), 2) AS xshj
+    FROM (
+      SELECT
+        a.sys_clinic_id,
+        a.seller_id,
+        b.profit_commission_rate,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 101
+          THEN (a.quantity * a.cost_price / (100 + a.purchase_tax_rate) * 100) ELSE 0 END) AS xycb,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 101
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS xyxs,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 101 AND b.profit_commission_rate > 0
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS xytc,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 102
+          THEN (a.quantity * a.cost_price / (100 + a.purchase_tax_rate) * 100) ELSE 0 END) AS zycb,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 102
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS zyxs,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 102 AND b.profit_commission_rate > 0
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS zytc,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 103
+          THEN (a.quantity * a.cost_price / (100 + a.purchase_tax_rate) * 100) ELSE 0 END) AS wccb,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 103
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS wcxs,
+        (CASE WHEN a.sys_sell_type_id = 1 AND a.entity_type_id = 103 AND b.profit_commission_rate > 0
+          THEN (a.quantity * a.actual_retail_price / (100 + a.sell_tax_rate) * 100) ELSE 0 END) AS wctc,
+        (CASE WHEN a.sys_sell_type_id = 2 AND a.entity_type_id = 101
+          THEN (a.quantity * a.actual_retail_price) ELSE 0 END) AS yjxmxs,
+        (CASE WHEN a.sys_sell_type_id = 2 AND a.entity_type_id = 102
+          THEN (a.quantity * a.actual_retail_price) ELSE 0 END) AS fzzlxs,
+        (CASE WHEN a.sys_sell_type_id = 2 AND a.entity_type_id = 103
+          THEN (a.quantity * a.actual_retail_price) ELSE 0 END) AS qtxmsx
+      FROM dr_sell_record a
+      LEFT JOIN gsm_goods b ON a.`sys_sell_type_id` = 1 AND a.entity_id = b.`id`
+      <trim prefix="where" suffixOverrides="and">
+        <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+          (DATE_FORMAT(a.creation_date, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+        </if>
+        <if test="sysClinicId != null">
+          (a.sys_clinic_id = #{sysClinicId}) and
+        </if>
+        <if test="true">
+          (a.returned = 0) and
+        </if>
+      </trim>
+    ) a
+    LEFT JOIN sys_clinic b ON a.sys_clinic_id = b.`id`
+    LEFT JOIN sys_user c ON a.seller_id = c.`id`
+    <trim prefix="where" suffixOverrides="and">
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (b.name like '${sysClinicName}%' or b.code like '${sysClinicName}%') and
+      </if>
+      <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
+        (c.name like '${sellerName}%' or c.code like '${sellerName}%') and
+      </if>
+    </trim>
+    GROUP BY a.seller_id
+    ORDER BY a.sys_clinic_id, a.seller_id
+  </select>
+
 </mapper>

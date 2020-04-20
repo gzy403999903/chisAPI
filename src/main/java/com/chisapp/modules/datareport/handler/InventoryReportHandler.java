@@ -61,7 +61,7 @@ public class InventoryReportHandler {
     }
 
     /**
-     * 全机构近效期库存表下载
+     * 全机构 近效期库存表下载
      * @param response
      */
     @GetMapping("/downloadExpiryDateExcel")
@@ -110,7 +110,7 @@ public class InventoryReportHandler {
     }
 
     /**
-     * 全机构近效期库存表下载
+     * 本机构 近效期库存表下载
      * @param response
      */
     @GetMapping("/downloadClinicExpiryDateExcel")

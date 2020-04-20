@@ -12,7 +12,7 @@
       IFNULL(c.max_cz,0) AS maxCz,
       IFNULL(c.min_cz,0) AS minCz,
       c.last_date AS czLastDate,
-      COUNT(IFNULL(d.lsh, 0)) AS xfpc,
+      COUNT(d.lsh) AS xfpc,
       ROUND(SUM(IFNULL(d.xfje,0)), 2) AS xfhj,
       MAX(IFNULL(d.xfje,0)) AS maxXfje,
       MIN(IFNULL(d.xfje,0)) AS minXfje,

@@ -376,8 +376,117 @@ public class SellRecordReportHandler {
         return PageResult.success().resultSet("list", list);
     }
 
+    /**
+     * 全机构 销售提成汇总
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sysClinicName
+     * @param sellerName
+     * @return
+     */
+    @GetMapping("/getSellRecordCommissionByCriteria")
+    public PageResult getSellRecordCommissionByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sysClinicName,
+            @RequestParam(required = false) String sellerName){
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getSellRecordCommissionByCriteria(creationDate, null, sysClinicName, sellerName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
 
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 全机构 导出销售汇总报表
+     * @param response
+     * @param creationDate
+     * @param sysClinicName
+     * @param sellerName
+     */
+    @GetMapping("/downloadSellRecordCommissionExcel")
+    public void downloadSellRecordCommissionExcel(
+            HttpServletResponse response,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sysClinicName,
+            @RequestParam(required = false) String sellerName) {
+
+        XSSFWorkbook workbook = sellRecordReportService.downloadSellRecordCommissionExcel(
+                creationDate,null, sysClinicName, sellerName);
+        // 如果为 null 则不继续执行
+        if (workbook == null) {
+            return;
+        }
+
+        String fileName = "销售汇总(按人员).xlsx";
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 本机构 销售提成汇总
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param sellerName
+     * @return
+     */
+    @GetMapping("/getClinicSellRecordCommissionByCriteria")
+    public PageResult getClinicSellRecordCommissionByCriteria (
+            @RequestParam(defaultValue="1") Integer pageNum,
+            @RequestParam(defaultValue="1") Integer pageSize,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sellerName){
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList =
+                sellRecordReportService.getSellRecordCommissionByCriteria(creationDate, user.getSysClinicId(), null, sellerName);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
+    /**
+     * 本机构 导出销售汇总报表
+     * @param response
+     * @param creationDate
+     * @param sellerName
+     */
+    @GetMapping("/downloadClinicSellRecordCommissionExcel")
+    public void downloadClinicSellRecordCommissionExcel(
+            HttpServletResponse response,
+            @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+            @RequestParam(required = false) String sellerName) {
+
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        XSSFWorkbook workbook = sellRecordReportService.downloadSellRecordCommissionExcel(
+                creationDate,user.getSysClinicId(), null, sellerName);
+        // 如果为 null 则不继续执行
+        if (workbook == null) {
+            return;
+        }
+
+        String fileName = "销售汇总(按人员).xlsx";
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

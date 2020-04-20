@@ -12,7 +12,6 @@ public class VisitRecord implements Serializable {
     private Integer id;
 
     @NotNull
-    @Future
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date appointmentDate;
 

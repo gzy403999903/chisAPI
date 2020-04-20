@@ -177,5 +177,38 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         return sellRecordReportMapper.selectSellRecordStatisticsByCriteria(creationDate, sysClinicId);
     }
 
+    @Override
+    public List<Map<String, Object>> getSellRecordCommissionByCriteria(String[] creationDate,
+                                                                       Integer sysClinicId,
+                                                                       String sysClinicName,
+                                                                       String sellerName) {
+        return sellRecordReportMapper.selectSellRecordCommissionByCriteria(creationDate, sysClinicId, sysClinicName, sellerName);
+    }
+
+    @Override
+    public XSSFWorkbook downloadSellRecordCommissionExcel(String[] creationDate,
+                                                          Integer sysClinicId,
+                                                          String sysClinicName,
+                                                          String sellerName) {
+        // 获取数据
+        List<Map<String, Object>> bodyList = this.getSellRecordCommissionByCriteria(creationDate, sysClinicId, sysClinicName, sellerName);
+
+        // 生成 excel 报表
+        Map<String, String> titleMap = new LinkedHashMap<>();
+        titleMap.put("sellerId", "销售人ID");
+        titleMap.put("sellerName", "销售人");
+        titleMap.put("xytc", "西药(无税)");
+        titleMap.put("zytc", "中药(无税)");
+        titleMap.put("wctc", "卫材(无税)");
+        titleMap.put("yjxmxs", "医技项目");
+        titleMap.put("fzzlxs", "辅助项目");
+        titleMap.put("qtxmsx", "其他项目");
+        titleMap.put("tcxshj", "提成销售合计");
+        titleMap.put("xshj", "全部销售合计");
+        titleMap.put("sysClinicName", "门诊名称");
+
+        return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
+    }
+
 
 }
