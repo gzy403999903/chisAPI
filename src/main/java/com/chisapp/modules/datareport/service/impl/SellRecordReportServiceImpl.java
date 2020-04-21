@@ -125,10 +125,13 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                 }
             }
         }
-        // 计算总完成率
-        BigDecimal wcl =  new BigDecimal(countMap.get("yxs").toString())
-                .multiply(new BigDecimal("100"))
-                .divide(new BigDecimal(countMap.get("yzb").toString()), 2, BigDecimal.ROUND_HALF_UP);
+        // 计算总完成率 (月销售 / 月指标 * 100)
+        BigDecimal wcl = new BigDecimal("100");
+        BigDecimal yzb = new BigDecimal(countMap.get("yzb").toString());
+        // 如果月指标大于 0 则计算完成成率
+        if (yzb.compareTo(new BigDecimal("0")) > 0) {
+            wcl = new BigDecimal(countMap.get("yxs").toString()).multiply(new BigDecimal("100")).divide(yzb, 2, BigDecimal.ROUND_HALF_UP);
+        }
 
         countMap.put("wcl", wcl);
         countMap.put("sysClinicName", "--- 合计 ---");

@@ -24,7 +24,8 @@ public interface PayableAccountMapper {
     List<Map<String, Object>> selectGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                         @Param("pemSupplierId") Integer pemSupplierId,
                                                         @Param("sysClinicId") Integer sysClinicId,
-                                                        @Param("arrearagesAmount") BigDecimal arrearagesAmount);
+                                                        @Param("arrearagesAmount") BigDecimal arrearagesAmount,
+                                                        @Param("surplusArrearagesDays") Integer surplusArrearagesDays);
 
     List<Map<String, Object>> selectByLsh(@Param("lsh") String lsh);
 

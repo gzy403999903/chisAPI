@@ -49,10 +49,12 @@ public class PayableAccountHandler {
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
             @RequestParam(required = false) Integer pemSupplierId,
             @RequestParam(required = false) Integer sysClinicId,
-            @RequestParam(required = false) BigDecimal arrearagesAmount){
+            @RequestParam(required = false) BigDecimal arrearagesAmount,
+            @RequestParam(required = false) Integer surplusArrearagesDays){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList = payableAccountService.getGroupListByCriteria(creationDate, pemSupplierId, sysClinicId, arrearagesAmount);
+        List<Map<String, Object>> pageList = payableAccountService.getGroupListByCriteria(
+                creationDate, pemSupplierId, sysClinicId, arrearagesAmount, surplusArrearagesDays);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

@@ -77,6 +77,7 @@
     from (
     select
     creationDate, lsh, pemSupplierId, pemSupplierOid, pemSupplierName, sum(quantity * costPrice) as payableAmount,
+    (CASE WHEN arrearagesDays > 0 THEN DATEDIFF(NOW(), creationDate) - CAST(arrearagesDays AS SIGNED) ELSE NULL END) AS surplusArrearagesDays,
     creatorId, creatorName, sysClinicId, sysClinicName
     from view_flm_payable_account
     <trim prefix="where" suffixOverrides="and">
@@ -102,6 +103,9 @@
     <trim prefix="where" suffixOverrides="and">
       <if test="arrearagesAmount != null">
         ((a.payableAmount - ifnull(b.paidAmount, 0)) >= #{arrearagesAmount}) and
+      </if>
+      <if test="surplusArrearagesDays != null">
+        (surplusArrearagesDays &lt;= #{surplusArrearagesDays}) and
       </if>
     </trim>
     order by a.creationDate desc

@@ -27,12 +27,14 @@ public interface PayableAccountService {
      * @param pemSupplierId
      * @param sysClinicId
      * @param arrearagesAmount
+     * @param surplusArrearagesDays
      * @return
      */
     List<Map<String, Object>> getGroupListByCriteria(String[] creationDate,
                                                      Integer pemSupplierId,
                                                      Integer sysClinicId,
-                                                     BigDecimal arrearagesAmount);
+                                                     BigDecimal arrearagesAmount,
+                                                     Integer surplusArrearagesDays);
 
     /**
      * 根据 lsh 获取对应的应付账款明细

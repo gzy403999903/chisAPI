@@ -47,25 +47,31 @@ public class MessagerServiceImpl implements MessagerService {
     @Override
     public List<Messager> getMessageList() {
         List<Messager> messageList = new ArrayList<>();
+        // 添加近效期消息
         this.countExpiryDateList(messageList);
 
         return messageList;
     }
 
     /******************************************************************************************************************
-        "id"	"name"
-        "1"	    "系统维护"
-        "2"	    "总经办"
-        "3"	    "财务"
-        "4"	    "采购"
-        "5"	    "运营"
-        "6"	    "质管"
-        "7"	    "店长"
-        "8"	    "全科医生"
-        "9"	    "西医"
-        "10"	"中医"
-        "11"	"理疗师"
-        "12"	"护士"
+     "id"	"name"
+     "1"	"系统维护"
+     "2"	"总经办"
+     "3"	"财务总监"
+     "4"	"采购"
+     "5"	"运营"
+     "6"	"质管"
+     "7"	"店长"
+     "8"	"中西医结合"
+     "9"	"临床"
+     "10"	"中医"
+     "11"	"理疗师"
+     "12"	"护士"
+     "13"	"营业员"
+     "14"	"收银员"
+     "16"	"核算"
+     "17"	"出纳"
+     "18"	"综合"
      ******************************************************************************************************************/
 
     /**
@@ -75,7 +81,7 @@ public class MessagerServiceImpl implements MessagerService {
     private void countExpiryDateList(List<Messager> messageList) {
         int sums = 0;
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
-        int[] targetRoleIds = new int[]{7 ,12}; // 设置门店返回消息的分组ID
+        int[] targetRoleIds = new int[]{7, 12, 13}; // 设置门店返回消息的分组ID
         for (int targetRoleId : targetRoleIds) { // 判断该用户是否属于该分组
             if (user.getSysRoleId() == targetRoleId) {
                 sums = inventoryReportService.countExpiryDateListByCriteria(user.getSysClinicId(), 90);
@@ -83,7 +89,7 @@ public class MessagerServiceImpl implements MessagerService {
             }
         }
 
-        targetRoleIds = new int[]{5 ,6}; // 设置总部返回消息的分组ID
+        targetRoleIds = new int[]{2, 5 ,6}; // 设置总部返回消息的分组ID
         for (int targetRoleId : targetRoleIds) { // 判断该用户是否属于该分组
             if (user.getSysRoleId() == targetRoleId) {
                 sums = inventoryReportService.countExpiryDateListByCriteria(null, 90);

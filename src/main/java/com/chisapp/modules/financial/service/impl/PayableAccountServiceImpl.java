@@ -49,8 +49,14 @@ public class PayableAccountServiceImpl implements PayableAccountService {
     }
 
     @Override
-    public List<Map<String, Object>> getGroupListByCriteria(String[] creationDate, Integer pemSupplierId, Integer sysClinicId, BigDecimal arrearagesAmount) {
-        return payableAccountMapper.selectGroupListByCriteria(creationDate, pemSupplierId, sysClinicId, arrearagesAmount);
+    public List<Map<String, Object>> getGroupListByCriteria(String[] creationDate,
+                                                            Integer pemSupplierId,
+                                                            Integer sysClinicId,
+                                                            BigDecimal arrearagesAmount,
+                                                            Integer surplusArrearagesDays) {
+
+        return payableAccountMapper.selectGroupListByCriteria(
+                creationDate, pemSupplierId, sysClinicId, arrearagesAmount, surplusArrearagesDays);
     }
 
     @Override

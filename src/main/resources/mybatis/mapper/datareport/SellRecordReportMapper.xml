@@ -235,7 +235,7 @@
       ROUND(IFNULL(b.rxs, 0), 2) AS rxs,
       ROUND(IFNULL(a.yxs, 0), 2) AS yxs,
       d.yzb,
-      ROUND((IFNULL(a.yxs, 0) / d.yzb * 100), 2) as wcl,
+      (case when d.yzb > 0 then ROUND((IFNULL(a.yxs, 0) / d.yzb * 100), 2) else 100 end) as wcl,
       a.sys_clinic_id AS sysClinicId,
       c.name AS sysClinicName
     FROM (
@@ -273,10 +273,18 @@
       select
         id,
         (case #{queryMonth}
-         when 1 then IFNULL(january, 0) when 2 then IFNULL(february, 0) when 3 then IFNULL(march, 0)
-         when 4 then IFNULL(april, 0) when 5 then IFNULL(may, 0) when 6 then IFNULL(june, 0)
-         when 7 then IFNULL(july, 0) when 8 then IFNULL(august, 0) when 9 then IFNULL(september, 0)
-         when 10 then IFNULL(october, 0) when 11 then IFNULL(november, 0) when 12 then IFNULL(december, 0)
+         when 1 then IFNULL(january, 0)
+         when 2 then IFNULL(february, 0)
+         when 3 then IFNULL(march, 0)
+         when 4 then IFNULL(april, 0)
+         when 5 then IFNULL(may, 0)
+         when 6 then IFNULL(june, 0)
+         when 7 then IFNULL(july, 0)
+         when 8 then IFNULL(august, 0)
+         when 9 then IFNULL(september, 0)
+         when 10 then IFNULL(october, 0)
+         when 11 then IFNULL(november, 0)
+         when 12 then IFNULL(december, 0)
          end) as yzb
       from sys_clinic_sell_target
     ) d on a.sys_clinic_id = d.id
