@@ -403,6 +403,9 @@
         <if test="sysClinicId != null">
           (sys_clinic_id = #{sysClinicId}) and
         </if>
+        <if test="true">
+          (returned = 0) and
+        </if>
       </trim>
       GROUP BY sys_clinic_id
       ORDER BY sys_clinic_id
