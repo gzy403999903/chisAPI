@@ -200,12 +200,24 @@ public class ShiroConfig {
     }
 
     /**
-     * setUsePrefix(false)用于解决一个奇怪的bug。在引入spring aop的情况下。
-     * 在@Controller注解的类的方法中加入@RequiresRole注解，会导致该方法无法映射请求，导致返回404。
-     * 加入这项配置能解决这个bug
+     * 注解权限
+     * 解决使用注解控制权限不起作用的问题, 注解要标注到 @Controller
+     * 如果标注到 @service, 当和 @Transactional 标注同一个方法时, 会报错,
+     * 因为该方法已经为代理对象, 该方法不能是代理的代理。
+     */
+    /*
+    @Bean
+    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
+        return new DefaultAdvisorAutoProxyCreator();
+    }
+    */
+
+    /**
+     * filterChainDefinitionMap 权限
+     * setUsePrefix(true) 解决在使用非注解权限时报错的问题
      */
     @Bean
-    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
+    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
         DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
         creator.setUsePrefix(true);
         return creator;

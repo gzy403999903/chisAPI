@@ -113,11 +113,12 @@ public class InventorySubtractHandler {
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
             @RequestParam(required = false) Integer sysClinicId,
             @RequestParam(required = false) Byte approveState,
+            @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) String pemSupplierName){
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventorySubtractService.getClinicLshGroupListByCriteria(creationDate, sysClinicId, approveState, pemSupplierName);
+        List<Map<String, Object>> pageList = inventorySubtractService.getClinicLshGroupListByCriteria(
+                creationDate, sysClinicId, approveState, sysClinicName, pemSupplierName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -140,8 +141,8 @@ public class InventorySubtractHandler {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventorySubtractService.getClinicLshGroupListByCriteria(creationDate, user.getSysClinicId(), approveState, pemSupplierName);
+        List<Map<String, Object>> pageList = inventorySubtractService.getClinicLshGroupListByCriteria(
+                creationDate, user.getSysClinicId(), approveState, null, pemSupplierName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

@@ -175,9 +175,12 @@ public class InventorySubtractServiceImpl implements InventorySubtractService {
     }
 
     @Override
-    public List<Map<String, Object>> getClinicLshGroupListByCriteria(
-            String[] creationDate, Integer sysClinicId, Byte approveState, String pemSupplierName) {
-        return inventorySubtractMapper.selectClinicLshGroupListByCriteria(creationDate, sysClinicId, approveState, pemSupplierName);
+    public List<Map<String, Object>> getClinicLshGroupListByCriteria(String[] creationDate,
+                                                                     Integer sysClinicId,
+                                                                     Byte approveState,
+                                                                     String sysClinicName,
+                                                                     String pemSupplierName) {
+        return inventorySubtractMapper.selectClinicLshGroupListByCriteria(creationDate, sysClinicId, approveState, sysClinicName, pemSupplierName);
     }
 
     @Override

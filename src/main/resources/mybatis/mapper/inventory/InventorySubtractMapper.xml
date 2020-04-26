@@ -144,6 +144,9 @@
       <if test="approveState != null">
         (approveState = #{approveState}) and
       </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
       <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
         (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
       </if>

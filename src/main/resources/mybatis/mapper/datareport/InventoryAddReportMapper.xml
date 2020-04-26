@@ -58,10 +58,10 @@
     LEFT JOIN pem_supplier d ON a.`pem_supplier_id` = d.`id`
     <trim prefix="where" suffixOverrides="and">
       <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
-        (b.name like '${sysClinicName}%' or b.code like '${sysClinicName}%') and
+        (c.name like '${sysClinicName}%' or c.code like '${sysClinicName}%') and
       </if>
       <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
-        (c.name like '${pemSupplierName}%' or c.code like '${pemSupplierName}%') and
+        (d.name like '${pemSupplierName}%' or d.code like '${pemSupplierName}%') and
       </if>
     </trim>
     ORDER BY a.sys_clinic_id, a.pem_supplier_id

@@ -50,12 +50,14 @@ public interface InventorySubtractService {
      * @param creationDate
      * @param sysClinicId
      * @param approveState
+     * @param sysClinicName
      * @param pemSupplierName
      * @return
      */
     List<Map<String, Object>> getClinicLshGroupListByCriteria(String[] creationDate,
                                                               Integer sysClinicId,
                                                               Byte approveState,
+                                                              String sysClinicName,
                                                               String pemSupplierName);
 
     /**
