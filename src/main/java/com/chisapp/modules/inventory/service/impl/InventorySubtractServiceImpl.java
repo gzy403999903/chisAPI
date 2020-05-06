@@ -170,8 +170,14 @@ public class InventorySubtractServiceImpl implements InventorySubtractService {
     }
 
     @Override
-    public List<Map<String, Object>> getClinicListByCriteria(String[] creationDate, Integer sysClinicId, Byte approveState, String pemSupplierName) {
-        return inventorySubtractMapper.selectClinicListByCriteria(creationDate, sysClinicId, approveState, pemSupplierName);
+    public List<Map<String, Object>> getClinicListByCriteria(String[] creationDate,
+                                                             Integer sysClinicId,
+                                                             Byte approveState,
+                                                             String pemSupplierName,
+                                                             String gsmGoodsOid,
+                                                             String gsmGoodsName) {
+        return inventorySubtractMapper.selectClinicListByCriteria(
+                creationDate, sysClinicId, approveState, pemSupplierName, gsmGoodsOid, gsmGoodsName);
     }
 
     @Override

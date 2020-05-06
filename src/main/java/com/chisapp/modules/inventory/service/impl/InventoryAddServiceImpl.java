@@ -220,8 +220,11 @@ public class InventoryAddServiceImpl implements InventoryAddService {
                                                              Integer sysClinicId,
                                                              Byte approveState,
                                                              Byte actionType,
-                                                             String pemSupplierName) {
-        return inventoryAddMapper.selectClinicListByCriteria(creationDate, sysClinicId, approveState, actionType, pemSupplierName);
+                                                             String pemSupplierName,
+                                                             String gsmGoodsOid,
+                                                             String gsmGoodsName) {
+        return inventoryAddMapper.selectClinicListByCriteria(
+                creationDate, sysClinicId, approveState, actionType, pemSupplierName, gsmGoodsOid, gsmGoodsName);
     }
 
     @Override

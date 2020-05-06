@@ -122,6 +122,12 @@
       <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
         (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
       </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid like '${gsmGoodsOid}%') and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
     </trim>
     order by creationDate desc, lsh desc, gsmGoodsOid
   </select>

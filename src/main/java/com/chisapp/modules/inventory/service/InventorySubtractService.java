@@ -38,12 +38,16 @@ public interface InventorySubtractService {
      * @param sysClinicId
      * @param approveState
      * @param pemSupplierName
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
      * @return
      */
     List<Map<String, Object>> getClinicListByCriteria(String[] creationDate,
                                                       Integer sysClinicId,
                                                       Byte approveState,
-                                                      String pemSupplierName);
+                                                      String pemSupplierName,
+                                                      String gsmGoodsOid,
+                                                      String gsmGoodsName);
 
     /**
      * 查询机构退货汇总记录

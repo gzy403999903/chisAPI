@@ -45,13 +45,17 @@ public interface InventoryAddService {
      * @param approveState
      * @param actionType
      * @param pemSupplierName
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
      * @return
      */
     List<Map<String, Object>> getClinicListByCriteria(String[] creationDate,
                                                       Integer sysClinicId,
                                                       Byte approveState,
                                                       Byte actionType,
-                                                      String pemSupplierName);
+                                                      String pemSupplierName,
+                                                      String gsmGoodsOid,
+                                                      String gsmGoodsName);
 
     /**
      * 根据条件查询机构入库汇总记录

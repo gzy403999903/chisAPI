@@ -119,15 +119,17 @@ public class InventoryAddHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
             @RequestParam(required = false) Byte approveState,
-            @RequestParam(required = false) String pemSupplierName){
+            @RequestParam(required = false) String pemSupplierName,
+            @RequestParam(required = false) String gsmGoodsOid,
+            @RequestParam(required = false) String gsmGoodsName){
 
         // 获取创建人信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventoryAddService.getClinicListByCriteria(creationDate, user.getSysClinicId(), approveState,
-                        ActionTypeEnum.PURCHASE_PLAN_ADD.getIndex(), pemSupplierName);
+        List<Map<String, Object>> pageList = inventoryAddService.getClinicListByCriteria(
+                creationDate, user.getSysClinicId(), approveState, ActionTypeEnum.PURCHASE_PLAN_ADD.getIndex(),
+                pemSupplierName, gsmGoodsOid, gsmGoodsName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -147,15 +149,17 @@ public class InventoryAddHandler {
             @RequestParam(defaultValue="1") Integer pageSize,
             @RequestParam(value = "creationDate[]",required = false) String[] creationDate, // 创建日期
             @RequestParam(required = false) Byte approveState,
-            @RequestParam(required = false) String pemSupplierName){
+            @RequestParam(required = false) String pemSupplierName,
+            @RequestParam(required = false) String gsmGoodsOid,
+            @RequestParam(required = false) String gsmGoodsName){
 
         // 获取创建人信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventoryAddService.getClinicListByCriteria(creationDate, user.getSysClinicId(), approveState,
-                        ActionTypeEnum.PURCHASE_ALONE_ADD.getIndex(), pemSupplierName);
+        List<Map<String, Object>> pageList = inventoryAddService.getClinicListByCriteria(
+                creationDate, user.getSysClinicId(), approveState, ActionTypeEnum.PURCHASE_ALONE_ADD.getIndex(),
+                pemSupplierName, gsmGoodsOid, gsmGoodsName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }
@@ -181,8 +185,8 @@ public class InventoryAddHandler {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> pageList =
-                inventoryAddService.getClinicLshGroupListByCriteria(creationDate, user.getSysClinicId(), approveState, pemSupplierName);
+        List<Map<String, Object>> pageList = inventoryAddService.getClinicLshGroupListByCriteria(
+                creationDate, user.getSysClinicId(), approveState, pemSupplierName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

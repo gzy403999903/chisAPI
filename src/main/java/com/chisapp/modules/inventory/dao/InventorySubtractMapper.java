@@ -29,7 +29,9 @@ public interface InventorySubtractMapper {
     List<Map<String, Object>> selectClinicListByCriteria(@Param("creationDate") String[] creationDate,
                                                          @Param("sysClinicId") Integer sysClinicId,
                                                          @Param("approveState") Byte approveState,
-                                                         @Param("pemSupplierName") String pemSupplierName);
+                                                         @Param("pemSupplierName") String pemSupplierName,
+                                                         @Param("gsmGoodsOid") String gsmGoodsOid,
+                                                         @Param("gsmGoodsName") String gsmGoodsName);
 
     List<Map<String, Object>> selectClinicLshGroupListByCriteria(@Param("creationDate") String[] creationDate,
                                                                  @Param("sysClinicId") Integer sysClinicId,
