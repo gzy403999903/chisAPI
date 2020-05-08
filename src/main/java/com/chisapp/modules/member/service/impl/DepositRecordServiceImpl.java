@@ -189,6 +189,7 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         paymentRecord.setUnionpay(paymentRecord.getUnionpay().multiply(minus1)); // 银联(设置负数)
         paymentRecord.setAlipay(paymentRecord.getAlipay().multiply(minus1)); // 支付宝(设置负数)
         paymentRecord.setWechatpay(paymentRecord.getWechatpay().multiply(minus1)); // 微信(设置负数)
+        paymentRecord.setCreditpay(paymentRecord.getCreditpay().multiply(minus1)); // 信用卡(设置负数)
         paymentRecord.setSysPaymentWayAmount(paymentRecord.getSysPaymentWayAmount().multiply(minus1)); // 其他收费方式(设置负数)
         paymentRecord.setActualAmount(paymentRecord.getActualAmount().multiply(minus1)); // 实收金额(设置负数)
         paymentRecord.setDisparityAmount(paymentRecord.getDisparityAmount().multiply(minus1)); // 差额(设置负数)
