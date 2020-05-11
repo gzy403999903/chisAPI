@@ -69,13 +69,8 @@ public class DepositRecordServiceImpl implements DepositRecordService {
             throw new RuntimeException("获取会员类型失败");
         }
 
-        // 将收款记录 JSON 转成对象 并进行赋值
-        PaymentRecord paymentRecord = JSONUtils.parseJsonToObject(paymentRecordJson, new TypeReference<PaymentRecord>() {});
-        paymentRecord.setLsh(lsh); // 流水号
-        paymentRecord.setSysClinicId(user.getSysClinicId()); // 机构ID
-        paymentRecord.setCreatorId(user.getId()); // 创建人
-        paymentRecord.setCreationDate(new Date()); // 创建日期
-        this.paymentRecordService.save(paymentRecord); // 保存收款记录
+        // 解析收款记录
+        PaymentRecord paymentRecord = savePaymentRecord(paymentRecordJson, lsh, user);
 
         // 计算储值赠送金额
         BigDecimal zero = new BigDecimal("0");
@@ -108,6 +103,29 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         this.memberService.updateBalanceForDeposit(mrmMemberId, totalDepositAmount);
     }
 
+    /**
+     * 保存收款记录
+     * @param paymentRecordJson
+     * @param lsh
+     * @param user
+     * @return
+     */
+    private PaymentRecord savePaymentRecord(String paymentRecordJson, String lsh, User user) {
+        // 将收款记录 JSON 转成对象 并进行赋值
+        PaymentRecord paymentRecord = JSONUtils.parseJsonToObject(paymentRecordJson, new TypeReference<PaymentRecord>() {});
+        paymentRecord.setLsh(lsh); // 流水号
+        paymentRecord.setSysClinicId(user.getSysClinicId()); // 机构ID
+        paymentRecord.setCreatorId(user.getId()); // 创建人
+        paymentRecord.setCreationDate(new Date()); // 创建日期
+
+        if (paymentRecord.getMemberBalance().compareTo(new BigDecimal("0")) > 0) {
+            throw new RuntimeException("不能使用[会员卡]支付方式进行充值");
+        }
+        this.paymentRecordService.save(paymentRecord); // 保存收款记录
+
+        return paymentRecord;
+    }
+
     @Override
     public void saveForReturned(String lsh) {
         // 根据流水号获取对应的储值记录
@@ -117,9 +135,8 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         }
 
         for (int i = 0; i < depositRecordList.size(); i++) {
-            DepositRecord dr = depositRecordList.get(i);
-            if (i > 1 || dr.getReturned()) {
-                throw new RuntimeException("该储值可能已被退回");
+            if (i > 1) {
+                throw new RuntimeException("记录重复");
             }
         }
 
@@ -128,8 +145,7 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         depositRecord.setReturned(true); // 修改其为已经退回状态
         this.depositRecordMapper.updateByPrimaryKey(depositRecord);
 
-        // 获取用户和会员信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        // 获取会员信息
         Integer mrmMemberId = depositRecord.getMrmMemberId();
         Member member = this.memberService.getById(mrmMemberId);
         if (member == null) {
@@ -146,6 +162,8 @@ public class DepositRecordServiceImpl implements DepositRecordService {
             throw new RuntimeException("会员余额不足");
         }
 
+        // 获取操作人信息
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
         // 设置退回记录属性
         BigDecimal minus1 = new BigDecimal("-1");
         depositRecord.setId(null); // 将 ID 重置为 null
@@ -170,7 +188,7 @@ public class DepositRecordServiceImpl implements DepositRecordService {
             throw new RuntimeException("获取储值的付款方式失败");
         }
         if (paymentRecordList.size() > 1) {
-            throw new RuntimeException("该储值可能已被退回");
+            throw new RuntimeException("记录重复");
         }
 
         // 获取操作人信息
@@ -178,21 +196,24 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         // 获取付款记录 并设置退回记录属性
         PaymentRecord paymentRecord = paymentRecordList.get(0);
         if (user.getSysClinicId().intValue() != paymentRecord.getSysClinicId().intValue()) {
-            throw new RuntimeException("操作人所在机构与会员储值机构不一致");
+            throw new RuntimeException("操作人所在机构与储值机构不一致");
         }
 
-        // 设置退款记录属性
+        // 设置记录属性 并将收费方式设置对应的负数
         BigDecimal minus1 = new BigDecimal("-1");
         paymentRecord.setId(null); // 将 ID 重置为 null
-        paymentRecord.setCash(paymentRecord.getCash().multiply(minus1)); // 现金(设置负数)
+        paymentRecord.setCash(paymentRecord.getCash().multiply(minus1)); // 现金
+        paymentRecord.setUnionpay(paymentRecord.getUnionpay().multiply(minus1)); // 银联
+        paymentRecord.setWechatpay(paymentRecord.getWechatpay().multiply(minus1)); // 微信
+        paymentRecord.setAlipay(paymentRecord.getAlipay().multiply(minus1)); // 支付宝
+        paymentRecord.setCmedicare(paymentRecord.getCmedicare().multiply(minus1)); // 市医保
+        paymentRecord.setPmedicare(paymentRecord.getPmedicare().multiply(minus1)); // 省医保
         // paymentRecord.setMemberBalance(); // 不允许使用会员卡余额
-        paymentRecord.setUnionpay(paymentRecord.getUnionpay().multiply(minus1)); // 银联(设置负数)
-        paymentRecord.setAlipay(paymentRecord.getAlipay().multiply(minus1)); // 支付宝(设置负数)
-        paymentRecord.setWechatpay(paymentRecord.getWechatpay().multiply(minus1)); // 微信(设置负数)
-        paymentRecord.setCreditpay(paymentRecord.getCreditpay().multiply(minus1)); // 信用卡(设置负数)
-        paymentRecord.setSysPaymentWayAmount(paymentRecord.getSysPaymentWayAmount().multiply(minus1)); // 其他收费方式(设置负数)
-        paymentRecord.setActualAmount(paymentRecord.getActualAmount().multiply(minus1)); // 实收金额(设置负数)
-        paymentRecord.setDisparityAmount(paymentRecord.getDisparityAmount().multiply(minus1)); // 差额(设置负数)
+        paymentRecord.setCreditpay(paymentRecord.getCreditpay().multiply(minus1)); // 信用卡
+        paymentRecord.setCoupon(paymentRecord.getCoupon().multiply(minus1)); // 抵扣券
+        paymentRecord.setSysPaymentWayAmount(paymentRecord.getSysPaymentWayAmount().multiply(minus1)); // 其他收费方式
+        paymentRecord.setActualAmount(paymentRecord.getActualAmount().multiply(minus1)); // 实收金额
+        paymentRecord.setDisparityAmount(paymentRecord.getDisparityAmount().multiply(minus1)); // 差额
         paymentRecord.setSysClinicId(user.getSysClinicId()); // 机构ID
         paymentRecord.setCreatorId(user.getId()); // 操作人ID
         paymentRecord.setCreationDate(new Date()); // 操作日期

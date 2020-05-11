@@ -28,7 +28,8 @@ public interface PaymentRecordService {
     List<PaymentRecord> getByLsh(String lsh);
 
     /**
-     * 根据流水号获取机构的汇总付款记录
+     * 根据流水号获取机构的汇总付款记录 (收费打印小票使用)
+     * [可能有退费 所以要进行 group 然后 sum 操作]
      * @param lsh
      * @return
      */

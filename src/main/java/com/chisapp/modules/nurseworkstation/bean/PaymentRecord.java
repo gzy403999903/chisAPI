@@ -21,11 +21,11 @@ public class PaymentRecord implements Serializable {
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal memberBalance = new BigDecimal("0");
+    private BigDecimal unionpay = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal unionpay = new BigDecimal("0");
+    private BigDecimal wechatpay = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
@@ -33,7 +33,19 @@ public class PaymentRecord implements Serializable {
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal wechatpay = new BigDecimal("0");
+    private BigDecimal cmedicare = new BigDecimal("0");
+
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
+    private BigDecimal pmedicare = new BigDecimal("0");
+
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
+    private BigDecimal memberBalance = new BigDecimal("0");
+
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
+    private BigDecimal coupon = new BigDecimal("0");
 
     @Digits(integer = 8, fraction = 2)
     @NotNull
@@ -63,8 +75,7 @@ public class PaymentRecord implements Serializable {
     /*** 不保存 运算需求的字段 ******************************************************************************************/
     @Digits(integer = 8, fraction = 2)
     @NotNull
-    private BigDecimal cashBackAmount;
-
+    private BigDecimal cashBackAmount = new BigDecimal("0");
 
     public Integer getId() {
         return id;
@@ -90,20 +101,20 @@ public class PaymentRecord implements Serializable {
         this.cash = cash;
     }
 
-    public BigDecimal getMemberBalance() {
-        return memberBalance;
-    }
-
-    public void setMemberBalance(BigDecimal memberBalance) {
-        this.memberBalance = memberBalance;
-    }
-
     public BigDecimal getUnionpay() {
         return unionpay;
     }
 
     public void setUnionpay(BigDecimal unionpay) {
         this.unionpay = unionpay;
+    }
+
+    public BigDecimal getWechatpay() {
+        return wechatpay;
+    }
+
+    public void setWechatpay(BigDecimal wechatpay) {
+        this.wechatpay = wechatpay;
     }
 
     public BigDecimal getAlipay() {
@@ -114,12 +125,36 @@ public class PaymentRecord implements Serializable {
         this.alipay = alipay;
     }
 
-    public BigDecimal getWechatpay() {
-        return wechatpay;
+    public BigDecimal getCmedicare() {
+        return cmedicare;
     }
 
-    public void setWechatpay(BigDecimal wechatpay) {
-        this.wechatpay = wechatpay;
+    public void setCmedicare(BigDecimal cmedicare) {
+        this.cmedicare = cmedicare;
+    }
+
+    public BigDecimal getPmedicare() {
+        return pmedicare;
+    }
+
+    public void setPmedicare(BigDecimal pmedicare) {
+        this.pmedicare = pmedicare;
+    }
+
+    public BigDecimal getMemberBalance() {
+        return memberBalance;
+    }
+
+    public void setMemberBalance(BigDecimal memberBalance) {
+        this.memberBalance = memberBalance;
+    }
+
+    public BigDecimal getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(BigDecimal coupon) {
+        this.coupon = coupon;
     }
 
     public BigDecimal getCreditpay() {
