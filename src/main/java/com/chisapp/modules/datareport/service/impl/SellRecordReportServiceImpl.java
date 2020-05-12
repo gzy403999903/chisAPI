@@ -208,6 +208,7 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         titleMap.put("qtxmsx", "其他项目");
         titleMap.put("tcxshj", "提成销售合计");
         titleMap.put("xshj", "全部销售合计");
+        titleMap.put("passengerFlow", "客流 / 人次");
         titleMap.put("sysClinicName", "门诊名称");
 
         return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
