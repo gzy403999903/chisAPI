@@ -6,7 +6,7 @@
   <select id="selectMemberAnalysisByCriteria" resultType="map">
     SELECT
       a.id, a.oid, a.name, a.code, a.`genderName`, a.`idCardNo`, a.`age`, a.`phone`, a.`birth`, b.birthSurplusDays, a.`balance`,
-      a.sysClinicId, a.`sysClinicName`, a.sysClinicCode,
+      a.sysClinicId, a.`sysClinicName`, a.sysClinicCode, a.creationDate,
       IFNULL(c.czpc, 0) AS czpc,
       ROUND(IFNULL(c.czhj,0),2) AS czhj,
       IFNULL(c.max_cz,0) AS maxCz,
