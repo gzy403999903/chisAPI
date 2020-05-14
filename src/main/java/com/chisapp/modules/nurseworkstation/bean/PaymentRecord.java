@@ -72,10 +72,11 @@ public class PaymentRecord implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date creationDate;
 
-    /*** 不保存 运算需求的字段 ******************************************************************************************/
+    /* -- 不保存 运算需求的字段 --------------------------------------------------------------------------------------- */
     @Digits(integer = 8, fraction = 2)
     @NotNull
     private BigDecimal cashBackAmount = new BigDecimal("0");
+    /* -------------------------------------------------------------------------------------------------------------- */
 
     public Integer getId() {
         return id;

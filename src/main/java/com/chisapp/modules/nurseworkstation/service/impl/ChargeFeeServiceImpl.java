@@ -247,6 +247,38 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
             }
         }
 
+        // 判断退费是否合法
+        BigDecimal zero = new BigDecimal("0");
+        // 如果实收金额为负数 则说明为退费操作
+        if (paymentRecord.getActualAmount().compareTo(zero) < 0) {
+            // 获取所有付款(退费)的合计
+            Map<String, Object> paymentRecordMap = paymentRecordService.getClinicGroupByLsh(user.getSysClinicId(), lsh);
+            PaymentRecord groupPaymentRecord = JSONUtils.parseJsonToObject(JSONUtils.parseObjectToJson(paymentRecordMap), new TypeReference<PaymentRecord>() {});
+            if (groupPaymentRecord == null) {
+                throw new RuntimeException("获取付款记录失败");
+            }
+
+            // 判断历史支付和退费记录的合计实收金额是否足够可退
+            BigDecimal totalActualAmount = groupPaymentRecord.getActualAmount();
+            BigDecimal returnedActualAmount = paymentRecord.getActualAmount();
+            if ((totalActualAmount.compareTo(zero) <= 0) || totalActualAmount.subtract(returnedActualAmount.abs()).compareTo(zero) < 0) {
+                throw new RuntimeException("可退金额不足");
+            }
+
+            // 判断是否需要退 抵扣券
+            BigDecimal payCoupon = groupPaymentRecord.getCoupon(); // 支付记录的抵扣券金额
+            BigDecimal returnedCoupon = paymentRecord.getCoupon().abs(); // 退费记录的抵扣券金额 取绝对值
+
+            // 如果支付时使用了抵扣券 退费时必须退对应的金额
+            if (payCoupon.compareTo(zero) > 0 && payCoupon.compareTo(returnedCoupon) != 0) {
+                throw new RuntimeException("退费必须包含支付时使用的 [抵扣券" + payCoupon + "元]");
+            }
+            // 如果支付时未使用抵扣券 退费时不能向抵扣券进行退费
+            if (payCoupon.compareTo(zero) == 0 && payCoupon.compareTo(returnedCoupon) != 0) {
+                throw new RuntimeException("退费不能包含支付时未使用的抵扣券");
+            }
+        }
+
         // 赋值部分属性
         BigDecimal cash = paymentRecord.getCash().subtract(paymentRecord.getCashBackAmount()); // 计算要保存的实收现金 = 实收现金 - 找零现金
 

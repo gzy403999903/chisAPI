@@ -134,10 +134,8 @@ public class DepositRecordServiceImpl implements DepositRecordService {
             throw new RuntimeException("获取储值记录失败");
         }
 
-        for (int i = 0; i < depositRecordList.size(); i++) {
-            if (i > 1) {
-                throw new RuntimeException("记录重复");
-            }
+        if (depositRecordList.size() > 1) {
+            throw new RuntimeException("记录重复");
         }
 
         // 更新该储值记录为退回状态
@@ -187,7 +185,7 @@ public class DepositRecordServiceImpl implements DepositRecordService {
         if (paymentRecordList.isEmpty()) {
             throw new RuntimeException("获取储值的付款方式失败");
         }
-        if (paymentRecordList.size() > 1) {
+        if (paymentRecordList.size() > 1) { // 储值退费只能有一次 并且全额退回 多条退费记录需抛出异常
             throw new RuntimeException("记录重复");
         }
 
