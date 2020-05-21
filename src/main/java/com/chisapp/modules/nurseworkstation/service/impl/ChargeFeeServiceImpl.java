@@ -3,6 +3,7 @@ package com.chisapp.modules.nurseworkstation.service.impl;
 import com.chisapp.common.enums.GoodsTypeEnum;
 import com.chisapp.common.enums.ItemTypeEnum;
 import com.chisapp.common.enums.SellTypeEnum;
+import com.chisapp.common.utils.DateUtils;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.common.utils.KeyUtils;
 import com.chisapp.modules.datareport.bean.SellRecord;
@@ -12,6 +13,7 @@ import com.chisapp.modules.doctorworkstation.bean.SellPrescription;
 import com.chisapp.modules.doctorworkstation.service.ClinicalHistoryService;
 import com.chisapp.modules.doctorworkstation.service.PerformItemService;
 import com.chisapp.modules.doctorworkstation.service.SellPrescriptionService;
+import com.chisapp.modules.financial.service.WorkGroupCloseService;
 import com.chisapp.modules.inventory.bean.Inventory;
 import com.chisapp.modules.inventory.service.InventoryService;
 import com.chisapp.modules.member.bean.ExpendRecord;
@@ -43,6 +45,9 @@ import java.util.*;
  */
 @Service
 public class ChargeFeeServiceImpl implements ChargeFeeService {
+    @Autowired
+    private WorkGroupCloseService workGroupCloseService;
+
     private PaymentRecordService paymentRecordService;
     @Autowired
     public void setPaymentRecordService(PaymentRecordService paymentRecordService) {
@@ -109,7 +114,7 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
         this.registrationRecordService = registrationRecordService;
     }
 
-    /*----------------------------------------------------------------------------------------------------------------*/
+    /*------- 以下为主调方法 ------------------------------------------------------------------------------------------*/
 
     @Override
     public String saveForPrescription(Integer mrmMemberId, String paymentRecordJson, String sellRecordJson) {
@@ -120,6 +125,10 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
         // 初始化用户信息、流水号、会员信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String lsh = KeyUtils.getLSH(user.getId());
+        // 检查是否登记班次
+        if (!this.workGroupCloseService.checkRegistration(DateUtils.parseToShort(new Date()), user)) {
+            throw new RuntimeException("未登记班次, 不能执行该操作");
+        }
         Member member = this.memberService.getById(mrmMemberId);
 
         // 1保存付款记录
@@ -159,6 +168,11 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String lsh = KeyUtils.getLSH(user.getId());
 
+        // 检查是否登记班次
+        if (!this.workGroupCloseService.checkRegistration(DateUtils.parseToShort(new Date()), user)) {
+            throw new RuntimeException("未登记班次, 不能执行该操作");
+        }
+
         // 获取会员信息
         Member member = null;
         if (mrmMemberId != null) {
@@ -190,6 +204,12 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
 
         // 初始化用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
+
+        // 检查是否登记班次
+        if (!this.workGroupCloseService.checkRegistration(DateUtils.parseToShort(new Date()), user)) {
+            throw new RuntimeException("未登记班次, 不能执行该操作");
+        }
+
         // 获取会员信息
         Member member = null;
         if (mrmMemberId != null) {
@@ -229,6 +249,8 @@ public class ChargeFeeServiceImpl implements ChargeFeeService {
         this.updateInventoryQuantity(sellRecordList);
 
     }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
      * 保存付款记录

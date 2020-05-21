@@ -36,7 +36,7 @@
 
 		<!-- 配置javaBean 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<javaModelGenerator
-			targetPackage="com.chisapp.modules.nurseworkstation.bean"
+			targetPackage="com.chisapp.modules.financial.bean"
 			targetProject=".\src\main\java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
@@ -44,7 +44,7 @@
 
 		<!-- 配置 Mapper 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<sqlMapGenerator
-			targetPackage="mybatis.mapper.nurseworkstation"
+			targetPackage="mybatis.mapper.financial"
 			targetProject=".\src\main\resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
@@ -52,14 +52,14 @@
 		<!-- 配置 dao 生成位置 --> <!-- ↓↓↓↓↓ -->
 		<javaClientGenerator
 			type="XMLMAPPER"
-			targetPackage="com.chisapp.modules.nurseworkstation.dao"
+			targetPackage="com.chisapp.modules.financial.dao"
 			targetProject=".\src\main\java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
 		<!-- 配置逆向工程的数据库表 -->
-		<table tableName="nwt_payment_record"
-			   domainObjectName="PaymentRecord"/>
+		<table tableName="flm_work_group_close"
+			   domainObjectName="WorkGroupClose"/>
 
 	</context>
 </generatorConfiguration>

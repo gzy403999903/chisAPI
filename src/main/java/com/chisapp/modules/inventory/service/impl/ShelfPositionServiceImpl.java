@@ -30,6 +30,7 @@ public class ShelfPositionServiceImpl implements ShelfPositionService {
 
     /* -------------------------------------------------------------------------------------------------------------- */
 
+    @CacheEvict(key = "#shelfPosition.sysClinicId")
     @Override
     public void save(ShelfPosition shelfPosition) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();  // 获取操作人信息

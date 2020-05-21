@@ -145,6 +145,15 @@
             <version>4.5.5</version>
         </dependency>
 
+        <!-- 引入 aspects 切面, 用于 service 内部方法调用可支持缓存 -->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>5.0.7.RELEASE</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

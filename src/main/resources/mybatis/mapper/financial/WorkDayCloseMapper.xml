@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.financial.dao.WorkDayCloseMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.financial.bean.WorkDayClose">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="logic_date" jdbcType="DATE" property="logicDate" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="operate_date" jdbcType="TIMESTAMP" property="operateDate" />
+    <result column="close_state" jdbcType="BIT" property="closeState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from flm_work_day_close
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.financial.bean.WorkDayClose">
+    insert into flm_work_day_close (id, logic_date, sys_clinic_id,
+      operator_id, operate_date, close_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{logicDate,jdbcType=DATE}, #{sysClinicId,jdbcType=INTEGER},
+      #{operatorId,jdbcType=INTEGER}, #{operateDate,jdbcType=TIMESTAMP}, #{closeState,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.financial.bean.WorkDayClose">
+    update flm_work_day_close
+    set logic_date = #{logicDate,jdbcType=DATE},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      operate_date = #{operateDate,jdbcType=TIMESTAMP},
+      close_state = #{closeState,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, logic_date, sys_clinic_id, operator_id, operate_date, close_state
+    from flm_work_day_close
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, logic_date, sys_clinic_id, operator_id, operate_date, close_state
+    from flm_work_day_close
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByLogicDateAndSysClinicId" resultMap="BaseResultMap">
+    select *
+    from flm_work_day_close
+    where
+      (DATE_FORMAT(logic_date, '%Y-%m-%d') = DATE_FORMAT(#{logicDate}, '%Y-%m-%d')) and
+      (sys_clinic_id = #{sysClinicId})
+  </select>
+
+  <select id="selectUnClosedByLogicDateAndSysClinicId" resultMap="BaseResultMap">
+    select *
+    from flm_work_day_close
+    where
+      (DATE_FORMAT(logic_date, '%Y-%m-%d') between DATE_FORMAT(#{logicDate[0]}, '%Y-%m-%d') and DATE_FORMAT(#{logicDate[1]}, '%Y-%m-%d')) and
+      (sys_clinic_id = #{sysClinicId}) and
+      (close_state is false )
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_flm_work_day_close
+    <trim prefix="where" suffixOverrides="and">
+      <if test="logicDate != null &amp;&amp; logicDate.length == 2">
+        (logicDate between #{logicDate[0]} and #{logicDate[1]}) and
+      </if>
+      <if test="sysClinicId != null">
+        (sysClinicId = #{sysClinicId}) and
+      </if>
+      <if test="closeState != null">
+        (closeState = #{closeState}) and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+
+</mapper>

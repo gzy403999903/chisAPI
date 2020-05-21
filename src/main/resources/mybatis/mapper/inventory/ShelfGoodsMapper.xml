@@ -55,26 +55,55 @@
 
 
   <select id="selectClinicListByCriteria" resultType="map">
-    select *
-    from view_iym_shelf_goods
+    select
+      `a`.`id`                    AS `gsmGoodsId`,
+      `a`.`gsmGoodsTypeId`        AS `gsmGoodsTypeId`,
+      `a`.`gsmGoodsTypeName`      AS `gsmGoodsTypeName`,
+      `a`.`oid`                   AS `gsmGoodsOid`,
+      `a`.`name`                  AS `gsmGoodsName`,
+      `a`.`code`                  AS `gsmGoodsCode`,
+      `a`.`specs`                 AS `specs`,
+      `a`.`goodsUnitsId`          AS `goodsUnitsId`,
+      `a`.`goodsUnitsName`        AS `goodsUnitsName`,
+      `a`.`goodsClassifyId`       AS `goodsClassifyId`,
+      `a`.`goodsClassifyName`     AS `goodsClassifyName`,
+      `a`.`manufacturerId`        AS `manufacturerId`,
+      `a`.`manufacturerName`      AS `manufacturerName`,
+      `a`.`originId`              AS `originId`,
+      `a`.`originName`            AS `originName`,
+      `b`.`id`,
+      `b`.`iymShelfPositionId`,
+      `b`.`iymShelfPositionName`,
+      `b`.`iymShelfPositionCode`,
+      IFNULL(`b`.`maxQuantity`,0) AS `maxQuantity`,
+      IFNULL(`b`.`maxQuantity`,0) AS `minQuantity`,
+      `b`.`sysClinicId`,
+      `b`.`sysClinicName`
+    from view_gsm_goods a
+    left join (
+      select *
+      from view_iym_shelf_goods
     <trim prefix="where" suffixOverrides="and">
       <if test="sysClinicId != null">
-        (sysClinicId = #{sysClinicId} or sysClinicId is null) and
-      </if>
-      <if test="gsmGoodsTypeId != null">
-        (gsmGoodsTypeId = #{gsmGoodsTypeId}) and
-      </if>
-      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
-        (gsmGoodsOid like '${gsmGoodsOid}%') and
-      </if>
-      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
-        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+        (sysClinicId = #{sysClinicId}) and
       </if>
       <if test="iymShelfPositionName != null &amp;&amp; iymShelfPositionName.trim() != ''">
         (iymShelfPositionName like '${iymShelfPositionName}%' or iymShelfPositionCode like '${iymShelfPositionName}%') and
       </if>
     </trim>
-    order by gsmGoodsTypeId, gsmGoodsOid
+    ) b on a.id = b.gsmGoodsId
+    <trim prefix="where" suffixOverrides="and">
+      <if test="gsmGoodsTypeId != null">
+        (a.gsmGoodsTypeId = #{gsmGoodsTypeId}) and
+      </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (a.oid like '${gsmGoodsOid}%') and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (a.name like '${gsmGoodsName}%' or a.code like '${gsmGoodsName}%') and
+      </if>
+    </trim>
+    order by a.gsmGoodsTypeId, a.oid
   </select>
 
 

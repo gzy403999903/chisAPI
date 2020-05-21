@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.financial.dao.WorkGroupCloseMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.financial.bean.WorkGroupClose">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="logic_date" jdbcType="DATE" property="logicDate" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="flm_work_group_id" jdbcType="INTEGER" property="flmWorkGroupId" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="cash" jdbcType="DECIMAL" property="cash" />
+    <result column="unionpay" jdbcType="DECIMAL" property="unionpay" />
+    <result column="wechatpay" jdbcType="DECIMAL" property="wechatpay" />
+    <result column="alipay" jdbcType="DECIMAL" property="alipay" />
+    <result column="cmedicare" jdbcType="DECIMAL" property="cmedicare" />
+    <result column="pmedicare" jdbcType="DECIMAL" property="pmedicare" />
+    <result column="member_balance" jdbcType="DECIMAL" property="memberBalance" />
+    <result column="creditpay" jdbcType="DECIMAL" property="creditpay" />
+    <result column="coupon" jdbcType="DECIMAL" property="coupon" />
+    <result column="other_amount" jdbcType="DECIMAL" property="otherAmount" />
+    <result column="actual_amount" jdbcType="DECIMAL" property="actualAmount" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    <result column="close_state" jdbcType="BIT" property="closeState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from flm_work_group_close
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.financial.bean.WorkGroupClose">
+    insert into flm_work_group_close (id, logic_date, sys_clinic_id,
+      flm_work_group_id, operator_id, begin_date,
+      end_date, cash, unionpay,
+      wechatpay, alipay, cmedicare,
+      pmedicare, member_balance, creditpay,
+      coupon, other_amount, actual_amount,
+      last_updater_id, last_update_date, close_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{logicDate,jdbcType=DATE}, #{sysClinicId,jdbcType=INTEGER},
+      #{flmWorkGroupId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{beginDate,jdbcType=TIMESTAMP},
+      #{endDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{unionpay,jdbcType=DECIMAL},
+      #{wechatpay,jdbcType=DECIMAL}, #{alipay,jdbcType=DECIMAL}, #{cmedicare,jdbcType=DECIMAL},
+      #{pmedicare,jdbcType=DECIMAL}, #{memberBalance,jdbcType=DECIMAL}, #{creditpay,jdbcType=DECIMAL},
+      #{coupon,jdbcType=DECIMAL}, #{otherAmount,jdbcType=DECIMAL}, #{actualAmount,jdbcType=DECIMAL},
+      #{lastUpdaterId,jdbcType=INTEGER}, #{lastUpdateDate,jdbcType=TIMESTAMP}, #{closeState,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.financial.bean.WorkGroupClose">
+    update flm_work_group_close
+    set logic_date = #{logicDate,jdbcType=DATE},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      flm_work_group_id = #{flmWorkGroupId,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      cash = #{cash,jdbcType=DECIMAL},
+      unionpay = #{unionpay,jdbcType=DECIMAL},
+      wechatpay = #{wechatpay,jdbcType=DECIMAL},
+      alipay = #{alipay,jdbcType=DECIMAL},
+      cmedicare = #{cmedicare,jdbcType=DECIMAL},
+      pmedicare = #{pmedicare,jdbcType=DECIMAL},
+      member_balance = #{memberBalance,jdbcType=DECIMAL},
+      creditpay = #{creditpay,jdbcType=DECIMAL},
+      coupon = #{coupon,jdbcType=DECIMAL},
+      other_amount = #{otherAmount,jdbcType=DECIMAL},
+      actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      close_state = #{closeState,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, logic_date, sys_clinic_id, flm_work_group_id, operator_id, begin_date,
+    end_date, cash, unionpay, wechatpay, alipay, cmedicare, pmedicare, member_balance,
+    creditpay, coupon, other_amount, actual_amount, last_updater_id, last_update_date,
+    close_state
+    from flm_work_group_close
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, logic_date, sys_clinic_id, flm_work_group_id, operator_id, begin_date,
+    end_date, cash, unionpay, wechatpay, alipay, cmedicare, pmedicare, member_balance,
+    creditpay, coupon, other_amount, actual_amount, last_updater_id, last_update_date,
+    close_state
+    from flm_work_group_close
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByLogicDateAndOperatorId"  resultMap="BaseResultMap">
+    select *
+    from flm_work_group_close
+    where
+      (DATE_FORMAT(logic_date, '%Y-%m-%d') = DATE_FORMAT(#{logicDate}, '%Y-%m-%d')) and
+      (operator_id = #{operatorId})
+  </select>
+
+  <select id="selectUnClosedByLogicDateAndSysClinicId" resultMap="BaseResultMap">
+    select *
+    from flm_work_group_close
+    where
+      (DATE_FORMAT(logic_date, '%Y-%m-%d') = DATE_FORMAT(#{logicDate}, '%Y-%m-%d')) and
+      (sys_clinic_id = #{sysClinicId}) and
+      (close_state is false)
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_flm_work_group_close
+    <trim prefix="where" suffixOverrides="and">
+      <if test="logicDate != null &amp;&amp; logicDate.length == 2">
+        (DATE_FORMAT(logicDate, '%Y-%m-%d') between #{logicDate[0]} and #{logicDate[1]}) and
+      </if>
+      <if test="operatorId != null">
+        (operatorId = #{operatorId}) and
+      </if>
+      <if test="closeState != null">
+        (closeState = #{closeState}) and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="operatorName != null &amp;&amp; operatorName.trim() != ''">
+        (operatorName like '${operatorName}%' or operatorCode like '${operatorName}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

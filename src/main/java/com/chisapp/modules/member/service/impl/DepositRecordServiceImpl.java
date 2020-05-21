@@ -1,7 +1,9 @@
 package com.chisapp.modules.member.service.impl;
 
+import com.chisapp.common.utils.DateUtils;
 import com.chisapp.common.utils.JSONUtils;
 import com.chisapp.common.utils.KeyUtils;
+import com.chisapp.modules.financial.service.WorkGroupCloseService;
 import com.chisapp.modules.member.bean.DepositRecord;
 import com.chisapp.modules.member.bean.Member;
 import com.chisapp.modules.member.bean.MemberType;
@@ -29,6 +31,8 @@ import java.util.Map;
  */
 @Service
 public class DepositRecordServiceImpl implements DepositRecordService {
+    @Autowired
+    private WorkGroupCloseService workGroupCloseService;
 
     private DepositRecordMapper depositRecordMapper;
     @Autowired
@@ -60,6 +64,12 @@ public class DepositRecordServiceImpl implements DepositRecordService {
     public void save(Integer mrmMemberId, String paymentRecordJson) {
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
         String lsh = KeyUtils.getLSH(user.getId()); // 获取流水号
+
+        // 检查是否登记班次
+        if (!this.workGroupCloseService.checkRegistration(DateUtils.parseToShort(new Date()), user)) {
+            throw new RuntimeException("未登记班次, 不能执行该操作");
+        }
+
         Member member = memberService.getById(mrmMemberId); // 获取会员
         if (member == null) {
             throw new RuntimeException("获取会员失败");
@@ -128,6 +138,14 @@ public class DepositRecordServiceImpl implements DepositRecordService {
 
     @Override
     public void saveForReturned(String lsh) {
+        // 获取操作人信息
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+
+        // 检查是否登记班次
+        if (!this.workGroupCloseService.checkRegistration(DateUtils.parseToShort(new Date()), user)) {
+            throw new RuntimeException("未登记班次, 不能执行该操作");
+        }
+
         // 根据流水号获取对应的储值记录
         List<DepositRecord> depositRecordList = this.getByLsh(lsh);
         if (depositRecordList.isEmpty()) {
@@ -160,8 +178,6 @@ public class DepositRecordServiceImpl implements DepositRecordService {
             throw new RuntimeException("会员余额不足");
         }
 
-        // 获取操作人信息
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
         // 设置退回记录属性
         BigDecimal minus1 = new BigDecimal("-1");
         depositRecord.setId(null); // 将 ID 重置为 null

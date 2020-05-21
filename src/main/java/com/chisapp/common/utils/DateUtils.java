@@ -1,5 +1,7 @@
 package com.chisapp.common.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,6 +25,13 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+    public static Date getPastDate(Date date, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, days * -1);
+
+        return calendar.getTime();
+    }
 
 
     /**
@@ -37,4 +46,26 @@ public class DateUtils {
 
         return calendar.getTime();
     }
+
+    /**
+     * 将日期字符串 或 日期 格式化为 yyyy-MM-dd 格式
+     * @param date
+     * @return
+     */
+    public static Date parseToShort(Object date) {
+        Date parseDate;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            if (date.getClass().getName().equals("java.lang.String")) {
+                date = df.parse(date.toString());
+            }
+            parseDate = df.parse(df.format(date));
+        } catch (ParseException e) {
+            throw new RuntimeException("日期格式不正确");
+        }
+
+        return parseDate;
+    }
+
+
 }
