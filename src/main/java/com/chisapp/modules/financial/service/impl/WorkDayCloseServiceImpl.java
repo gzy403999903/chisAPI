@@ -40,7 +40,7 @@ public class WorkDayCloseServiceImpl implements WorkDayCloseService {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     @Override
-    public void autoSaveList() {
+    public void saveList() {
         SqlSession batchSqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         WorkDayCloseMapper mapper = batchSqlSession.getMapper(WorkDayCloseMapper.class);
         try {

@@ -16,10 +16,10 @@ import java.util.Map;
 public interface WorkDayCloseService {
 
     /**
-     * 定时创建日结记录
+     * 创建日结记录
      */
     @Transactional
-    void autoSaveList();
+    void saveList();
 
     /**
      * 编辑日结记录

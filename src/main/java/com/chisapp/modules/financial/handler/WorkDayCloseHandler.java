@@ -34,7 +34,7 @@ public class WorkDayCloseHandler {
      */
     @Scheduled(cron = "0 1 0 * * *") // 秒 分 时 日 月 周
     private void autoSaveList () {
-        workDayCloseService.autoSaveList();
+        workDayCloseService.saveList();
     }
 
     /**

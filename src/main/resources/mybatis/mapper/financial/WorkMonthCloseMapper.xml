@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.financial.dao.WorkMonthCloseMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.financial.bean.WorkMonthClose">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ap_year" jdbcType="INTEGER" property="apYear" />
+    <result column="ap_month" jdbcType="INTEGER" property="apMonth" />
+    <result column="sys_clinic_id" jdbcType="INTEGER" property="sysClinicId" />
+    <result column="hs_qccb" jdbcType="DECIMAL" property="hsQccb" />
+    <result column="ws_qccb" jdbcType="DECIMAL" property="wsQccb" />
+    <result column="hs_cgcb" jdbcType="DECIMAL" property="hsCgcb" />
+    <result column="ws_cgcb" jdbcType="DECIMAL" property="wsCgcb" />
+    <result column="hs_thcb" jdbcType="DECIMAL" property="hsThcb" />
+    <result column="ws_thcb" jdbcType="DECIMAL" property="wsThcb" />
+    <result column="hs_xscb" jdbcType="DECIMAL" property="hsXscb" />
+    <result column="ws_xscb" jdbcType="DECIMAL" property="wsXscb" />
+    <result column="hs_lycb" jdbcType="DECIMAL" property="hsLycb" />
+    <result column="ws_lycb" jdbcType="DECIMAL" property="wsLycb" />
+    <result column="hs_bscb" jdbcType="DECIMAL" property="hsBscb" />
+    <result column="ws_bscb" jdbcType="DECIMAL" property="wsBscb" />
+    <result column="hs_qmcb" jdbcType="DECIMAL" property="hsQmcb" />
+    <result column="ws_qmcb" jdbcType="DECIMAL" property="wsQmcb" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="operate_date" jdbcType="TIMESTAMP" property="operateDate" />
+    <result column="close_state" jdbcType="BIT" property="closeState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from flm_work_month_close
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.financial.bean.WorkMonthClose">
+    insert into flm_work_month_close (id, ap_year, ap_month,
+      sys_clinic_id, hs_qccb, ws_qccb,
+      hs_cgcb, ws_cgcb, hs_thcb,
+      ws_thcb, hs_xscb, ws_xscb,
+      hs_lycb, ws_lycb, hs_bscb,
+      ws_bscb, hs_qmcb, ws_qmcb,
+      operator_id, operate_date, close_state
+      )
+    values (#{id,jdbcType=INTEGER}, #{apYear,jdbcType=INTEGER}, #{apMonth,jdbcType=INTEGER},
+      #{sysClinicId,jdbcType=INTEGER}, #{hsQccb,jdbcType=DECIMAL}, #{wsQccb,jdbcType=DECIMAL},
+      #{hsCgcb,jdbcType=DECIMAL}, #{wsCgcb,jdbcType=DECIMAL}, #{hsThcb,jdbcType=DECIMAL},
+      #{wsThcb,jdbcType=DECIMAL}, #{hsXscb,jdbcType=DECIMAL}, #{wsXscb,jdbcType=DECIMAL},
+      #{hsLycb,jdbcType=DECIMAL}, #{wsLycb,jdbcType=DECIMAL}, #{hsBscb,jdbcType=DECIMAL},
+      #{wsBscb,jdbcType=DECIMAL}, #{hsQmcb,jdbcType=DECIMAL}, #{wsQmcb,jdbcType=DECIMAL},
+      #{operatorId,jdbcType=INTEGER}, #{operateDate,jdbcType=TIMESTAMP}, #{closeState,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.financial.bean.WorkMonthClose">
+    update flm_work_month_close
+    set ap_year = #{apYear,jdbcType=INTEGER},
+      ap_month = #{apMonth,jdbcType=INTEGER},
+      sys_clinic_id = #{sysClinicId,jdbcType=INTEGER},
+      hs_qccb = #{hsQccb,jdbcType=DECIMAL},
+      ws_qccb = #{wsQccb,jdbcType=DECIMAL},
+      hs_cgcb = #{hsCgcb,jdbcType=DECIMAL},
+      ws_cgcb = #{wsCgcb,jdbcType=DECIMAL},
+      hs_thcb = #{hsThcb,jdbcType=DECIMAL},
+      ws_thcb = #{wsThcb,jdbcType=DECIMAL},
+      hs_xscb = #{hsXscb,jdbcType=DECIMAL},
+      ws_xscb = #{wsXscb,jdbcType=DECIMAL},
+      hs_lycb = #{hsLycb,jdbcType=DECIMAL},
+      ws_lycb = #{wsLycb,jdbcType=DECIMAL},
+      hs_bscb = #{hsBscb,jdbcType=DECIMAL},
+      ws_bscb = #{wsBscb,jdbcType=DECIMAL},
+      hs_qmcb = #{hsQmcb,jdbcType=DECIMAL},
+      ws_qmcb = #{wsQmcb,jdbcType=DECIMAL},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      operate_date = #{operateDate,jdbcType=TIMESTAMP},
+      close_state = #{closeState,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, ap_year, ap_month, sys_clinic_id, hs_qccb, ws_qccb, hs_cgcb, ws_cgcb,
+    hs_thcb, ws_thcb, hs_xscb, ws_xscb, hs_lycb, ws_lycb, hs_bscb, ws_bscb, hs_qmcb,
+    ws_qmcb, operator_id, operate_date, close_state
+    from flm_work_month_close
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, ap_year, ap_month, sys_clinic_id, hs_qccb, ws_qccb, hs_cgcb, ws_cgcb,
+    hs_thcb, ws_thcb, hs_xscb, ws_xscb, hs_lycb, ws_lycb, hs_bscb, ws_bscb, hs_qmcb,
+    ws_qmcb, operator_id, operate_date, close_state
+    from flm_work_month_close
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectClinicByYearAndMonth" resultMap="BaseResultMap">
+    select *
+    from flm_work_month_close
+    where ap_year = #{year} and ap_month = #{month} and sys_clinic_id = #{sysClinicId}
+  </select>
+
+  <select id="selectUnClosedByYearAndMonth" resultMap="BaseResultMap">
+    select *
+    from flm_work_month_close
+    where ap_year = #{year} and ap_month &lt; #{month} and close_state is false
+  </select>
+
+  <select id="selectPendingMsgByDateAndSysClinicId" resultType="map">
+    select *
+    from (
+      SELECT
+        sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的采购入库单' END) AS msg
+      FROM iym_inventory_add
+      WHERE
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
+      UNION
+      SELECT
+        sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的采购退货单' END) AS msg
+      FROM iym_inventory_subtract
+      WHERE
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
+      UNION
+      SELECT
+        sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的领用出库单' END) AS msg
+      FROM iym_self_used_record
+      WHERE
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
+      UNION
+      SELECT
+        sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的报损出库单' END) AS msg
+      FROM iym_loss_record
+      WHERE
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
+    ) a
+    where a.sys_clinic_id is not null
+
+  </select>
+
+
+  <select id="selectClinicWorkMonthCloseData" resultMap="BaseResultMap">
+    SELECT
+      a.id as sys_clinic_id,
+      ROUND(IFNULL(b.hs_qmcb, 0),2) AS hs_qccb,
+      ROUND(IFNULL(b.ws_qmcb, 0),2) AS ws_qccb,
+      ROUND(IFNULL(c.hscb, 0),2) AS hs_cgcb,
+      ROUND(IFNULL(c.wscb, 0),2) AS ws_cgcb,
+      ROUND(IFNULL(d.hscb, 0),2) AS hs_thcb,
+      ROUND(IFNULL(d.wscb, 0),2) AS ws_thcb,
+      ROUND(IFNULL(e.hscb, 0),2) AS hs_xscb,
+      ROUND(IFNULL(e.wscb, 0),2) AS ws_xscb,
+      ROUND(IFNULL(f.hscb, 0),2) AS hs_lycb,
+      ROUND(IFNULL(f.wscb, 0),2) AS ws_lycb,
+      ROUND(IFNULL(g.hscb, 0),2) AS hs_bscb,
+      ROUND(IFNULL(g.wscb, 0),2) AS ws_bscb,
+      ROUND(IFNULL(h.hscb, 0),2) AS hs_qmcb,
+      ROUND(IFNULL(h.wscb, 0),2) AS ws_qmcb
+    FROM sys_clinic a
+    LEFT JOIN (
+        SELECT sys_clinic_id, hs_qmcb, ws_qmcb
+        FROM flm_work_month_close
+        WHERE ap_year = #{prevYear} AND ap_month = #{prevMonth}
+    ) b ON a.id = b.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM iym_inventory_add
+        WHERE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+        GROUP BY sys_clinic_id
+    ) c ON a.id = c.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM iym_inventory_subtract
+        WHERE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+        GROUP BY sys_clinic_id
+    ) d ON a.id = d.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM dr_sell_record
+        WHERE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND sys_sell_type_id = 1 AND returned IS FALSE
+        GROUP BY sys_clinic_id
+    ) e ON a.id = e.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM iym_self_used_record
+        WHERE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+        GROUP BY sys_clinic_id
+    ) f ON a.id = f.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM iym_loss_record
+        WHERE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+        GROUP BY sys_clinic_id
+    ) g ON a.id = g.sys_clinic_id
+    LEFT JOIN (
+        SELECT
+        sys_clinic_id,
+        SUM(quantity * cost_price) AS hscb,
+        SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
+        FROM iym_inventory
+        WHERE quantity > 0
+        GROUP BY sys_clinic_id
+    ) h ON a.id = h.sys_clinic_id
+    where a.id = #{sysClinicId}
+    ORDER BY a.`id`
+  </select>
+
+
+
+
+
+
+
+</mapper>

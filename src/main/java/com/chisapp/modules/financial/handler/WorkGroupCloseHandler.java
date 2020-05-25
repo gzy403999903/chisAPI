@@ -131,10 +131,9 @@ public class WorkGroupCloseHandler {
             @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) String operatorName){
 
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList =
-                workGroupCloseService.getByCriteria(logicDate, user.getId(), closeState, sysClinicName, operatorName);
+                workGroupCloseService.getByCriteria(logicDate, null, closeState, sysClinicName, operatorName);
         PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo);
     }

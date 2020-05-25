@@ -77,7 +77,7 @@ public class WorkGroupCloseServiceImpl implements WorkGroupCloseService {
         // 检查逻辑日是否合法
         this.workDayCloseService.checkLogicDate(userDate, user.getSysClinicId());
 
-        // 检查是否有未班结班次
+        // 检查是否有未班结班次(同一个逻辑日只能有一个未结班次, 不班结无法日结, 所以不同逻辑日也不可能再次创建班次)
         if (this.checkRegistration(userDate, user)) {
             throw new RuntimeException("有未班结班次, 不能执行该操作");
         }

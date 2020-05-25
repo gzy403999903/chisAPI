@@ -58,8 +58,8 @@
 		</javaClientGenerator>
 
 		<!-- 配置逆向工程的数据库表 -->
-		<table tableName="flm_work_group_close"
-			   domainObjectName="WorkGroupClose"/>
+		<table tableName="flm_work_month_close"
+			   domainObjectName="WorkMonthClose"/>
 
 	</context>
 </generatorConfiguration>
