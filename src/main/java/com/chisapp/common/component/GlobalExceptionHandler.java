@@ -187,7 +187,7 @@ public class GlobalExceptionHandler {
      * 403
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public PageResult handleDataIntegrityViolationException() {
+    public PageResult handleDataIntegrityViolationException(Exception e) {
         return PageResult.fail().code(HttpServletResponse.SC_FORBIDDEN).msg("违反数据约束");
     }
 

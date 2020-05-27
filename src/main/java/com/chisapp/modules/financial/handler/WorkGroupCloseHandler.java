@@ -101,7 +101,7 @@ public class WorkGroupCloseHandler {
     public PageResult getOperatorByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]",required = false) String[] logicDate, // 创建日期
+            @RequestParam(value = "logicDate[]",required = false) String[] logicDate, // 创建日期
             @RequestParam(required = false) Boolean closeState){
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -126,7 +126,7 @@ public class WorkGroupCloseHandler {
     public PageResult getByCriteria (
             @RequestParam(defaultValue="1") Integer pageNum,
             @RequestParam(defaultValue="1") Integer pageSize,
-            @RequestParam(value = "creationDate[]",required = false) String[] logicDate, // 创建日期
+            @RequestParam(value = "logicDate[]",required = false) String[] logicDate, // 创建日期
             @RequestParam(required = false) Boolean closeState,
             @RequestParam(required = false) String sysClinicName,
             @RequestParam(required = false) String operatorName){

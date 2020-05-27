@@ -86,7 +86,7 @@ public class WorkDayCloseServiceImpl implements WorkDayCloseService {
     @Override
     public Boolean checkLogicDate(Date userDate, Integer sysClinicId) {
         // 检查当前日期之前是否有未日结的逻辑日(按账期日)
-        Date[] logicDate = new Date[]{AccountPeriod.getInstance().getBeginDate(), DateUtils.getPastDate(userDate, 1)};
+        Date[] logicDate = new Date[]{AccountPeriod.getInstance().getPrevBeginDate(userDate), DateUtils.getPastDate(userDate, 1)};
         List<WorkDayClose> workDayCloseList = this.getUnClosedByLogicDateAndSysClinicId(logicDate, sysClinicId);
         if (!workDayCloseList.isEmpty()) {
             throw new RuntimeException("在当前逻辑日前有未日结逻辑日");

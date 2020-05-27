@@ -118,6 +118,20 @@ public class AccountPeriod {
         return beginDate;
     }
 
+    public Date getPrevBeginDate(Date date) {
+        int year = this.getPrevYear(date);
+        int month = this.getPrevMonth(date) == 1 ? 1 : this.getPrevMonth(date) - 1;
+        int day = month == 1 ? 1 : 26;
+
+        Date beginDate;
+        try {
+            beginDate = simpleDateFormat.parse(year + "-" + month + "-" + day);
+        } catch (ParseException e) {
+            throw new RuntimeException("不正确的格式日期");
+        }
+        return beginDate;
+    }
+
     /**
      * 获取结束日期
      * @return

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -78,14 +79,11 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
     public void updateToClose(Date userDate, User user) {
         // 检查账期是否可进行月结
         WorkMonthClose workMonthClose = this.checkAccountPeriod(userDate, user.getSysClinicId());
-
-        // 获取账期工具类
-        AccountPeriod accountPeriod = AccountPeriod.getInstance();
-
         // 获取月结数据
-        WorkMonthClose data = this.getClinicWorkMonthCloseData(
-                accountPeriod.getPrevYear(userDate), accountPeriod.getPrevMonth(userDate),
-                accountPeriod.getBeginDate(userDate), accountPeriod.getEndDate(userDate), user.getSysClinicId());
+        WorkMonthClose data = this.getClinicWorkMonthCloseData(userDate, user.getSysClinicId());
+        if (this.hasDisparity(data)) {
+            throw new RuntimeException("本期成本结算存在差异");
+        }
 
         workMonthClose.setHsQccb(data.getHsQccb());
         workMonthClose.setWsQccb(data.getWsQccb());
@@ -110,19 +108,30 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
         workMonthCloseMapper.updateByPrimaryKey(workMonthClose);
     }
 
+    private Boolean hasDisparity(WorkMonthClose workMonthClose) {
+        BigDecimal disparity = workMonthClose.getHsQccb()
+                .add(workMonthClose.getHsCgcb())
+                .subtract(workMonthClose.getHsThcb())
+                .subtract(workMonthClose.getHsXscb())
+                .subtract(workMonthClose.getHsLycb())
+                .subtract(workMonthClose.getHsBscb())
+                .subtract(workMonthClose.getHsQmcb());
+        return disparity.compareTo(new BigDecimal("0")) != 0;
+    }
+
     @Override
     public WorkMonthClose checkAccountPeriod(Date userDate, Integer sysClinicId) {
         // 检查当前是否是月结日
         LocalDate localDate = userDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         int userDay = localDate.getDayOfMonth();
         if (userDay != workMonthCloseDay) {
-            throw new RuntimeException("当前日期与月结日期[" + workMonthCloseDay + "]不符");
+            throw new RuntimeException("当前账期月结日为 [" + workMonthCloseDay + "日]");
         }
 
         // 获取账期工具类
         AccountPeriod accountPeriod = AccountPeriod.getInstance();
 
-        // 检查月结记录是否存在
+        // 检查月结记录是否存在 并将其作为返回值
         WorkMonthClose workMonthClose = this.getClinicByYearAndMonth(
                 accountPeriod.getYear(userDate), accountPeriod.getMonth(userDate), sysClinicId);
         if (workMonthClose == null) {
@@ -179,8 +188,22 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
     }
 
     @Override
-    public WorkMonthClose getClinicWorkMonthCloseData(Integer prevYear, Integer prevMonth, Date beginDate, Date endDate, Integer sysClinicId) {
-        return workMonthCloseMapper.selectClinicWorkMonthCloseData(prevYear, prevMonth, beginDate, endDate, sysClinicId);
+    public WorkMonthClose getClinicWorkMonthCloseData(Date userDate, Integer sysClinicId) {
+        AccountPeriod accountPeriod = AccountPeriod.getInstance();
+        WorkMonthClose workMonthClose = workMonthCloseMapper.selectClinicWorkMonthCloseData(
+                accountPeriod.getPrevYear(userDate),
+                accountPeriod.getPrevMonth(userDate),
+                accountPeriod.getBeginDate(userDate),
+                accountPeriod.getEndDate(userDate),
+                sysClinicId);
+        workMonthClose.setApYear(accountPeriod.getYear(userDate));
+        workMonthClose.setApMonth(accountPeriod.getMonth(userDate));
+        return workMonthClose;
+    }
+
+    @Override
+    public List<Map<String, Object>> getByCriteria(Integer apYear, Integer apMonth) {
+        return workMonthCloseMapper.selectByCriteria(apYear, apMonth);
     }
 
 

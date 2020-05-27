@@ -105,28 +105,28 @@
         sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的采购入库单' END) AS msg
       FROM iym_inventory_add
       WHERE
-        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN  DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d'))
         AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
       UNION
       SELECT
         sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的采购退货单' END) AS msg
       FROM iym_inventory_subtract
       WHERE
-        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN  DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d'))
         AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
       UNION
       SELECT
         sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的领用出库单' END) AS msg
       FROM iym_self_used_record
       WHERE
-        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN  DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d'))
         AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
       UNION
       SELECT
         sys_clinic_id, (CASE WHEN COUNT(id) > 0 THEN '你有未审核的报损出库单' END) AS msg
       FROM iym_loss_record
       WHERE
-        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate})
+        (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN  DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d'))
         AND approve_state = 99 AND sys_clinic_id = #{sysClinicId}
     ) a
     where a.sys_clinic_id is not null
@@ -164,7 +164,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM iym_inventory_add
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND approve_state = 1
         GROUP BY sys_clinic_id
     ) c ON a.id = c.sys_clinic_id
     LEFT JOIN (
@@ -174,7 +174,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM iym_inventory_subtract
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+           (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND approve_state = 1
         GROUP BY sys_clinic_id
     ) d ON a.id = d.sys_clinic_id
     LEFT JOIN (
@@ -184,7 +184,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM dr_sell_record
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND sys_sell_type_id = 1 AND returned IS FALSE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND sys_sell_type_id = 1 AND returned IS FALSE
         GROUP BY sys_clinic_id
     ) e ON a.id = e.sys_clinic_id
     LEFT JOIN (
@@ -194,7 +194,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM iym_self_used_record
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+           (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND approve_state = 1
         GROUP BY sys_clinic_id
     ) f ON a.id = f.sys_clinic_id
     LEFT JOIN (
@@ -204,7 +204,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM iym_loss_record
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}) AND approve_state = 1
+           (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND approve_state = 1
         GROUP BY sys_clinic_id
     ) g ON a.id = g.sys_clinic_id
     LEFT JOIN (
@@ -220,6 +220,12 @@
     ORDER BY a.`id`
   </select>
 
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_flm_work_month_close
+    where apYear = #{apYear} and apMonth = #{apMonth}
+    order by sysClinicId
+  </select>
 
 
 

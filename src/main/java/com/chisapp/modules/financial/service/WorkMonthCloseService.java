@@ -63,17 +63,18 @@ public interface WorkMonthCloseService {
 
     /**
      * 获取月结数据
-     * @param prevYear
-     * @param prevMonth
-     * @param beginDate
-     * @param endDate
+     * @param userDate
      * @param sysClinicId
      * @return
      */
-    WorkMonthClose getClinicWorkMonthCloseData(Integer prevYear,
-                                               Integer prevMonth,
-                                               Date beginDate,
-                                               Date endDate,
-                                               Integer sysClinicId);
+    WorkMonthClose getClinicWorkMonthCloseData(Date userDate, Integer sysClinicId);
+
+    /**
+     * 根据条件获取对应的月结记录
+     * @param apYear
+     * @param apMonth
+     * @return
+     */
+    List<Map<String, Object>> getByCriteria(Integer apYear, Integer apMonth);
 
 }

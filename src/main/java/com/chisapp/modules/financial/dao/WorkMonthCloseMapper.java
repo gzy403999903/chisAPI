@@ -37,6 +37,9 @@ public interface WorkMonthCloseMapper {
                                                   @Param("endDate") Date endDate,
                                                   @Param("sysClinicId") Integer sysClinicId);
 
+    List<Map<String, Object>> selectByCriteria(@Param("apYear") Integer apYear,
+                                               @Param("apMonth")Integer apMonth);
+
 
 
 
