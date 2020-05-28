@@ -87,7 +87,13 @@ public class WorkMonthCloseHandler {
     @GetMapping("/getUnClosedByYearAndMonth")
     public Boolean getUnClosedByYearAndMonth(@RequestParam Integer year, @RequestParam Integer month) {
         List<WorkMonthClose> workMonthCloseList = workMonthCloseService.getUnClosedByYearAndMonth(year, month);
-        return workMonthCloseList.isEmpty();
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        for (WorkMonthClose workMonthClose : workMonthCloseList) {
+            if (workMonthClose.getSysClinicId().intValue() == user.getSysClinicId().intValue()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

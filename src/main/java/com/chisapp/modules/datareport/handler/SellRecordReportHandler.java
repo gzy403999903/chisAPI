@@ -65,16 +65,21 @@ public class SellRecordReportHandler {
             @RequestParam(required = false) String mrmMemberName,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) Integer sellerId,
-            @RequestParam(required = false) String sellerName){
+            @RequestParam(required = false) String sellerName,
+            @RequestParam(required = false) String pemSupplierOid,
+            @RequestParam(required = false) String pemSupplierName,
+            @RequestParam(value = "sellClassifyId[]", required = false) Integer[] sellClassifyId){
 
-        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(creationDate, invoiceDate, null,
-                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
+        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(
+                creationDate, invoiceDate, null,sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid,
+                entityName, mrmMemberName, phone, sellerId, sellerName, pemSupplierOid, pemSupplierName, sellClassifyId);
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = sellRecordReportService.getByCriteria(creationDate, invoiceDate, null,
-                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId,
+                sellerName, pemSupplierOid, pemSupplierName, sellClassifyId);
 
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo).resultSet("countMap", countMap);
     }
 
@@ -103,19 +108,24 @@ public class SellRecordReportHandler {
             @RequestParam(required = false) String mrmMemberName,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) Integer sellerId,
-            @RequestParam(required = false) String sellerName){
+            @RequestParam(required = false) String sellerName,
+            @RequestParam(required = false) String pemSupplierOid,
+            @RequestParam(required = false) String pemSupplierName,
+            @RequestParam(value = "sellClassifyId[]", required = false) Integer[] sellClassifyId){
 
         // 获取用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
-        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(creationDate, invoiceDate, user.getSysClinicId(),
-                null, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
+        Map<String, Object> countMap = sellRecordReportService.countSellRecordByCriteria(
+                creationDate, invoiceDate, user.getSysClinicId(), null, lsh, sysSellTypeId, entityTypeId,
+                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName, pemSupplierOid, pemSupplierName, sellClassifyId);
 
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> pageList = sellRecordReportService.getByCriteria(creationDate, invoiceDate, user.getSysClinicId(),
-                null, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
-        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+                null, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId,
+                sellerName, pemSupplierOid, pemSupplierName, sellClassifyId);
 
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
         return PageResult.success().resultSet("page", pageInfo).resultSet("countMap", countMap);
     }
 

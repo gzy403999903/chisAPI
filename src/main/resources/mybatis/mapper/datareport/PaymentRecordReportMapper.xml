@@ -19,6 +19,23 @@
       ROUND(SUM(CASE WHEN sysPaymentWayId = 6 THEN sysPaymentWayAmount ELSE 0 END), 2) AS yky,
       ROUND(SUM(actualAmount), 2) AS actualAmount,
       ROUND(SUM(disparityAmount), 2) AS disparityAmount,
+
+      ROUND(SUM(unionpay) + SUM(wechatpay) + SUM(alipay), 2) as xj1,
+      ROUND(SUM(cmedicare) +
+            SUM(pmedicare) +
+            SUM(CASE WHEN sysPaymentWayId = 4 THEN sysPaymentWayAmount ELSE 0 END) +
+            SUM(CASE WHEN sysPaymentWayId = 5 THEN sysPaymentWayAmount ELSE 0 END), 2) as xj2,
+      ROUND(SUM(cash) +
+            SUM(unionpay) +
+            SUM(wechatpay) +
+            SUM(alipay) +
+            SUM(cmedicare) +
+            SUM(pmedicare) +
+            SUM(creditpay) +
+            SUM(coupon) +
+            SUM(CASE WHEN sysPaymentWayId = 4 THEN sysPaymentWayAmount ELSE 0 END) +
+            SUM(CASE WHEN sysPaymentWayId = 5 THEN sysPaymentWayAmount ELSE 0 END), 2) as xj3,
+
       DATE_FORMAT(creationDate, '%Y-%m-%d') AS creationDate,
       creatorId,
       creatorName,

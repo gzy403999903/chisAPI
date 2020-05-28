@@ -46,6 +46,19 @@
       <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
         (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
       </if>
+      <if test="pemSupplierOid != null &amp;&amp; pemSupplierOid.trim() != ''">
+        (pemSupplierOid like '${pemSupplierOid}%') and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+      <if test="sellClassifyId != null &amp;&amp; sellClassifyId.length > 0">
+        (sellClassifyId in
+          <foreach collection="sellClassifyId" item="sellClassifyId" open="(" separator="," close=")">
+            #{sellClassifyId}
+          </foreach>
+        ) and
+      </if>
     </trim>
     order by creationDate desc, sysClinicId, sysSellTypeId, entityTypeId, entityId
   </select>
@@ -103,6 +116,19 @@
       </if>
       <if test="sellerName != null &amp;&amp; sellerName.trim() != ''">
         (sellerName like '${sellerName}%' or sellerCode like '${sellerName}%') and
+      </if>
+      <if test="pemSupplierOid != null &amp;&amp; pemSupplierOid.trim() != ''">
+        (pemSupplierOid like '${pemSupplierOid}%') and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+      <if test="sellClassifyId != null &amp;&amp; sellClassifyId.length > 0">
+        (sellClassifyId in
+        <foreach collection="sellClassifyId" item="sellClassifyId" open="(" separator="," close=")">
+          #{sellClassifyId}
+        </foreach>
+        ) and
       </if>
     </trim>
     ) a

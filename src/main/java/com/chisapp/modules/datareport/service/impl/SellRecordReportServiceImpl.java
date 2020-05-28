@@ -43,11 +43,15 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                    String mrmMemberName,
                                                    String phone,
                                                    Integer sellerId,
-                                                   String sellerName) {
+                                                   String sellerName,
+                                                   String pemSupplierOid,
+                                                   String pemSupplierName,
+                                                   Integer[] sellClassifyId) {
 
         return sellRecordReportMapper.selectByCriteria(
                 creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
-                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
+                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName, pemSupplierOid, pemSupplierName,
+                sellClassifyId);
     }
 
     @Override
@@ -63,11 +67,15 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
                                                          String mrmMemberName,
                                                          String phone,
                                                          Integer sellerId,
-                                                         String sellerName) {
+                                                         String sellerName,
+                                                         String pemSupplierOid,
+                                                         String pemSupplierName,
+                                                         Integer[] sellClassifyId) {
 
         return sellRecordReportMapper.countSellRecordByCriteria(
                 creationDate, invoiceDate, sysClinicId, sysClinicName, lsh, sysSellTypeId, entityTypeId,
-                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName);
+                entityOid, entityName, mrmMemberName, phone, sellerId, sellerName,pemSupplierOid, pemSupplierName,
+                sellClassifyId);
     }
 
     @Override

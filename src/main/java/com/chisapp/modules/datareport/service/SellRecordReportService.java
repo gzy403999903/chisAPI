@@ -27,6 +27,9 @@ public interface SellRecordReportService {
      * @param phone
      * @param sellerId
      * @param sellerName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sellClassifyId
      * @return
      */
     List<Map<String, Object>> getByCriteria(String[] creationDate,
@@ -41,7 +44,10 @@ public interface SellRecordReportService {
                                             String mrmMemberName,
                                             String phone,
                                             Integer sellerId,
-                                            String sellerName);
+                                            String sellerName,
+                                            String pemSupplierOid,
+                                            String pemSupplierName,
+                                            Integer[] sellClassifyId);
 
     /**
      * 计算销售明细 部分数值
@@ -58,6 +64,9 @@ public interface SellRecordReportService {
      * @param phone
      * @param sellerId
      * @param sellerName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sellClassifyId
      * @return
      */
     Map<String, Object> countSellRecordByCriteria(String[] creationDate,
@@ -72,7 +81,10 @@ public interface SellRecordReportService {
                                                   String mrmMemberName,
                                                   String phone,
                                                   Integer sellerId,
-                                                  String sellerName);
+                                                  String sellerName,
+                                                  String pemSupplierOid,
+                                                  String pemSupplierName,
+                                                  Integer[] sellClassifyId);
 
     /**
      * 计费类型汇总表
