@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.goods.dao.EquivalentMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.goods.bean.Equivalent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="use_gsm_goods_id" jdbcType="INTEGER" property="useGsmGoodsId" />
+    <result column="use_goods_units_id" jdbcType="INTEGER" property="useGoodsUnitsId" />
+    <result column="refer_gsm_goods_id" jdbcType="INTEGER" property="referGsmGoodsId" />
+    <result column="refer_goods_units_id" jdbcType="INTEGER" property="referGoodsUnitsId" />
+    <result column="refer_quantity" jdbcType="INTEGER" property="referQuantity" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from gsm_equivalent
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.goods.bean.Equivalent">
+    insert into gsm_equivalent (id, use_gsm_goods_id, use_goods_units_id,
+      refer_gsm_goods_id, refer_goods_units_id, refer_quantity,
+      creator_id, creation_date, last_updater_id,
+      last_update_date)
+    values (#{id,jdbcType=INTEGER}, #{useGsmGoodsId,jdbcType=INTEGER}, #{useGoodsUnitsId,jdbcType=INTEGER},
+      #{referGsmGoodsId,jdbcType=INTEGER}, #{referGoodsUnitsId,jdbcType=INTEGER}, #{referQuantity,jdbcType=INTEGER},
+      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{lastUpdaterId,jdbcType=INTEGER},
+      #{lastUpdateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.goods.bean.Equivalent">
+    update gsm_equivalent
+    set use_gsm_goods_id = #{useGsmGoodsId,jdbcType=INTEGER},
+      use_goods_units_id = #{useGoodsUnitsId,jdbcType=INTEGER},
+      refer_gsm_goods_id = #{referGsmGoodsId,jdbcType=INTEGER},
+      refer_goods_units_id = #{referGoodsUnitsId,jdbcType=INTEGER},
+      refer_quantity = #{referQuantity,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, use_gsm_goods_id, use_goods_units_id, refer_gsm_goods_id, refer_goods_units_id,
+    refer_quantity, creator_id, creation_date, last_updater_id, last_update_date
+    from gsm_equivalent
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, use_gsm_goods_id, use_goods_units_id, refer_gsm_goods_id, refer_goods_units_id,
+    refer_quantity, creator_id, creation_date, last_updater_id, last_update_date
+    from gsm_equivalent
+  </select>
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_gsm_equivalent
+    <trim prefix="where" suffixOverrides="and">
+      <if test="useGsmGoodsName != null &amp;&amp; useGsmGoodsName.trim() != ''">
+        (useGsmGoodsName like '${useGsmGoodsName}%' or useGsmGoodsCode like '${useGsmGoodsName}%') and
+      </if>
+      <if test="referGsmGoodsName != null &amp;&amp; referGsmGoodsName.trim() != ''">
+        (referGsmGoodsName like '${referGsmGoodsName}%' or referGsmGoodsCode like '${referGsmGoodsName}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
