@@ -10,6 +10,8 @@ import com.chisapp.modules.inventory.bean.InventoryAdd;
 import com.chisapp.modules.inventory.dao.InventoryAddMapper;
 import com.chisapp.modules.inventory.service.InventoryAddService;
 import com.chisapp.modules.inventory.service.InventoryService;
+import com.chisapp.modules.purchase.bean.AssessCost;
+import com.chisapp.modules.purchase.service.AssessCostService;
 import com.chisapp.modules.purchase.service.PurchaseOrderService;
 import com.chisapp.modules.purchase.service.SupplierService;
 import com.chisapp.modules.system.bean.User;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Tandy
@@ -66,6 +69,9 @@ public class InventoryAddServiceImpl implements InventoryAddService {
     public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
     }
+
+    @Autowired
+    private AssessCostService assessCostService;
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -158,6 +164,8 @@ public class InventoryAddServiceImpl implements InventoryAddService {
             inventory.setPch(inventoryAdd.getPch()); // 批次号
             inventory.setQuantity(inventoryAdd.getQuantity()); // 入库数量
             inventory.setCostPrice(inventoryAdd.getCostPrice()); // 成本价
+            inventory.setFirstCostPrice(inventoryAdd.getCostPrice()); // 一成本价
+            inventory.setSecondCostPrice(inventoryAdd.getCostPrice()); // 二成本价
             inventory.setPurchaseTaxRate(inventoryAdd.getPurchaseTaxRate()); // 进货税率
             inventory.setSellTaxRate(inventoryAdd.getSellTaxRate()); // 销售税率
             inventory.setProducedDate(inventoryAdd.getProducedDate()); // 生产日期
@@ -167,10 +175,41 @@ public class InventoryAddServiceImpl implements InventoryAddService {
 
             inventoryList.add(inventory);
         }
+        // 设置考核成本
+        this.setAssessCost(inventoryList);
+        // 保存库存记录
         inventoryService.save(inventoryList);
-
         // 供应商应付账款记账
         this.savePayableAccount(inventoryAddList);
+    }
+
+    private void setAssessCost(List<Inventory> inventoryList) {
+        if (inventoryList.isEmpty()) {
+            return;
+        }
+
+        // 获取供应商ID 与 商品ID集合
+        Integer pemSupplierId = inventoryList.get(0).getPemSupplierId();
+        List<Integer> gsmGoodsIdList = inventoryList.stream().map(Inventory::getGsmGoodsId).distinct().collect(Collectors.toList());
+
+        // 获取对应的考核成本集合
+        List<AssessCost> assessCostList = this.assessCostService.getBySupplierIdAndGoodsIdList(pemSupplierId, gsmGoodsIdList);
+        // 将 assessCostList 转成 map<gsmGoodsId, AssessCost>
+        Map<Integer, AssessCost> assessCostMap = new HashMap<>();
+        for (AssessCost assessCost : assessCostList) {
+            assessCostMap.put(assessCost.getGsmGoodsId(), assessCost);
+        }
+
+        // 设置考核成本
+        AssessCost assessCost = null;
+        for (Inventory inventory : inventoryList) {
+            assessCost = assessCostMap.get(inventory.getGsmGoodsId());
+            if (assessCost != null) {
+                inventory.setFirstCostPrice(assessCost.getFirstCostPrice());
+                inventory.setSecondCostPrice(assessCost.getSecondCostPrice());
+            }
+        }
+
     }
 
     private void savePayableAccount (List<InventoryAdd> inventoryAddList) {

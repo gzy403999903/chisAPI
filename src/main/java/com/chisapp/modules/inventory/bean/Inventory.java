@@ -40,13 +40,23 @@ public class Inventory extends InventoryAttach implements Serializable {
     @Min(0)
     @Digits(integer = 8, fraction = 4)
     @NotNull
-    private BigDecimal costPrice;
+    private BigDecimal costPrice = new BigDecimal("0");
+
+    @Min(0)
+    @Digits(integer = 8, fraction = 4)
+    @NotNull
+    private BigDecimal firstCostPrice = new BigDecimal("0");
+
+    @Min(0)
+    @Digits(integer = 8, fraction = 4)
+    @NotNull
+    private BigDecimal secondCostPrice = new BigDecimal("0");
 
     // 平均进价, 拆零商品的平均进价 = 平均进价 / 拆分系数
     @Min(0)
     @Digits(integer = 8, fraction = 4)
     @NotNull
-    private BigDecimal averageCostPrice;
+    private BigDecimal averageCostPrice = new BigDecimal("0");
 
     @Max(99)
     @Min(1)
@@ -144,6 +154,22 @@ public class Inventory extends InventoryAttach implements Serializable {
 
     public void setCostPrice(BigDecimal costPrice) {
         this.costPrice = costPrice;
+    }
+
+    public BigDecimal getFirstCostPrice() {
+        return firstCostPrice;
+    }
+
+    public void setFirstCostPrice(BigDecimal firstCostPrice) {
+        this.firstCostPrice = firstCostPrice;
+    }
+
+    public BigDecimal getSecondCostPrice() {
+        return secondCostPrice;
+    }
+
+    public void setSecondCostPrice(BigDecimal secondCostPrice) {
+        this.secondCostPrice = secondCostPrice;
     }
 
     public BigDecimal getAverageCostPrice() {

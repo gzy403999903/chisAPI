@@ -94,6 +94,14 @@ public class SellRecord extends SellRecordAttach implements Serializable {
     @Min(0)
     private BigDecimal costPrice = new BigDecimal("0");
 
+    @Digits(integer = 8, fraction = 4)
+    @Min(0)
+    private BigDecimal firstCostPrice = new BigDecimal("0");
+
+    @Digits(integer = 8, fraction = 4)
+    @Min(0)
+    private BigDecimal secondCostPrice = new BigDecimal("0");
+
     @JsonFormat(pattern="yyyy-MM-dd", timezone="GMT+8")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date producedDate;
@@ -316,6 +324,22 @@ public class SellRecord extends SellRecordAttach implements Serializable {
 
     public void setCostPrice(BigDecimal costPrice) {
         this.costPrice = costPrice;
+    }
+
+    public BigDecimal getFirstCostPrice() {
+        return firstCostPrice;
+    }
+
+    public void setFirstCostPrice(BigDecimal firstCostPrice) {
+        this.firstCostPrice = firstCostPrice;
+    }
+
+    public BigDecimal getSecondCostPrice() {
+        return secondCostPrice;
+    }
+
+    public void setSecondCostPrice(BigDecimal secondCostPrice) {
+        this.secondCostPrice = secondCostPrice;
     }
 
     public Date getProducedDate() {

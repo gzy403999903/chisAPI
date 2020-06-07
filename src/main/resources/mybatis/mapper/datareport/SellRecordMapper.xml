@@ -26,6 +26,8 @@
     <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
     <result column="quantity" jdbcType="INTEGER" property="quantity" />
     <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="first_cost_price" jdbcType="DECIMAL" property="firstCostPrice" />
+    <result column="second_cost_price" jdbcType="DECIMAL" property="secondCostPrice" />
     <result column="produced_date" jdbcType="DATE" property="producedDate" />
     <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
     <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
@@ -52,11 +54,11 @@
       sell_tax_rate, discountable, lossable,
       iym_inventory_id, ph, pch,
       split_quantity, quantity, cost_price,
-      produced_date, expiry_date, pem_supplier_id,
-      iym_inventory_add_id, mrm_member_id, member_discount_rate,
-      sys_clinic_id, seller_id, operator_id,
-      cashier_id, pay_state, returned
-      )
+      first_cost_price, second_cost_price, produced_date,
+      expiry_date, pem_supplier_id, iym_inventory_add_id,
+      mrm_member_id, member_discount_rate, sys_clinic_id,
+      seller_id, operator_id, cashier_id,
+      pay_state, returned)
     values (#{id,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{lsh,jdbcType=VARCHAR},
       #{mxh,jdbcType=VARCHAR}, #{dwtSellPrescriptionLsh,jdbcType=VARCHAR}, #{invoiceTypeId,jdbcType=INTEGER},
       #{invoiceNo,jdbcType=VARCHAR}, #{invoiceDate,jdbcType=TIMESTAMP}, #{sysSellWayId,jdbcType=INTEGER},
@@ -65,11 +67,11 @@
       #{sellTaxRate,jdbcType=TINYINT}, #{discountable,jdbcType=BIT}, #{lossable,jdbcType=BIT},
       #{iymInventoryId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR},
       #{splitQuantity,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL},
-      #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER},
-      #{iymInventoryAddId,jdbcType=INTEGER}, #{mrmMemberId,jdbcType=INTEGER}, #{memberDiscountRate,jdbcType=REAL},
-      #{sysClinicId,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER},
-      #{cashierId,jdbcType=INTEGER}, #{payState,jdbcType=BIT}, #{returned,jdbcType=BIT}
-      )
+      #{firstCostPrice,jdbcType=DECIMAL}, #{secondCostPrice,jdbcType=DECIMAL}, #{producedDate,jdbcType=DATE},
+      #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER},
+      #{mrmMemberId,jdbcType=INTEGER}, #{memberDiscountRate,jdbcType=REAL}, #{sysClinicId,jdbcType=INTEGER},
+      #{sellerId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{cashierId,jdbcType=INTEGER},
+      #{payState,jdbcType=BIT}, #{returned,jdbcType=BIT})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.datareport.bean.SellRecord">
     update dr_sell_record
@@ -96,6 +98,8 @@
       split_quantity = #{splitQuantity,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=INTEGER},
       cost_price = #{costPrice,jdbcType=DECIMAL},
+      first_cost_price = #{firstCostPrice,jdbcType=DECIMAL},
+      second_cost_price = #{secondCostPrice,jdbcType=DECIMAL},
       produced_date = #{producedDate,jdbcType=DATE},
       expiry_date = #{expiryDate,jdbcType=DATE},
       pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
@@ -114,9 +118,10 @@
     select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
     invoice_date, sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price,
     actual_retail_price, purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id,
-    ph, pch, split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
-    iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
-    operator_id, cashier_id, pay_state, returned
+    ph, pch, split_quantity, quantity, cost_price, first_cost_price, second_cost_price,
+    produced_date, expiry_date, pem_supplier_id, iym_inventory_add_id, mrm_member_id,
+    member_discount_rate, sys_clinic_id, seller_id, operator_id, cashier_id, pay_state,
+    returned
     from dr_sell_record
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -124,9 +129,10 @@
     select id, creation_date, lsh, mxh, dwt_sell_prescription_lsh, invoice_type_id, invoice_no,
     invoice_date, sys_sell_way_id, sys_sell_type_id, entity_type_id, entity_id, retail_price,
     actual_retail_price, purchase_tax_rate, sell_tax_rate, discountable, lossable, iym_inventory_id,
-    ph, pch, split_quantity, quantity, cost_price, produced_date, expiry_date, pem_supplier_id,
-    iym_inventory_add_id, mrm_member_id, member_discount_rate, sys_clinic_id, seller_id,
-    operator_id, cashier_id, pay_state, returned
+    ph, pch, split_quantity, quantity, cost_price, first_cost_price, second_cost_price,
+    produced_date, expiry_date, pem_supplier_id, iym_inventory_add_id, mrm_member_id,
+    member_discount_rate, sys_clinic_id, seller_id, operator_id, cashier_id, pay_state,
+    returned
     from dr_sell_record
   </select>
 
@@ -197,7 +203,5 @@
       (lsh = #{lsh})
     order by sysSellTypeId, entityTypeId, entityId
   </select>
-
-
 
 </mapper>

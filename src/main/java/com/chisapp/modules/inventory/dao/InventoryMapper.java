@@ -55,6 +55,4 @@ public interface InventoryMapper {
                                                       @Param("gsmGoodsOid") String gsmGoodsOid,
                                                       @Param("gsmGoodsName") String gsmGoodsName,
                                                       @Param("ph") String ph);
-
-
 }

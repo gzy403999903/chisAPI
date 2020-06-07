@@ -18,8 +18,6 @@ public interface SellRecordMapper {
 
     int updateByPrimaryKey(SellRecord record);
 
-
-
     /* -------------------------------------------------------------------------------------------------------------- */
 
     void updateReturnedByIdList(@Param("idList") List<Integer> idList);
@@ -39,7 +37,6 @@ public interface SellRecordMapper {
 
     List<Map<String, Object>> selectClinicListByLsh(@Param("sysClinicId") Integer sysClinicId,
                                                     @Param("lsh") String lsh);
-
 
 
 }

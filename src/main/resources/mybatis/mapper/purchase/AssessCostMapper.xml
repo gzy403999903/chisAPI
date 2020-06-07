@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chisapp.modules.purchase.dao.AssessCostMapper">
+  <resultMap id="BaseResultMap" type="com.chisapp.modules.purchase.bean.AssessCost">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pem_supplier_id" jdbcType="INTEGER" property="pemSupplierId" />
+    <result column="gsm_goods_id" jdbcType="INTEGER" property="gsmGoodsId" />
+    <result column="first_cost_price" jdbcType="DECIMAL" property="firstCostPrice" />
+    <result column="second_cost_price" jdbcType="DECIMAL" property="secondCostPrice" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="last_updater_id" jdbcType="INTEGER" property="lastUpdaterId" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from pem_assess_cost
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chisapp.modules.purchase.bean.AssessCost">
+    insert into pem_assess_cost (id, pem_supplier_id, gsm_goods_id,
+      first_cost_price, second_cost_price, creator_id,
+      creation_date, last_updater_id, last_update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{pemSupplierId,jdbcType=INTEGER}, #{gsmGoodsId,jdbcType=INTEGER},
+      #{firstCostPrice,jdbcType=DECIMAL}, #{secondCostPrice,jdbcType=DECIMAL}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{lastUpdaterId,jdbcType=INTEGER}, #{lastUpdateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.purchase.bean.AssessCost">
+    update pem_assess_cost
+    set pem_supplier_id = #{pemSupplierId,jdbcType=INTEGER},
+      gsm_goods_id = #{gsmGoodsId,jdbcType=INTEGER},
+      first_cost_price = #{firstCostPrice,jdbcType=DECIMAL},
+      second_cost_price = #{secondCostPrice,jdbcType=DECIMAL},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      last_updater_id = #{lastUpdaterId,jdbcType=INTEGER},
+      last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, pem_supplier_id, gsm_goods_id, first_cost_price, second_cost_price, creator_id,
+    creation_date, last_updater_id, last_update_date
+    from pem_assess_cost
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, pem_supplier_id, gsm_goods_id, first_cost_price, second_cost_price, creator_id,
+    creation_date, last_updater_id, last_update_date
+    from pem_assess_cost
+  </select>
+
+
+  <!-- ************************************************************************************************************* -->
+
+  <select id="selectBySupplierIdAndGoodsIdList" resultMap="BaseResultMap">
+    select *
+    from pem_assess_cost
+    where
+    (pem_supplier_id = #{pemSupplierId}) and
+    (gsm_goods_id in
+      <foreach collection="gsmGoodsIdList" item="gsmGoodsId" open="(" separator="," close=")">
+        #{gsmGoodsId}
+      </foreach>
+    )
+
+  </select>
+
+  <select id="selectByCriteria" resultType="map">
+    select *
+    from view_pem_assess_cost
+    <trim prefix="where" suffixOverrides="and">
+      <if test="pemSupplierOid != null &amp;&amp; pemSupplierOid.trim() != ''">
+        (pemSupplierOid = '${pemSupplierOid}%') and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid = '${gsmGoodsOid}%') and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+    </trim>
+    order by id desc
+  </select>
+
+</mapper>

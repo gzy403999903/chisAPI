@@ -11,6 +11,8 @@
     <result column="split_quantity" jdbcType="INTEGER" property="splitQuantity" />
     <result column="quantity" jdbcType="INTEGER" property="quantity" />
     <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="first_cost_price" jdbcType="DECIMAL" property="firstCostPrice" />
+    <result column="second_cost_price" jdbcType="DECIMAL" property="secondCostPrice" />
     <result column="average_cost_price" jdbcType="DECIMAL" property="averageCostPrice" />
     <result column="purchase_tax_rate" jdbcType="TINYINT" property="purchaseTaxRate" />
     <result column="sell_tax_rate" jdbcType="TINYINT" property="sellTaxRate" />
@@ -27,15 +29,17 @@
     insert into iym_inventory (id, sys_clinic_id, iym_inventory_type_id,
       gsm_goods_id, ph, pch,
       split_quantity, quantity, cost_price,
-      average_cost_price, purchase_tax_rate, sell_tax_rate,
-      produced_date, expiry_date, pem_supplier_id,
-      iym_inventory_add_id)
+      first_cost_price, second_cost_price, average_cost_price,
+      purchase_tax_rate, sell_tax_rate, produced_date,
+      expiry_date, pem_supplier_id, iym_inventory_add_id
+      )
     values (#{id,jdbcType=INTEGER}, #{sysClinicId,jdbcType=INTEGER}, #{iymInventoryTypeId,jdbcType=INTEGER},
       #{gsmGoodsId,jdbcType=INTEGER}, #{ph,jdbcType=VARCHAR}, #{pch,jdbcType=VARCHAR},
       #{splitQuantity,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL},
-      #{averageCostPrice,jdbcType=DECIMAL}, #{purchaseTaxRate,jdbcType=TINYINT}, #{sellTaxRate,jdbcType=TINYINT},
-      #{producedDate,jdbcType=DATE}, #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER},
-      #{iymInventoryAddId,jdbcType=INTEGER})
+      #{firstCostPrice,jdbcType=DECIMAL}, #{secondCostPrice,jdbcType=DECIMAL}, #{averageCostPrice,jdbcType=DECIMAL},
+      #{purchaseTaxRate,jdbcType=TINYINT}, #{sellTaxRate,jdbcType=TINYINT}, #{producedDate,jdbcType=DATE},
+      #{expiryDate,jdbcType=DATE}, #{pemSupplierId,jdbcType=INTEGER}, #{iymInventoryAddId,jdbcType=INTEGER}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.inventory.bean.Inventory">
     update iym_inventory
@@ -47,6 +51,8 @@
       split_quantity = #{splitQuantity,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=INTEGER},
       cost_price = #{costPrice,jdbcType=DECIMAL},
+      first_cost_price = #{firstCostPrice,jdbcType=DECIMAL},
+      second_cost_price = #{secondCostPrice,jdbcType=DECIMAL},
       average_cost_price = #{averageCostPrice,jdbcType=DECIMAL},
       purchase_tax_rate = #{purchaseTaxRate,jdbcType=TINYINT},
       sell_tax_rate = #{sellTaxRate,jdbcType=TINYINT},
@@ -58,18 +64,17 @@
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, sys_clinic_id, iym_inventory_type_id, gsm_goods_id, ph, pch, split_quantity,
-    quantity, cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
-    expiry_date, pem_supplier_id, iym_inventory_add_id
+    quantity, cost_price, first_cost_price, second_cost_price, average_cost_price, purchase_tax_rate,
+    sell_tax_rate, produced_date, expiry_date, pem_supplier_id, iym_inventory_add_id
     from iym_inventory
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, sys_clinic_id, iym_inventory_type_id, gsm_goods_id, ph, pch, split_quantity,
-    quantity, cost_price, average_cost_price, purchase_tax_rate, sell_tax_rate, produced_date,
-    expiry_date, pem_supplier_id, iym_inventory_add_id
+    quantity, cost_price, first_cost_price, second_cost_price, average_cost_price, purchase_tax_rate,
+    sell_tax_rate, produced_date, expiry_date, pem_supplier_id, iym_inventory_add_id
     from iym_inventory
   </select>
-
 
   <!-- ************************************************************************************************************* -->
   <update id="updateQuantityById">
@@ -89,13 +94,13 @@
     FROM iym_inventory
     WHERE
     id IN (
-      SELECT MAX(id)
-      FROM iym_inventory
-      WHERE gsm_goods_id IN
-        <foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
-          #{goodsId}
-        </foreach>
-      GROUP BY gsm_goods_id
+    SELECT MAX(id)
+    FROM iym_inventory
+    WHERE gsm_goods_id IN
+    <foreach collection="goodsIdList" item="goodsId" open="(" separator="," close=")">
+      #{goodsId}
+    </foreach>
+    GROUP BY gsm_goods_id
     )
   </select>
 
@@ -116,16 +121,16 @@
   <select id="selectClinicPchListByGoodsIdList" resultType="map">
     select *
     from
-      view_iym_inventory
+    view_iym_inventory
     where
-      (sysClinicId = #{sysClinicId}) and
-      (sellable is true) and
-      (quantity > 0) and
-      gsmGoodsId in (
-        <foreach collection="gsmGoodsIdList" item="goodsId" separator=",">
-          #{goodsId}
-        </foreach>
-      )
+    (sysClinicId = #{sysClinicId}) and
+    (sellable is true) and
+    (quantity > 0) and
+    gsmGoodsId in (
+    <foreach collection="gsmGoodsIdList" item="goodsId" separator=",">
+      #{goodsId}
+    </foreach>
+    )
     order by expiryDate
   </select>
 
@@ -214,7 +219,5 @@
     </trim>
     order by sysClinicId, iymInventoryTypeId, gsmGoodsTypeId, gsmGoodsOid, expiryDate
   </select>
-
-
 
 </mapper>
