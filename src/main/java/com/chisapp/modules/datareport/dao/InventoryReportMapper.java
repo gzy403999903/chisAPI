@@ -30,8 +30,12 @@ public interface InventoryReportMapper {
                                                                 @Param("sellQuantity") Integer sellQuantity,
                                                                 @Param("minAge") Integer minAge);
 
-
-
+    List<Map<String, Object>> selectInventoryAssessCostByCriteria(@Param("gsmGoodsOid") String gsmGoodsOid,
+                                                                  @Param("gsmGoodsName") String gsmGoodsName,
+                                                                  @Param("pemSupplierOid") String pemSupplierOid,
+                                                                  @Param("pemSupplierName") String pemSupplierName,
+                                                                  @Param("sysClinicName") String sysClinicName,
+                                                                  @Param("groupBy") String groupBy);
 
 
 

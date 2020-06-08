@@ -222,5 +222,18 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
         return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
     }
 
+    @Override
+    public List<Map<String, Object>> getSellAssessCostByCriteria(String[] creationDate,
+                                                                 String gsmGoodsOid,
+                                                                 String gsmGoodsName,
+                                                                 String pemSupplierOid,
+                                                                 String pemSupplierName,
+                                                                 String sysClinicName,
+                                                                 String groupBy) {
+
+        return sellRecordReportMapper.selectSellAssessCostByCriteria(
+                creationDate, gsmGoodsOid, gsmGoodsName, pemSupplierOid, pemSupplierName, sysClinicName, groupBy);
+    }
+
 
 }

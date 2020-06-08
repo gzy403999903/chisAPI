@@ -60,6 +60,22 @@ public interface InventoryReportService {
                                                              Integer sellQuantity,
                                                              Integer minAge);
 
+    /**
+     * 库存协定成本
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sysClinicName
+     * @param groupBy
+     * @return
+     */
+    List<Map<String, Object>> getInventoryAssessCostByCriteria(String gsmGoodsOid,
+                                                               String gsmGoodsName,
+                                                               String pemSupplierOid,
+                                                               String pemSupplierName,
+                                                               String sysClinicName,
+                                                               String groupBy);
 
 
 }

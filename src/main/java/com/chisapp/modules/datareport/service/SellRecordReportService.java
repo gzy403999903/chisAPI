@@ -193,4 +193,23 @@ public interface SellRecordReportService {
                                                    String sysClinicName,
                                                    String sellerName);
 
+    /**
+     * 销售协定成本
+     * @param creationDate
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sysClinicName
+     * @param groupBy
+     * @return
+     */
+    List<Map<String, Object>> getSellAssessCostByCriteria(String[] creationDate,
+                                                          String gsmGoodsOid,
+                                                          String gsmGoodsName,
+                                                          String pemSupplierOid,
+                                                          String pemSupplierName,
+                                                          String sysClinicName,
+                                                          String groupBy);
+
 }

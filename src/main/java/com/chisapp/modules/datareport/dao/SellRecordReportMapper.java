@@ -83,6 +83,14 @@ public interface SellRecordReportMapper {
                                                                    @Param("sysClinicName") String sysClinicName,
                                                                    @Param("sellerName") String sellerName);
 
+    List<Map<String, Object>> selectSellAssessCostByCriteria(@Param("creationDate") String[] creationDate,
+                                                             @Param("gsmGoodsOid") String gsmGoodsOid,
+                                                             @Param("gsmGoodsName") String gsmGoodsName,
+                                                             @Param("pemSupplierOid") String pemSupplierOid,
+                                                             @Param("pemSupplierName") String pemSupplierName,
+                                                             @Param("sysClinicName") String sysClinicName,
+                                                             @Param("groupBy") String groupBy);
+
 
 
 }

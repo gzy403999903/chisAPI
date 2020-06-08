@@ -202,6 +202,36 @@ public class InventoryReportHandler {
         return PageResult.success().resultSet("page", pageInfo);
     }
 
+    /**
+     * 库存协定成本
+     * @param pageNum
+     * @param pageSize
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sysClinicName
+     * @param groupBy
+     * @return
+     */
+    @GetMapping("/getInventoryAssessCostByCriteria")
+    public PageResult getInventoryAssessCostByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+                                                        @RequestParam(defaultValue="1") Integer pageSize,
+                                                        @RequestParam(required = false) String gsmGoodsOid,
+                                                        @RequestParam(required = false) String gsmGoodsName,
+                                                        @RequestParam(required = false) String pemSupplierOid,
+                                                        @RequestParam(required = false) String pemSupplierName,
+                                                        @RequestParam(required = false) String sysClinicName,
+                                                        @RequestParam(defaultValue="clinic") String groupBy) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = inventoryReportService.getInventoryAssessCostByCriteria(
+                gsmGoodsOid, gsmGoodsName, pemSupplierOid, pemSupplierName, sysClinicName, groupBy);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
+
 
 
 

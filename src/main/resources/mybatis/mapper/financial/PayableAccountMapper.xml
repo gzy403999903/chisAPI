@@ -134,6 +134,7 @@
       where split_quantity = 1
       group by iym_inventory_add_id
     ) c on a.iymInventoryAddId = c.iym_inventory_add_id
+    ORDER BY a.iymInventoryAddId
   </select>
 
 </mapper>

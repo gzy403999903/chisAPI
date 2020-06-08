@@ -518,4 +518,46 @@
     ORDER BY a.sys_clinic_id, a.seller_id
   </select>
 
+  <!-- 销售协定成本报表 -->
+  <select id="selectSellAssessCostByCriteria" resultType="map">
+    SELECT
+    entityTypeName AS gsmGoodsTypeName, entityOid AS gsmGoodsOid, entityName AS gsmGoodsName,
+    specs AS gsmGoodsSpecs, unitsName AS goodsUnitsName,
+    retailPrice, costPrice, firstCostPrice, secondCostPrice, SUM(quantity) AS quantity,
+    manufacturerName, originName, goodsClassifyName, pemSupplierId, pemSupplierOid, pemSupplierName, sysClinicName
+    FROM view_dr_sell_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="creationDate != null &amp;&amp; creationDate.length == 2">
+        (DATE_FORMAT(creationDate, '%Y-%m-%d') between #{creationDate[0]} and #{creationDate[1]}) and
+      </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (entityOid = #{gsmGoodsOid}) and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (entityName like '${gsmGoodsName}%' or entityCode like '${gsmGoodsName}%') and
+      </if>
+      <if test="pemSupplierOid != null &amp;&amp; pemSupplierOid.trim() != ''">
+        (pemSupplierOid = #{pemSupplierOid}) and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+      <if test="true">
+        (returned = 0 AND sysSellTypeId = 1) and
+      </if>
+    </trim>
+    <if test="groupBy == 'clinic'">
+      GROUP BY sysClinicId, entityId, costPrice, firstCostPrice, secondCostPrice, pemSupplierId
+      ORDER BY sysClinicId, entityOid
+    </if>
+    <if test="groupBy != 'clinic'">
+      GROUP BY entityId, costPrice, firstCostPrice, secondCostPrice, pemSupplierId
+      ORDER BY entityOid
+    </if>
+  </select>
+
+
 </mapper>

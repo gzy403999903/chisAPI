@@ -207,27 +207,30 @@ public class InventoryServiceImpl implements InventoryService {
         }
 
         // 拆零操作
-        // 计算拆零成本单价
-        BigDecimal costPrice = inventory.getCostPrice();
         // 获取拆分数量
         int splitQuantity = goods.getSplitQuantity();
         // 平均成本单价 = 成本单价 / 拆分数量
-        BigDecimal averageSplitCostPrice = costPrice.divide(new BigDecimal(splitQuantity), 4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal averageCostPrice = inventory.getCostPrice().divide(new BigDecimal(splitQuantity), 4, BigDecimal.ROUND_HALF_UP);
         // 获取最后一次平均成本单价的取值(通过该值判断是否有可以除尽)
-        BigDecimal lastOneSplitCostPrice = costPrice.subtract(averageSplitCostPrice.multiply(new BigDecimal(splitQuantity -1)));
+        BigDecimal lastOneAverageCostPrice = inventory.getCostPrice().subtract(averageCostPrice.multiply(new BigDecimal(splitQuantity -1)));
+        // 获取一成本、二成本拆零单价
+        BigDecimal averageFirstCostPrice = inventory.getFirstCostPrice().divide(new BigDecimal(splitQuantity), 4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal averageSecondCostPrice = inventory.getSecondCostPrice().divide(new BigDecimal(splitQuantity), 4, BigDecimal.ROUND_HALF_UP);
 
         // 创建一条拆零记录
         List<Inventory> inventoryList = new ArrayList<>();
 
         // 判断是否拆零平均成本单价无法除尽, 则单独创建一条拆零库存记录
-        if (averageSplitCostPrice.compareTo(lastOneSplitCostPrice) != 0) {
+        if (averageCostPrice.compareTo(lastOneAverageCostPrice) != 0) {
             Inventory splitInventory = new Inventory();
             BeanUtils.copyProperties(inventory, splitInventory);
 
             splitInventory.setId(null); // 清空ID
             splitInventory.setSplitQuantity(splitQuantity); // 设置拆分数量
             splitInventory.setQuantity(1); // 设置拆分后的库存数量
-            splitInventory.setCostPrice(lastOneSplitCostPrice); // 设置成本价
+            splitInventory.setCostPrice(lastOneAverageCostPrice); // 设置成本价
+            splitInventory.setFirstCostPrice(averageFirstCostPrice); // 设置一成本价
+            splitInventory.setSecondCostPrice(averageSecondCostPrice); // 设置二成本价
 
             inventoryList.add(splitInventory);
         }
@@ -240,7 +243,9 @@ public class InventoryServiceImpl implements InventoryService {
             splitInventory.setId(null); // 清空ID
             splitInventory.setSplitQuantity(splitQuantity); // 设置拆分数量
             splitInventory.setQuantity(splitQuantity - inventoryList.size()); // 设置拆分后的库存数量(如果已经创建了一条, 则减去对应的库存数量)
-            splitInventory.setCostPrice(averageSplitCostPrice); // 设置成本价
+            splitInventory.setCostPrice(averageCostPrice); // 设置成本价
+            splitInventory.setFirstCostPrice(averageFirstCostPrice); // 设置一成本价
+            splitInventory.setSecondCostPrice(averageSecondCostPrice); // 设置二成本价
 
             inventoryList.add(splitInventory);
         }

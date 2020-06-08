@@ -117,6 +117,43 @@
     ORDER BY minAge desc, quantity desc, sellFrequency, sellQuantity
   </select>
 
+  <!-- 库存协定成本报表 -->
+  <select id="selectInventoryAssessCostByCriteria" resultType="map">
+    SELECT
+      gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName,
+      retailPrice, costPrice, firstCostPrice, secondCostPrice, SUM(quantity) AS quantity,
+      manufacturerName, originName, goodsClassifyName,
+      pemSupplierId, pemSupplierOid, pemSupplierName, sysClinicName
+    FROM view_iym_inventory
+    <trim prefix="where" suffixOverrides="and">
+      <if test="true">
+        (quantity > 0 ) and
+      </if>
+      <if test="gsmGoodsOid != null &amp;&amp; gsmGoodsOid.trim() != ''">
+        (gsmGoodsOid = #{gsmGoodsOid}) and
+      </if>
+      <if test="gsmGoodsName != null &amp;&amp; gsmGoodsName.trim() != ''">
+        (gsmGoodsName like '${gsmGoodsName}%' or gsmGoodsCode like '${gsmGoodsName}%') and
+      </if>
+      <if test="pemSupplierOid != null &amp;&amp; pemSupplierOid.trim() != ''">
+        (pemSupplierOid = #{pemSupplierOid}) and
+      </if>
+      <if test="pemSupplierName != null &amp;&amp; pemSupplierName.trim() != ''">
+        (pemSupplierName like '${pemSupplierName}%' or pemSupplierCode like '${pemSupplierName}%') and
+      </if>
+      <if test="sysClinicName != null &amp;&amp; sysClinicName.trim() != ''">
+        (sysClinicName like '${sysClinicName}%' or sysClinicCode like '${sysClinicName}%') and
+      </if>
+    </trim>
+    <if test="groupBy == 'clinic'">
+      GROUP BY sysClinicId, gsmGoodsId, costPrice, firstCostPrice, secondCostPrice, pemSupplierId
+      ORDER BY sysClinicId, gsmGoodsOid
+    </if>
+    <if test="groupBy != 'clinic'">
+      GROUP BY gsmGoodsId, costPrice, firstCostPrice, secondCostPrice, pemSupplierId
+      ORDER BY gsmGoodsOid
+    </if>
+  </select>
 
 
 </mapper>

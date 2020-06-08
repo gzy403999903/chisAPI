@@ -84,5 +84,17 @@ public class InventoryReportServiceImpl implements InventoryReportService {
                 sysClinicId, sysClinicName, quantity, gsmGoodsTypeId, gsmGoodsOid, gsmGoodsName, days, sellFrequency, sellQuantity, minAge);
     }
 
+    @Override
+    public List<Map<String, Object>> getInventoryAssessCostByCriteria(String gsmGoodsOid,
+                                                                      String gsmGoodsName,
+                                                                      String pemSupplierOid,
+                                                                      String pemSupplierName,
+                                                                      String sysClinicName,
+                                                                      String groupBy) {
+
+        return inventoryReportMapper.selectInventoryAssessCostByCriteria(
+                gsmGoodsOid, gsmGoodsName, pemSupplierOid, pemSupplierName, sysClinicName, groupBy);
+    }
+
 
 }

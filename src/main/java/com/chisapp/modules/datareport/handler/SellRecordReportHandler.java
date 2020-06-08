@@ -498,7 +498,37 @@ public class SellRecordReportHandler {
         }
     }
 
+    /**
+     * 销售协定成本
+     * @param pageNum
+     * @param pageSize
+     * @param creationDate
+     * @param gsmGoodsOid
+     * @param gsmGoodsName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sysClinicName
+     * @param groupBy
+     * @return
+     */
+    @GetMapping("/getSellAssessCostByCriteria")
+    public PageResult getSellAssessCostByCriteria (@RequestParam(defaultValue="1") Integer pageNum,
+                                                   @RequestParam(defaultValue="1") Integer pageSize,
+                                                   @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                                   @RequestParam(required = false) String gsmGoodsOid,
+                                                   @RequestParam(required = false) String gsmGoodsName,
+                                                   @RequestParam(required = false) String pemSupplierOid,
+                                                   @RequestParam(required = false) String pemSupplierName,
+                                                   @RequestParam(required = false) String sysClinicName,
+                                                   @RequestParam(defaultValue="clinic") String groupBy) {
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> pageList = sellRecordReportService.getSellAssessCostByCriteria(
+                creationDate, gsmGoodsOid, gsmGoodsName, pemSupplierOid, pemSupplierName, sysClinicName, groupBy);
+        PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(pageList);
+
+        return PageResult.success().resultSet("page", pageInfo);
+    }
 
 
 
