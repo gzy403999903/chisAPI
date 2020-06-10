@@ -523,7 +523,11 @@
     SELECT
     entityTypeName AS gsmGoodsTypeName, entityOid AS gsmGoodsOid, entityName AS gsmGoodsName,
     specs AS gsmGoodsSpecs, unitsName AS goodsUnitsName,
-    retailPrice, costPrice, firstCostPrice, secondCostPrice, SUM(quantity) AS quantity,
+    SUM(quantity) AS quantity, retailPrice, costPrice, firstCostPrice, secondCostPrice,
+    /*
+    round((actualRetailPrice - secondCostPrice) * sum(quantity), 2) as secondMle,
+    round((actualRetailPrice - secondCostPrice) / actualRetailPrice * 100, 2) as secondMll,
+    */
     manufacturerName, originName, goodsClassifyName, pemSupplierId, pemSupplierOid, pemSupplierName, sysClinicName
     FROM view_dr_sell_record
     <trim prefix="where" suffixOverrides="and">

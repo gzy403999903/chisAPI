@@ -56,4 +56,10 @@ public interface DoctorService {
      * @return
      */
     List<Map<String, Object>> getClinicEnabled(Integer sysClinicId);
+
+    /**
+     * 清除 getClinicEnabled 方法缓存
+     * @param sysClinicId
+     */
+    void getClinicEnabledCacheEvict(Integer sysClinicId);
 }

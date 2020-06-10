@@ -2,6 +2,7 @@ package com.chisapp.modules.system.service.impl;
 
 import com.chisapp.modules.system.bean.User;
 import com.chisapp.modules.system.dao.UserMapper;
+import com.chisapp.modules.system.service.DoctorService;
 import com.chisapp.modules.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
@@ -19,12 +20,12 @@ import java.util.regex.Pattern;
 @CacheConfig(cacheNames = "User")
 @Service
 public class UserServiceImpl implements UserService {
-
-    private UserMapper userMapper;
     @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
+    private UserMapper userMapper;
+
+    @Autowired
+    private DoctorService doctorService;
+    /* -------------------------------------------------------------------------------------------------------------- */
 
     @CacheEvict(key = "'clinicEnabled' + #user.sysClinicId")
     @Override
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         userMapper.updateByPrimaryKey(user);
+        this.doctorService.getClinicEnabledCacheEvict(user.getSysClinicId()); // 清除额外的缓存
         return user;
     }
 
@@ -57,6 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(User user) {
         userMapper.deleteByPrimaryKey(user.getId());
+        this.doctorService.getClinicEnabledCacheEvict(user.getSysClinicId()); // 清除额外的缓存
     }
 
     @CachePut(key = "#user.id")

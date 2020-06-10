@@ -67,4 +67,9 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.selectClinicEnabled(sysClinicId);
     }
 
+    @CacheEvict(key = "#sysClinicId")
+    @Override
+    public void getClinicEnabledCacheEvict(Integer sysClinicId) {
+    }
+
 }

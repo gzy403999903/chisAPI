@@ -121,7 +121,11 @@
   <select id="selectInventoryAssessCostByCriteria" resultType="map">
     SELECT
       gsmGoodsTypeName, gsmGoodsOid, gsmGoodsName, gsmGoodsSpecs, goodsUnitsName,
-      retailPrice, costPrice, firstCostPrice, secondCostPrice, SUM(quantity) AS quantity,
+      SUM(quantity) AS quantity, retailPrice, costPrice, firstCostPrice, secondCostPrice,
+      /*
+      round((retailPrice - secondCostPrice) * sum(quantity), 2) as secondMle,
+      round((retailPrice - secondCostPrice) / retailPrice * 100, 2) as secondMll,
+      */
       manufacturerName, originName, goodsClassifyName,
       pemSupplierId, pemSupplierOid, pemSupplierName, sysClinicName
     FROM view_iym_inventory

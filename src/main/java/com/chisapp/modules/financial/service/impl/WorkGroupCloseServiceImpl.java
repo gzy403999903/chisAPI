@@ -70,7 +70,7 @@ public class WorkGroupCloseServiceImpl implements WorkGroupCloseService {
         return false;
     }
 
-    @CacheEvict(key = "#userDate.getTime() + '.' + #user.id")
+    @CacheEvict(key = "#userDate.getTime() + '-' + #user.id")
     @Override
     public void registration(Date userDate, Integer flmWorkGroupId, User user) {
         userDate = DateUtils.parseToShort(userDate);
@@ -99,7 +99,7 @@ public class WorkGroupCloseServiceImpl implements WorkGroupCloseService {
         workGroupCloseMapper.insert(workGroupClose);
     }
 
-    @CacheEvict(key = "#workGroupClose.logicDate.getTime() + '.' + #workGroupClose.operatorId")
+    @CacheEvict(key = "#workGroupClose.logicDate.getTime() + '-' + #workGroupClose.operatorId")
     @Override
     public void update(WorkGroupClose workGroupClose) {
         workGroupCloseMapper.updateByPrimaryKey(workGroupClose);
@@ -110,7 +110,7 @@ public class WorkGroupCloseServiceImpl implements WorkGroupCloseService {
         return workGroupCloseMapper.selectByPrimaryKey(id);
     }
 
-    @Cacheable(key = "#logicDate.getTime() + '.' + #operatorId", condition = "#logicDate.getTime() % 1000 == 0")
+    @Cacheable(key = "#logicDate.getTime() + '-' + #operatorId", condition = "#logicDate.getTime() % 1000 == 0")
     @Override
     public List<WorkGroupClose> getByLogicDateAndOperatorId(Date logicDate, Integer operatorId) {
         return workGroupCloseMapper.selectByLogicDateAndOperatorId(logicDate, operatorId);

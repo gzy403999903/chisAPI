@@ -1,6 +1,8 @@
 package com.chisapp.common.config;
 
 import com.chisapp.common.interceptor.AccessTokenInterceptor;
+import com.chisapp.common.interceptor.MalignityInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,11 +29,23 @@ public class SpringBootConfig implements WebMvcConfigurer {
     }
 
     /**
+     * 实例化拦截器
+     * 由于拦截器在 实例化 Bean 之前执行, 所以要在执行之前实例化该拦截器本身, 否则无法在其进行其他 Bean 的注入。
+     * @return
+     */
+    @Bean
+    public MalignityInterceptor malignityInterceptor() {
+        return new MalignityInterceptor();
+    }
+
+    /**
      * 配置自定义拦截器
      * @param registry
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(this.malignityInterceptor()).addPathPatterns("/**");
+
         // 添加 token 拦截器 (要排除访问或转发时不携带 token 信息的路径)
         registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/login/**", "/logout/**", "/unauthorized/**", "/forcedLogout");
