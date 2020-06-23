@@ -2,6 +2,8 @@ package com.chisapp.common.interceptor;
 
 import com.chisapp.modules.system.bean.User;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,6 +24,19 @@ public class MalignityInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 日志
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+
+        logger.trace("test trace");
+        logger.debug("test debug");
+        logger.info("test info");
+        logger.warn("test warn");
+        logger.error("test error");
+
+        // 查看操作系统
+        String os = System.getProperty("os.name").toLowerCase();
+        System.out.println(os);
+
         // 获取用户登录信息
         User user = (User) SecurityUtils.getSubject().getPrincipal(); // 获取用户信息
         // 获取访问者的 IP
@@ -30,10 +45,10 @@ public class MalignityInterceptor implements HandlerInterceptor {
         // 判断是否登陆
         if (user == null) {
             // 如果 60 秒内, 访问超过 5 次为频繁访问, 访问超过 10 次锁定
-            this.requestJudge(ip, 60, 5, 10);
+            // this.requestJudge(ip, 60, 5, 10);
         } else {
             // 如果 60 秒内, 访问超过 30 次为频繁访问, 访问超过 50 次锁定
-            this.requestJudge(ip, 60, 30, 50);
+            // this.requestJudge(ip, 60, 30, 50);
         }
 
         return true;

@@ -22,6 +22,4 @@ public interface DoctorMapper {
                                                          @Param("name") String name);
 
     List<Map<String, Object>> selectClinicEnabled(@Param("sysClinicId") Integer sysClinicId);
-
-
 }

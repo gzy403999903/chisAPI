@@ -81,9 +81,11 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
         WorkMonthClose workMonthClose = this.checkAccountPeriod(userDate, user.getSysClinicId());
         // 获取月结数据
         WorkMonthClose data = this.getClinicWorkMonthCloseData(userDate, user.getSysClinicId());
+        /*
         if (this.hasDisparity(data)) {
             throw new RuntimeException("本期成本结算存在差异");
         }
+        */
 
         workMonthClose.setHsQccb(data.getHsQccb());
         workMonthClose.setWsQccb(data.getWsQccb());

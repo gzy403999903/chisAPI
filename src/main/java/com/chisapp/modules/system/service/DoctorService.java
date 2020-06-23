@@ -2,6 +2,7 @@ package com.chisapp.modules.system.service;
 
 import com.chisapp.modules.system.bean.Doctor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -62,4 +63,25 @@ public interface DoctorService {
      * @param sysClinicId
      */
     void getClinicEnabledCacheEvict(Integer sysClinicId);
+
+    /**
+     * 上传医生签名
+     * @param file
+     * @return
+     */
+    String fileUploadSignature(MultipartFile file);
+
+    /**
+     * 上传医生头像
+     * @param file
+     * @return
+     */
+    String fileUploadAvatar(MultipartFile file);
+
+    /**
+     * 删除上传图片
+     * @param virtualDir
+     * @return
+     */
+    Boolean fileDelete (String virtualDir);
 }

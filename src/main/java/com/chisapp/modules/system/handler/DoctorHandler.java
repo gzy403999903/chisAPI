@@ -11,6 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -118,6 +119,48 @@ public class DoctorHandler {
         // 获取用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         return doctorService.getClinicEnabled(user.getSysClinicId());
+    }
+
+    /**
+     * 上传医生签名
+     * @param file
+     * @return
+     */
+    @PostMapping("/fileUploadSignature")
+    public PageResult fileUploadSignature(@RequestParam("file") MultipartFile file) {
+        String signatureUrl = doctorService.fileUploadSignature(file);
+        return PageResult.success().resultSet("signatureUrl", signatureUrl);
+    }
+
+    /**
+     * 删除上传签名
+     * @param virtualDir
+     * @return
+     */
+    @DeleteMapping("/fileDeleteSignature")
+    public Boolean fileDeleteSignature(String virtualDir) {
+        return doctorService.fileDelete(virtualDir);
+    }
+
+    /**
+     * 上传医生头像
+     * @param file
+     * @return
+     */
+    @PostMapping("/fileUploadAvatar")
+    public PageResult fileUploadAvatar(@RequestParam("file") MultipartFile file) {
+        String avatarUrl = doctorService.fileUploadAvatar(file);
+        return PageResult.success().resultSet("avatarUrl", avatarUrl);
+    }
+
+    /**
+     * 删除上传头像
+     * @param virtualDir
+     * @return
+     */
+    @DeleteMapping("/fileDeleteAvatar")
+    public Boolean fileDeleteAvatar(String virtualDir) {
+        return doctorService.fileDelete(virtualDir);
     }
 
 

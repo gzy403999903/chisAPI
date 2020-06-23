@@ -39,9 +39,6 @@ public class MemberHandler {
         this.memberService = memberService;
     }
 
-    @Value("${file.member-head-image-dir}")
-    private String memberHeadImageDir;
-
     /**
      * 请求参数中带有 ID 的方法在被调用前都会先调用此方法
      * 如果 ID 部位空则会进行查询并填充 model
@@ -203,31 +200,5 @@ public class MemberHandler {
         }
         return memberService.getEnabledLikeByKeyword(keyword);
     }
-
-
-    @PostMapping("/uploadMemberImage")
-    public PageResult uploadMemberHeadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        // 设置文件名
-        String fileName = file.getOriginalFilename();
-        // 设置存放路径
-        ServletContext servletContext = request.getSession().getServletContext();
-        String path = servletContext.getRealPath(memberHeadImageDir + fileName);
-        File dest = new File(path);
-
-        // 如果路径不存在则自动创建
-        if (!dest.exists()) {
-            dest.mkdirs();
-        }
-
-        try {
-            // 保存文件
-            file.transferTo(dest);
-        } catch (IOException e) {
-            return PageResult.fail().msg(e.getMessage());
-        }
-
-        return PageResult.success();
-    }
-
 
 }

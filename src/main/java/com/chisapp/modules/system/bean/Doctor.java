@@ -29,6 +29,12 @@ public class Doctor implements Serializable {
     @Length(max = 200)
     private String intro;
 
+    @Length(max = 200)
+    private String avatarUrl;
+
+    @Length(max = 200)
+    private String signatureUrl;
+
     private Integer creatorId;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -104,6 +110,22 @@ public class Doctor implements Serializable {
 
     public void setIntro(String intro) {
         this.intro = intro == null ? null : intro.trim();
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
+    }
+
+    public String getSignatureUrl() {
+        return signatureUrl;
+    }
+
+    public void setSignatureUrl(String signatureUrl) {
+        this.signatureUrl = signatureUrl == null ? null : signatureUrl.trim();
     }
 
     public Integer getCreatorId() {

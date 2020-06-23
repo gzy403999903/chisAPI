@@ -76,7 +76,7 @@
       `b`.`iymShelfPositionName`,
       `b`.`iymShelfPositionCode`,
       IFNULL(`b`.`maxQuantity`,0) AS `maxQuantity`,
-      IFNULL(`b`.`maxQuantity`,0) AS `minQuantity`,
+      IFNULL(`b`.`minQuantity`,0) AS `minQuantity`,
       `b`.`sysClinicId`,
       `b`.`sysClinicName`
     from view_gsm_goods a

@@ -525,8 +525,8 @@
     specs AS gsmGoodsSpecs, unitsName AS goodsUnitsName,
     SUM(quantity) AS quantity, retailPrice, costPrice, firstCostPrice, secondCostPrice,
     /*
-    round((actualRetailPrice - secondCostPrice) * sum(quantity), 2) as secondMle,
-    round((actualRetailPrice - secondCostPrice) / actualRetailPrice * 100, 2) as secondMll,
+    round((sum(actualRetailPrice) - sum(secondCostPrice)) * sum(quantity), 2) as secondMle,
+    round((sum(actualRetailPrice) - sum(secondCostPrice)) / sum(actualRetailPrice) * 100, 2) as secondMll,
     */
     manufacturerName, originName, goodsClassifyName, pemSupplierId, pemSupplierOid, pemSupplierName, sysClinicName
     FROM view_dr_sell_record

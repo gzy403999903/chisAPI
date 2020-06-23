@@ -1,17 +1,19 @@
 package com.chisapp.modules.system.service.impl;
 
+import com.chisapp.common.utils.fileutils.FileUploadUtils;
 import com.chisapp.modules.system.bean.Doctor;
 import com.chisapp.modules.system.bean.User;
 import com.chisapp.modules.system.dao.DoctorMapper;
 import com.chisapp.modules.system.service.DoctorService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: Tandy
@@ -35,19 +37,45 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setCreatorId(user.getId());
         doctor.setCreationDate(new Date());
         doctorMapper.insert(doctor);
+
+        // 取消上传文件的游离状态
+        this.cancelDissociative(doctor);
     }
 
     @CacheEvict(allEntries = true)
     @Override
     public Doctor update(Doctor doctor) {
         doctorMapper.updateByPrimaryKey(doctor);
+        // 取消上传文件的游离状态
+        this.cancelDissociative(doctor);
+
         return doctor;
+    }
+
+    private void cancelDissociative (Doctor doctor) {
+        // 取消上传签名的游离状态
+        if (doctor.getSignatureUrl() != null && !doctor.getSignatureUrl().trim().equals("")) {
+            fileUploadUtils.cancelDissociative(this.imageDir + doctor.getSignatureUrl());
+        }
+        // 取消上传头像的游离状态
+        if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
+            fileUploadUtils.cancelDissociative(this.imageDir + doctor.getAvatarUrl());
+        }
     }
 
     @CacheEvict(allEntries = true)
     @Override
     public void delete(Doctor doctor) {
         doctorMapper.deleteByPrimaryKey(doctor.getId());
+
+        // 删除上传的签名
+        if (doctor.getSignatureUrl() != null && !doctor.getSignatureUrl().trim().equals("")) {
+            this.fileDelete(doctor.getSignatureUrl());
+        }
+        // 删除上传的头像
+        if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
+            this.fileDelete(doctor.getAvatarUrl());
+        }
     }
 
     @Override
@@ -71,5 +99,46 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void getClinicEnabledCacheEvict(Integer sysClinicId) {
     }
+
+    @Autowired
+    private FileUploadUtils fileUploadUtils;
+
+    // 上传图片的真实路径
+    @Value("${upload.image-dir}")
+    private String imageDir;
+
+    @Override
+    public String fileUploadSignature(MultipartFile file) {
+        String virtualUrl = fileUploadUtils.create(file, this.imageDir).validateToSave(
+                Collections.singletonList("png"),
+                500,
+                500,
+                2048L);
+        String fileName = fileUploadUtils.getFileName(virtualUrl);
+        fileUploadUtils.markDissociative(this.imageDir + fileName);
+
+        return virtualUrl;
+    }
+
+    @Override
+    public String fileUploadAvatar(MultipartFile file) {
+        String virtualUrl = fileUploadUtils.create(file, this.imageDir).validateToSave(
+                Arrays.asList("jpg", "jpeg"),
+                500,
+                500,
+                2048L);
+        String fileName = fileUploadUtils.getFileName(virtualUrl);
+        fileUploadUtils.markDissociative(this.imageDir + fileName);
+
+        return virtualUrl;
+    }
+
+    @Override
+    public Boolean fileDelete(String virtualDir) {
+        String fileName = fileUploadUtils.getFileName(virtualDir);
+        fileUploadUtils.cancelDissociative(this.imageDir + fileName);
+        return fileUploadUtils.delete(imageDir + fileName);
+    }
+
 
 }

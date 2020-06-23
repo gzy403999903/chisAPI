@@ -11,6 +11,8 @@
     <result column="practice_type_id" jdbcType="INTEGER" property="practiceTypeId" />
     <result column="sys_practice_scope_id" jdbcType="INTEGER" property="sysPracticeScopeId" />
     <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="signature_url" jdbcType="VARCHAR" property="signatureUrl" />
     <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
   </resultMap>
@@ -22,11 +24,13 @@
     insert into sys_doctor (id, main_sys_clinic_id, sub_sys_clinic_id,
       sub_sys_clinic_expiry_date, sys_clinic_room_id, doctor_titles_id,
       practice_type_id, sys_practice_scope_id, intro,
-      creator_id, creation_date)
+      avatar_url, signature_url, creator_id,
+      creation_date)
     values (#{id,jdbcType=INTEGER}, #{mainSysClinicId,jdbcType=INTEGER}, #{subSysClinicId,jdbcType=INTEGER},
       #{subSysClinicExpiryDate,jdbcType=DATE}, #{sysClinicRoomId,jdbcType=INTEGER}, #{doctorTitlesId,jdbcType=INTEGER},
       #{practiceTypeId,jdbcType=INTEGER}, #{sysPracticeScopeId,jdbcType=INTEGER}, #{intro,jdbcType=VARCHAR},
-      #{creatorId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP})
+      #{avatarUrl,jdbcType=VARCHAR}, #{signatureUrl,jdbcType=VARCHAR}, #{creatorId,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.chisapp.modules.system.bean.Doctor">
     update sys_doctor
@@ -38,21 +42,26 @@
       practice_type_id = #{practiceTypeId,jdbcType=INTEGER},
       sys_practice_scope_id = #{sysPracticeScopeId,jdbcType=INTEGER},
       intro = #{intro,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      signature_url = #{signatureUrl,jdbcType=VARCHAR},
       creator_id = #{creatorId,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, main_sys_clinic_id, sub_sys_clinic_id, sub_sys_clinic_expiry_date, sys_clinic_room_id,
-    doctor_titles_id, practice_type_id, sys_practice_scope_id, intro, creator_id, creation_date
+    doctor_titles_id, practice_type_id, sys_practice_scope_id, intro, avatar_url, signature_url,
+    creator_id, creation_date
     from sys_doctor
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, main_sys_clinic_id, sub_sys_clinic_id, sub_sys_clinic_expiry_date, sys_clinic_room_id,
-    doctor_titles_id, practice_type_id, sys_practice_scope_id, intro, creator_id, creation_date
+    doctor_titles_id, practice_type_id, sys_practice_scope_id, intro, avatar_url, signature_url,
+    creator_id, creation_date
     from sys_doctor
   </select>
+
 
 
   <!-- ************************************************************************************************************* -->

@@ -2,6 +2,7 @@ package com.chisapp.common.config;
 
 import com.chisapp.common.interceptor.AccessTokenInterceptor;
 import com.chisapp.common.interceptor.MalignityInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -38,17 +39,21 @@ public class SpringBootConfig implements WebMvcConfigurer {
         return new MalignityInterceptor();
     }
 
+    // 上传文件虚拟路径
+    @Value("${upload.virtual-dir}**")
+    private String virtualDir;
     /**
      * 配置自定义拦截器
      * @param registry
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(this.malignityInterceptor()).addPathPatterns("/**");
+        // 防止频繁访问拦截器
+        // registry.addInterceptor(this.malignityInterceptor()).addPathPatterns("/**");
 
         // 添加 token 拦截器 (要排除访问或转发时不携带 token 信息的路径)
         registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/login/**", "/logout/**", "/unauthorized/**", "/forcedLogout");
+                .excludePathPatterns("/login/**", "/logout/**", "/unauthorized/**", "/forcedLogout", this.virtualDir);
     }
 
     /**
@@ -63,4 +68,5 @@ public class SpringBootConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .maxAge(3600);
     }
+
 }
