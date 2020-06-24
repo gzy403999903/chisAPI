@@ -5,6 +5,9 @@ import com.chisapp.common.component.TreeNode;
 import com.chisapp.modules.system.bean.Authc;
 import com.chisapp.modules.system.dao.AuthcMapper;
 import com.chisapp.modules.system.service.AuthcService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,19 +26,14 @@ import java.util.*;
 @Service
 public class AuthcServiceImpl implements AuthcService {
 
+    @Autowired
     private AuthcMapper authcMapper;
     @Autowired
-    public void setAuthcMapper(AuthcMapper authcMapper) {
-        this.authcMapper = authcMapper;
-    }
+    private SqlSessionFactory sqlSessionFactory;
 
-    private ShiroFilterChainDefinitionMapUpdater filterChainDefinitionMapUpdater;
     @Lazy
     @Autowired
-    public void setFilterChainDefinitionMapUpdater(ShiroFilterChainDefinitionMapUpdater filterChainDefinitionMapUpdater) {
-        this.filterChainDefinitionMapUpdater = filterChainDefinitionMapUpdater;
-    }
-
+    private ShiroFilterChainDefinitionMapUpdater filterChainDefinitionMapUpdater;
     /*----------------------------------------------------------------------------------------------------------------*/
 
     @CacheEvict(key = "'all'", beforeInvocation = true)
@@ -67,8 +65,7 @@ public class AuthcServiceImpl implements AuthcService {
         }
 
         if (changedAuthcMap.size() > 0) {
-            authcMapper.updateRoleNamesByMap(changedAuthcMap);
-            filterChainDefinitionMapUpdater.update();
+            this.doSaveOrUpdate(changedAuthcMap);
         }
     }
 
@@ -93,9 +90,22 @@ public class AuthcServiceImpl implements AuthcService {
         }
 
         if (changedAuthcMap.size() > 0) {
-            authcMapper.updateRoleNamesByMap(changedAuthcMap);
-            filterChainDefinitionMapUpdater.update();
+            this.doSaveOrUpdate(changedAuthcMap);
         }
+    }
+
+    private void doSaveOrUpdate(Map<Integer, String> changedAuthcMap) {
+        SqlSession batchSqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+        AuthcMapper mapper = batchSqlSession.getMapper(AuthcMapper.class);
+        try {
+            for (Integer id: changedAuthcMap.keySet()) {
+                mapper.updateRoleNamesById(changedAuthcMap.get(id), id);
+            }
+            batchSqlSession.commit();
+        } finally {
+            batchSqlSession.close();
+        }
+        filterChainDefinitionMapUpdater.update();
     }
 
     @Cacheable(key = "'all'")

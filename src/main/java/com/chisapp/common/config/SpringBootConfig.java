@@ -5,10 +5,7 @@ import com.chisapp.common.interceptor.MalignityInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * spring boot 配置文件
@@ -42,6 +39,11 @@ public class SpringBootConfig implements WebMvcConfigurer {
     // 上传文件虚拟路径
     @Value("${upload.virtual-dir}**")
     private String virtualDir;
+
+    // 上传图片的真实路径
+    @Value("${upload.image-dir}")
+    private String imageDir;
+
     /**
      * 配置自定义拦截器
      * @param registry
@@ -54,6 +56,15 @@ public class SpringBootConfig implements WebMvcConfigurer {
         // 添加 token 拦截器 (要排除访问或转发时不携带 token 信息的路径)
         registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/login/**", "/logout/**", "/unauthorized/**", "/forcedLogout", this.virtualDir);
+    }
+
+    /**
+     * 配置虚拟路径映射
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(this.virtualDir).addResourceLocations("file:" + this.imageDir);
     }
 
     /**

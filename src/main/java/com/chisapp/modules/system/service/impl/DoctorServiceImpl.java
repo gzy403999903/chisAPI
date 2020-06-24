@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.Doc;
 import java.util.*;
 import java.util.List;
 
@@ -45,10 +46,12 @@ public class DoctorServiceImpl implements DoctorService {
     @CacheEvict(allEntries = true)
     @Override
     public Doctor update(Doctor doctor) {
-        doctorMapper.updateByPrimaryKey(doctor);
+        // 删除历史上传文件
+        this.fileDeleteFromRecord(doctor);
         // 取消上传文件的游离状态
         this.cancelDissociative(doctor);
 
+        doctorMapper.updateByPrimaryKey(doctor);
         return doctor;
     }
 
@@ -60,6 +63,18 @@ public class DoctorServiceImpl implements DoctorService {
         // 取消上传头像的游离状态
         if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
             fileUploadUtils.cancelDissociative(this.imageDir + doctor.getAvatarUrl());
+        }
+    }
+
+    private void fileDeleteFromRecord (Doctor doctor) {
+        Doctor record = this.getById(doctor.getId());
+        // 删除历史签名文件
+        if (record.getSignatureUrl() != null && !doctor.getSignatureUrl().equals(record.getSignatureUrl())) {
+            this.fileDelete(record.getSignatureUrl());
+        }
+        // 删除历史头像文件
+        if (record.getAvatarUrl() != null && !doctor.getAvatarUrl().equals(record.getAvatarUrl())) {
+            this.fileDelete(record.getAvatarUrl());
         }
     }
 
@@ -110,10 +125,10 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public String fileUploadSignature(MultipartFile file) {
         String virtualUrl = fileUploadUtils.create(file, this.imageDir).validateToSave(
-                Collections.singletonList("png"),
+                Arrays.asList("jpg", "jpeg"),
                 500,
                 500,
-                2048L);
+                1024L);
         String fileName = fileUploadUtils.getFileName(virtualUrl);
         fileUploadUtils.markDissociative(this.imageDir + fileName);
 

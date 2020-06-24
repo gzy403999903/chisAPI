@@ -59,12 +59,10 @@
 
 
   <!-- ************************************************************************************************************* -->
-  <update id="updateRoleNamesByMap" parameterType="java.util.Map">
-    <foreach collection="_parameter.entrySet()" index="id" item="roleNames">
-      UPDATE sys_authc
-      SET role_names=#{roleNames}
-      WHERE id=#{id};
-    </foreach>
+  <update id="updateRoleNamesById" parameterType="java.util.Map">
+    UPDATE sys_authc
+    SET role_names=#{roleNames}
+    WHERE id=#{id};
   </update>
 
 </mapper>
