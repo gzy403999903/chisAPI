@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.Doc;
 import java.util.*;
 import java.util.List;
 
@@ -46,8 +45,8 @@ public class DoctorServiceImpl implements DoctorService {
     @CacheEvict(allEntries = true)
     @Override
     public Doctor update(Doctor doctor) {
-        // 删除历史上传文件
-        this.fileDeleteFromRecord(doctor);
+        // 删除与记录不一致的文件
+        this.fileDeleteDifferentRecord(doctor);
         // 取消上传文件的游离状态
         this.cancelDissociative(doctor);
 
@@ -55,6 +54,10 @@ public class DoctorServiceImpl implements DoctorService {
         return doctor;
     }
 
+    /**
+     * 取消文件的游离状态
+     * @param doctor
+     */
     private void cancelDissociative (Doctor doctor) {
         // 取消上传签名的游离状态
         if (doctor.getSignatureUrl() != null && !doctor.getSignatureUrl().trim().equals("")) {
@@ -66,14 +69,22 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    private void fileDeleteFromRecord (Doctor doctor) {
+    /**
+     * 删除与记录不一致的文件
+     * @param doctor
+     */
+    private void fileDeleteDifferentRecord (Doctor doctor) {
         Doctor record = this.getById(doctor.getId());
         // 删除历史签名文件
-        if (record.getSignatureUrl() != null && !doctor.getSignatureUrl().equals(record.getSignatureUrl())) {
+        if (record.getSignatureUrl() != null &&
+            !record.getSignatureUrl().trim().equals("") &&
+            !record.getSignatureUrl().equals(doctor.getSignatureUrl())) {
             this.fileDelete(record.getSignatureUrl());
         }
         // 删除历史头像文件
-        if (record.getAvatarUrl() != null && !doctor.getAvatarUrl().equals(record.getAvatarUrl())) {
+        if (record.getAvatarUrl() != null &&
+            !record.getAvatarUrl().trim().equals("") &&
+            !record.getAvatarUrl().equals(doctor.getAvatarUrl())) {
             this.fileDelete(record.getAvatarUrl());
         }
     }
@@ -91,6 +102,17 @@ public class DoctorServiceImpl implements DoctorService {
         if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
             this.fileDelete(doctor.getAvatarUrl());
         }
+    }
+
+    /**
+     * 删除已上传的文件
+     * @param virtualDir 虚拟路径
+     * @return
+     */
+    private Boolean fileDelete(String virtualDir) {
+        String fileName = fileUploadUtils.getFileName(virtualDir);
+        fileUploadUtils.cancelDissociative(this.imageDir + fileName);
+        return fileUploadUtils.delete(imageDir + fileName);
     }
 
     @Override
@@ -147,13 +169,5 @@ public class DoctorServiceImpl implements DoctorService {
 
         return virtualUrl;
     }
-
-    @Override
-    public Boolean fileDelete(String virtualDir) {
-        String fileName = fileUploadUtils.getFileName(virtualDir);
-        fileUploadUtils.cancelDissociative(this.imageDir + fileName);
-        return fileUploadUtils.delete(imageDir + fileName);
-    }
-
 
 }

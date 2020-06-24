@@ -77,11 +77,4 @@ public interface DoctorService {
      * @return
      */
     String fileUploadAvatar(MultipartFile file);
-
-    /**
-     * 删除上传图片
-     * @param virtualDir
-     * @return
-     */
-    Boolean fileDelete (String virtualDir);
 }

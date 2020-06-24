@@ -133,16 +133,6 @@ public class DoctorHandler {
     }
 
     /**
-     * 删除上传签名
-     * @param virtualDir
-     * @return
-     */
-    @DeleteMapping("/fileDeleteSignature")
-    public Boolean fileDeleteSignature(String virtualDir) {
-        return doctorService.fileDelete(virtualDir);
-    }
-
-    /**
      * 上传医生头像
      * @param file
      * @return
@@ -152,16 +142,5 @@ public class DoctorHandler {
         String avatarUrl = doctorService.fileUploadAvatar(file);
         return PageResult.success().resultSet("avatarUrl", avatarUrl);
     }
-
-    /**
-     * 删除上传头像
-     * @param virtualDir
-     * @return
-     */
-    @DeleteMapping("/fileDeleteAvatar")
-    public Boolean fileDeleteAvatar(String virtualDir) {
-        return doctorService.fileDelete(virtualDir);
-    }
-
 
 }
