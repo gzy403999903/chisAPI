@@ -184,7 +184,7 @@
         SUM(quantity * (cost_price / (100 + purchase_tax_rate) * 100)) AS wscb
         FROM dr_sell_record
         WHERE
-          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND sys_sell_type_id = 1 AND returned IS FALSE
+          (DATE_FORMAT(creation_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{beginDate}, '%Y-%m-%d') AND DATE_FORMAT(#{endDate}, '%Y-%m-%d')) AND sys_sell_type_id = 1
         GROUP BY sys_clinic_id
     ) e ON a.id = e.sys_clinic_id
     LEFT JOIN (

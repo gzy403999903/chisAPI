@@ -79,6 +79,69 @@ public class SellRecordReportServiceImpl implements SellRecordReportService {
     }
 
     @Override
+    public XSSFWorkbook downloadSellRecordExcel(String[] creationDate,
+                                                String[] invoiceDate,
+                                                Integer sysClinicId,
+                                                String sysClinicName,
+                                                String lsh,
+                                                Integer sysSellTypeId,
+                                                Integer entityTypeId,
+                                                String entityOid,
+                                                String entityName,
+                                                String mrmMemberName,
+                                                String phone,
+                                                Integer sellerId,
+                                                String sellerName,
+                                                String pemSupplierOid,
+                                                String pemSupplierName,
+                                                Integer[] sellClassifyId) {
+
+        List<Map<String, Object>> bodyList = this.getByCriteria(creationDate, invoiceDate, sysClinicId, sysClinicName,
+                lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId, sellerName,
+                pemSupplierOid, pemSupplierName, sellClassifyId);
+
+        // 生成 excel 报表
+        Map<String, String> titleMap = new LinkedHashMap<>();
+        titleMap.put("creationDate", "销售日期");
+        titleMap.put("lsh", "流水号");
+        titleMap.put("sysSellWayName", "销售方式");
+        titleMap.put("sysSellTypeName", "销售类型");
+        titleMap.put("entityTypeName", "销售分类");
+        titleMap.put("entityOid", "编码");
+        titleMap.put("entityName", "名称");
+        titleMap.put("specs", "规格");
+        titleMap.put("unitsName", "单位");
+        titleMap.put("originName", "产地");
+        titleMap.put("manufacturerName", "生产厂家");
+        titleMap.put("billingTypeName", "计费类型");
+        titleMap.put("goodsClassifyName", "商品分类");
+        titleMap.put("sellClassifyName", "主推分类");
+        titleMap.put("retailPrice", "零售单价");
+        titleMap.put("actualRetailPrice", "实收单价");
+        titleMap.put("purchaseTaxRate", "进货税率");
+        titleMap.put("sellTaxRate", "销售税率");
+        titleMap.put("ph", "批号");
+        titleMap.put("pch", "批次号");
+        titleMap.put("quantity", "销售数量");
+        titleMap.put("costPrice", "成本价");
+        titleMap.put("firstCostPrice", "一成本价");
+        titleMap.put("secondCostPrice", "二成本价");
+        titleMap.put("producedDate", "生产日期");
+        titleMap.put("expiryDate", "有效期至");
+        titleMap.put("pemSupplierOid", "供应商编码");
+        titleMap.put("pemSupplierName", "供应商名称");
+        titleMap.put("sellerId", "销售人ID");
+        titleMap.put("sellerName", "销售人");
+        titleMap.put("operatorId", "出库/审核人ID");
+        titleMap.put("operatorName", "出库/审核人");
+        titleMap.put("cashierId", "收银员ID");
+        titleMap.put("cashierName", "收银员");
+        titleMap.put("sysClinicName", "门诊名称");
+
+        return ExcelFileUtils.createXSSFWorkbook(titleMap, bodyList);
+    }
+
+    @Override
     public List<Map<String, Object>> getBillingTypeGroupListByCriteria(String[] creationDate,
                                                                        Integer sysClinicId,
                                                                        String sysClinicName,

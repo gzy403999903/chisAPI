@@ -81,11 +81,10 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
         WorkMonthClose workMonthClose = this.checkAccountPeriod(userDate, user.getSysClinicId());
         // 获取月结数据
         WorkMonthClose data = this.getClinicWorkMonthCloseData(userDate, user.getSysClinicId());
-        /*
+        // 判断是否存在差异
         if (this.hasDisparity(data)) {
             throw new RuntimeException("本期成本结算存在差异");
         }
-        */
 
         workMonthClose.setHsQccb(data.getHsQccb());
         workMonthClose.setWsQccb(data.getWsQccb());
@@ -118,7 +117,8 @@ public class WorkMonthCloseServiceImpl implements WorkMonthCloseService {
                 .subtract(workMonthClose.getHsLycb())
                 .subtract(workMonthClose.getHsBscb())
                 .subtract(workMonthClose.getHsQmcb());
-        return disparity.compareTo(new BigDecimal("0")) != 0;
+        // 允许差异绝对值小于1毛 (大于1毛返回 false, 小于等于则返回 true)
+        return disparity.abs().compareTo(new BigDecimal("0.1")) == 1;
     }
 
     @Override

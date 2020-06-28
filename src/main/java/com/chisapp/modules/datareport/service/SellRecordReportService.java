@@ -87,6 +87,43 @@ public interface SellRecordReportService {
                                                   Integer[] sellClassifyId);
 
     /**
+     * 导出销售报表
+     * @param creationDate
+     * @param invoiceDate
+     * @param sysClinicId
+     * @param sysClinicName
+     * @param lsh
+     * @param sysSellTypeId
+     * @param entityTypeId
+     * @param entityOid
+     * @param entityName
+     * @param mrmMemberName
+     * @param phone
+     * @param sellerId
+     * @param sellerName
+     * @param pemSupplierOid
+     * @param pemSupplierName
+     * @param sellClassifyId
+     * @return
+     */
+    XSSFWorkbook downloadSellRecordExcel(String[] creationDate,
+                                         String[] invoiceDate,
+                                         Integer sysClinicId,
+                                         String sysClinicName,
+                                         String lsh,
+                                         Integer sysSellTypeId,
+                                         Integer entityTypeId,
+                                         String entityOid,
+                                         String entityName,
+                                         String mrmMemberName,
+                                         String phone,
+                                         Integer sellerId,
+                                         String sellerName,
+                                         String pemSupplierOid,
+                                         String pemSupplierName,
+                                         Integer[] sellClassifyId);
+
+    /**
      * 计费类型汇总表
      * @param creationDate
      * @param sysClinicId

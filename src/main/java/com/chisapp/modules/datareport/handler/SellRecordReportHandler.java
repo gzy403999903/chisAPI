@@ -84,6 +84,48 @@ public class SellRecordReportHandler {
     }
 
     /**
+     * 导出销售报表
+     * @param response
+     */
+    @GetMapping("/downloadSellRecordExcel")
+    public void downloadSellRecordExcel(HttpServletResponse response,
+                                        @RequestParam(value = "creationDate[]",required = false) String[] creationDate,
+                                        @RequestParam(value = "invoiceDate[]",required = false) String[] invoiceDate,
+                                        @RequestParam(required = false) String sysClinicName,
+                                        @RequestParam(required = false) String lsh,
+                                        @RequestParam(required = false) Integer sysSellTypeId,
+                                        @RequestParam(required = false) Integer entityTypeId,
+                                        @RequestParam(required = false) String entityOid,
+                                        @RequestParam(required = false) String entityName,
+                                        @RequestParam(required = false) String mrmMemberName,
+                                        @RequestParam(required = false) String phone,
+                                        @RequestParam(required = false) Integer sellerId,
+                                        @RequestParam(required = false) String sellerName,
+                                        @RequestParam(required = false) String pemSupplierOid,
+                                        @RequestParam(required = false) String pemSupplierName,
+                                        @RequestParam(value = "sellClassifyId[]", required = false) Integer[] sellClassifyId) {
+
+        XSSFWorkbook workbook = sellRecordReportService.downloadSellRecordExcel(creationDate, invoiceDate, null,
+                sysClinicName, lsh, sysSellTypeId, entityTypeId, entityOid, entityName, mrmMemberName, phone, sellerId,
+                sellerName, pemSupplierOid, pemSupplierName, sellClassifyId);
+
+        // 如果为 null 则不继续执行
+        if (workbook == null) {
+            return;
+        }
+
+        String fileName = "销售报表.xlsx";
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 获取当前机构 销售明细
      * @param pageNum
      * @param pageSize

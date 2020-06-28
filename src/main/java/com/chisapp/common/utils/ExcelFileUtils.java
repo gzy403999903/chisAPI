@@ -1,5 +1,6 @@
 package com.chisapp.common.utils;
 
+import io.netty.util.CharsetUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.*;
@@ -29,7 +30,7 @@ public class ExcelFileUtils {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet();
         // 设置表格默认宽度
-        sheet.setDefaultColumnWidth(15);
+        // sheet.setDefaultColumnWidth(15);
         // 设置标题框样式
         XSSFCellStyle titleCellStyle = workbook.createCellStyle();
         titleCellStyle.setBorderBottom(BorderStyle.THIN); // 下边框
@@ -83,7 +84,50 @@ public class ExcelFileUtils {
             }
         }
 
+        // 设置自动列宽
+        for (int i = 0; i < titleMap.size(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+        // 处理中文不能自动调整列宽的问题 (必须在设置完表体内容后执行)
+        setSizeColumn(sheet, titleMap.size());
+
         return workbook;
+    }
+
+
+    // 自适应宽度(中文支持)
+    private synchronized static void setSizeColumn(XSSFSheet sheet, int size) {
+        // 遍历每一列
+        for (int cellIndex = 0; cellIndex < size; cellIndex++){
+            // 获取当前单元格宽度
+            int cellWidth = sheet.getColumnWidth(cellIndex) / 256;
+
+            // 遍历每行
+            for (int rowIndex = 0; rowIndex < sheet.getLastRowNum(); rowIndex++) {
+                // 获取当前行, 如果当前行未使用则创建该行
+                XSSFRow currentRow = sheet.getRow(rowIndex) == null ? sheet.createRow(rowIndex) : sheet.getRow(rowIndex);
+                // 获取单元格内容
+                XSSFCell currentCell = currentRow.getCell(cellIndex);
+                // 如果单元格内容不为空且不为空串
+                if (currentCell != null && !currentCell.toString().trim().equals("")) {
+                    // 如果为字符串类型则获取其长度
+                    /*
+                    if (currentCell.getCellTypeEnum() == CellType.STRING) {
+                        int length = currentCell.getStringCellValue().getBytes(CharsetUtil.UTF_8).length;
+                    }
+                    */
+                    // 获取其内容的长度
+                    int length = currentCell.getStringCellValue().getBytes(CharsetUtil.UTF_8).length;
+                    // 如果单元格宽度小于当前获取内容的长度, 则单元格宽度等于当前获取内容长度
+                    if (cellWidth < length) {
+                        cellWidth = length;
+                    }
+                }
+            }
+
+            // 设置该列的宽度
+            sheet.setColumnWidth(cellIndex, cellWidth * 256);
+        }
     }
 
 }

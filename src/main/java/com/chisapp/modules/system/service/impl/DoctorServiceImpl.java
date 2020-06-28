@@ -148,8 +148,8 @@ public class DoctorServiceImpl implements DoctorService {
     public String fileUploadSignature(MultipartFile file) {
         String virtualUrl = fileUploadUtils.create(file, this.imageDir).validateToSave(
                 Arrays.asList("jpg", "jpeg"),
-                500,
-                500,
+                300,
+                150,
                 1024L);
         String fileName = fileUploadUtils.getFileName(virtualUrl);
         fileUploadUtils.markDissociative(this.imageDir + fileName);
