@@ -61,11 +61,13 @@ public class DoctorServiceImpl implements DoctorService {
     private void cancelDissociative (Doctor doctor) {
         // 取消上传签名的游离状态
         if (doctor.getSignatureUrl() != null && !doctor.getSignatureUrl().trim().equals("")) {
-            fileUploadUtils.cancelDissociative(this.imageDir + doctor.getSignatureUrl());
+            String fileName = fileUploadUtils.getFileName(doctor.getSignatureUrl());
+            fileUploadUtils.cancelDissociative(this.imageDir + fileName);
         }
         // 取消上传头像的游离状态
         if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
-            fileUploadUtils.cancelDissociative(this.imageDir + doctor.getAvatarUrl());
+            String fileName = fileUploadUtils.getFileName(doctor.getAvatarUrl());
+            fileUploadUtils.cancelDissociative(this.imageDir + fileName);
         }
     }
 
@@ -92,8 +94,6 @@ public class DoctorServiceImpl implements DoctorService {
     @CacheEvict(allEntries = true)
     @Override
     public void delete(Doctor doctor) {
-        doctorMapper.deleteByPrimaryKey(doctor.getId());
-
         // 删除上传的签名
         if (doctor.getSignatureUrl() != null && !doctor.getSignatureUrl().trim().equals("")) {
             this.fileDelete(doctor.getSignatureUrl());
@@ -102,6 +102,8 @@ public class DoctorServiceImpl implements DoctorService {
         if (doctor.getAvatarUrl() != null && !doctor.getAvatarUrl().trim().equals("")) {
             this.fileDelete(doctor.getAvatarUrl());
         }
+
+        doctorMapper.deleteByPrimaryKey(doctor.getId());
     }
 
     /**
